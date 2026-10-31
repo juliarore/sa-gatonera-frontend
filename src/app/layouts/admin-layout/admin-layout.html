@@ -1,2 +1,112 @@
-Layout admin
-<router-outlet />
+<div class="admin" (keydown.escape)="closeMenu()">
+  <aside id="admin-sidebar" class="sidebar" [class.sidebar--open]="menuOpen()">
+    <div class="sidebar__brand">
+      <span class="sidebar__logo"><i class="fa-solid fa-cat" aria-hidden="true"></i></span>
+      <div>
+        <p class="sidebar__name">Sa Gatonera</p>
+        <p class="sidebar__subtitle">Panell d'administració</p>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav" aria-label="Menú principal">
+      <p class="sidebar__label" id="menu-principal">Menú principal</p>
+      <ul class="menu" aria-labelledby="menu-principal">
+        <li>
+          <a
+            class="menu__item"
+            routerLink="/admin"
+            routerLinkActive="menu__item--active"
+            ariaCurrentWhenActive="page"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="fa-solid fa-house" aria-hidden="true"></i>
+            <span>Inici</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="menu__item"
+            routerLink="/admin/cats"
+            routerLinkActive="menu__item--active"
+            ariaCurrentWhenActive="page"
+          >
+            <i class="fa-solid fa-cat" aria-hidden="true"></i>
+            <span>Gats</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="menu__item"
+            routerLink="/admin/requests"
+            routerLinkActive="menu__item--active"
+            ariaCurrentWhenActive="page"
+          >
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span>Sol·licituds d'adopció</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="menu__item"
+            routerLink="/admin/news"
+            routerLinkActive="menu__item--active"
+            ariaCurrentWhenActive="page"
+          >
+            <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+            <span>Publicacions</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="sidebar__label" id="compte">Compte</p>
+      <ul class="menu" aria-labelledby="compte">
+        <li>
+          <span class="menu__item">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            <span>Administrador</span>
+          </span>
+        </li>
+        <li>
+          <span class="menu__item menu__item--muted">
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+            <span>Gestió del compte</span>
+          </span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar__footer">
+      <a class="sidebar__public-link" routerLink="/">
+        <span>Veure la web pública</span>
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+      </a>
+    </div>
+  </aside>
+
+  @if (menuOpen()) {
+    <div class="backdrop" (click)="closeMenu()" aria-hidden="true"></div>
+  }
+
+  <div class="content">
+    <header class="topbar">
+      <button
+        type="button"
+        class="topbar__toggle"
+        aria-controls="admin-sidebar"
+        [attr.aria-expanded]="menuOpen()"
+        [attr.aria-label]="menuOpen() ? 'Tanca el menú' : 'Obre el menú'"
+        (click)="toggleMenu()"
+      >
+        <i class="fa-solid" [class.fa-bars]="!menuOpen()" [class.fa-xmark]="menuOpen()" aria-hidden="true"></i>
+      </button>
+      <div>
+        <p class="topbar__breadcrumb">Sa Gatonera / Administració</p>
+        <p class="topbar__title">{{ pageTitle() }}</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

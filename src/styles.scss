@@ -1,3 +1,5 @@
+@import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+@import '@fortawesome/fontawesome-free/css/solid.min.css';
 @import '@fontsource/lora/500.css';
 @import '@fontsource/lora/600.css';
 @import '@fontsource/lora/700.css';
@@ -12,6 +14,7 @@
   --color-white: #ffffff;
   --color-text: #29201b;
   --color-accent: #109dc0;
+  --color-primary-dark: #8a4a12;
 
   --font-heading: 'Lora', serif;
   --font-body: 'Nunito Sans', sans-serif;
