@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { PublicLayout } from './layouts/public-layout/public-layout';
-import { Home } from './features/public/home/home';
+import { Home } from './views/public/home/home';
 
 export const routes: Routes = [
   {
@@ -17,25 +17,25 @@ export const routes: Routes = [
         path: '',
         data: { title: 'Panell de control' },
         loadComponent: () =>
-          import('./features/admin/dashboard/dashboard').then((m) => m.Dashboard),
+          import('./views/admin/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'cats',
-        data: { title: 'Gats' },
+        data: { title: 'Gestió dels gats' },
         loadComponent: () =>
-          import('./features/admin/cats/cats').then((m) => m.Cats),
+          import('./views/admin/cats/cats').then((m) => m.Cats),
       },
       {
         path: 'requests',
         data: { title: "Sol·licituds d'adopció" },
         loadComponent: () =>
-          import('./features/admin/requests/requests').then((m) => m.Requests),
+          import('./views/admin/requests/requests').then((m) => m.Requests),
       },
       {
         path: 'news',
         data: { title: 'Publicacions' },
         loadComponent: () =>
-          import('./features/admin/news/news').then((m) => m.News),
+          import('./views/admin/news/news').then((m) => m.News),
       },
     ],
   },

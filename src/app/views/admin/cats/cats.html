@@ -1,1 +1,179 @@
-<h1>Gats</h1>
+<header class="page-header">
+  <div>
+    <h1 class="page-header__title">Gats</h1>
+    <p class="page-header__subtitle">Consulta i gestiona els gats de la protectora.</p>
+  </div>
+  <button type="button" class="btn btn--primary">
+    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+    Afegir un gat
+  </button>
+</header>
+
+<section class="card" aria-labelledby="filters-title">
+  <h2 class="card__title" id="filters-title">Cerca i filtres</h2>
+  <form class="filters" (submit)="applyFilters($event)">
+    <div class="field field--search">
+      <label class="sr-only" for="cats-search">Cerca pel nom del gat</label>
+      <i class="fa-solid fa-magnifying-glass field__icon" aria-hidden="true"></i>
+      <input
+        id="cats-search"
+        class="control control--with-icon"
+        type="search"
+        placeholder="Cerca pel nom del gat..."
+        autocomplete="off"
+        [value]="searchDraft()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label class="sr-only" for="cats-status">Estat</label>
+      <select id="cats-status" class="control" (change)="onStatusChange($event)">
+        <option value="" [selected]="statusDraft() === ''">Tots els estats</option>
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value" [selected]="statusDraft() === option.value">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="sr-only" for="cats-age">Edat</label>
+      <select id="cats-age" class="control" (change)="onAgeGroupChange($event)">
+        <option value="" [selected]="ageGroupDraft() === ''">Totes les edats</option>
+        @for (option of ageGroupOptions; track option.value) {
+          <option [value]="option.value" [selected]="ageGroupDraft() === option.value">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="filters__actions">
+      <button type="submit" class="btn btn--primary">Filtrar</button>
+      <button type="button" class="btn btn--secondary" (click)="clearFilters()">
+        Netejar filtres
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="card card--table" aria-labelledby="catalog-title">
+  <div class="card__header">
+    <h2 class="card__title" id="catalog-title">Catàleg de gats</h2>
+    <p class="card__meta" aria-live="polite">
+      @if (data(); as page) {
+        {{ page.total }} registres · Ordenats pels més recents
+      }
+    </p>
+  </div>
+
+  @if (loading()) {
+    <p class="state">Carregant gats...</p>
+  } @else if (error()) {
+    <div class="state" role="alert">
+      <p>No s'han pogut carregar els gats. Torna-ho a provar.</p>
+      <button type="button" class="btn btn--secondary" (click)="load()">Reintentar</button>
+    </div>
+  } @else if (data(); as page) {
+    @if (page.items.length === 0) {
+      <p class="state">No s'ha trobat cap gat amb aquests filtres.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="table">
+          <caption class="sr-only">Llistat de gats de la protectora</caption>
+          <thead>
+            <tr>
+              <th scope="col">Gat</th>
+              <th scope="col">Estat</th>
+              <th scope="col">Edat</th>
+              <th scope="col">Data d'alta</th>
+              <th scope="col">Visibilitat</th>
+              <th scope="col">Accions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cat of page.items; track cat.id) {
+              <tr>
+                <td>
+                  <div class="cat">
+                    <span class="cat__avatar">
+                      <i class="fa-solid fa-cat" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                      <p class="cat__name">{{ cat.name }}</p>
+                      <p class="cat__detail">
+                        {{ genderLabels[cat.gender] }} · {{ ageLabel(cat.birthDate) }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="pills">
+                    <span class="pill pill--{{ cat.status }}">{{ statusLabels[cat.status] }}</span>
+                    @if (cat.isUrgent) {
+                      <span class="pill pill--urgent">{{ urgentLabel }}</span>
+                    }
+                  </div>
+                </td>
+                <td>{{ ageGroupLabels[cat.ageGroup] }}</td>
+                <td>{{ cat.entryDate | date: 'dd/MM/yyyy' }}</td>
+                <td>
+                  {{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}
+                </td>
+                <td>
+                  <button type="button" class="btn-icon" disabled aria-label="Accions">
+                    <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="card__footer">
+        <p class="card__meta">
+          Mostrant {{ firstShown() }}–{{ lastShown() }} de {{ page.total }} gats
+        </p>
+        <nav class="pagination" aria-label="Paginació">
+          <button
+            type="button"
+            class="pagination__btn"
+            aria-label="Pàgina anterior"
+            [disabled]="page.page <= 1"
+            (click)="goToPage(page.page - 1)"
+          >
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          @for (item of pageItems(); track $index) {
+            @if (item === 'ellipsis') {
+              <span class="pagination__gap" aria-hidden="true">…</span>
+            } @else {
+              <button
+                type="button"
+                class="pagination__btn"
+                [class.pagination__btn--active]="item === page.page"
+                [attr.aria-current]="item === page.page ? 'page' : null"
+                [attr.aria-label]="'Pàgina ' + item"
+                (click)="goToPage(item)"
+              >
+                {{ item }}
+              </button>
+            }
+          }
+          <button
+            type="button"
+            class="pagination__btn"
+            aria-label="Pàgina següent"
+            [disabled]="page.page >= page.totalPages"
+            (click)="goToPage(page.page + 1)"
+          >
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </footer>
+    }
+  }
+</section>
