@@ -1,59 +1,49 @@
-# SaGatoneraFrontend
+# Sa Gatonera – Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Aplicació web d'adopció de gats de Sa Gatonera, una associació de Blanes dedicada a la protecció i cura dels gats. Inclou una àrea pública per consultar els gats en adopció i un _backoffice_ per a la gestió interna de l'associació. Forma part d'un Treball Final de Màster (Màster universitari en Desenvolupament de Llocs i Aplicacions Web, UOC).
 
-## Development server
+Aquest repositori conté només el frontend. L'API és en un repositori independent: `sa-gatonera-backend`.
 
-To start a local development server, run:
+## Tecnologies
 
-```bash
-ng serve
-```
+- Angular
+- TypeScript
+- SCSS
+- Server-Side Rendering (SSR)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Requisits
 
-## Code scaffolding
+- Node.js 24
+- npm
+- El backend en funcionament
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Posada en marxa
 
-```bash
-ng generate component component-name
-```
+1. Instal·lar les dependències:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+   ```bash
+   npm install
+   ```
 
-```bash
-ng generate --help
-```
+2. Comprovar que l'adreça de l'API als fitxers de `src/environments/` apunta al backend:
 
-## Building
+   ```text
+   http://localhost:3000/api
+   ```
 
-To build the project run:
+3. Iniciar el servidor de desenvolupament:
 
-```bash
-ng build
-```
+   ```bash
+   ng serve
+   ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+L'aplicació estarà disponible a `http://localhost:4200`.
 
-## Running unit tests
+Per permetre la comunicació entre el frontend i el backend, la variable `FRONTEND_URL` del fitxer `.env` del backend ha de contenir `http://localhost:4200`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Comandes disponibles
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| Comanda    | Descripció                            |
+| ---------- | ------------------------------------- |
+| `ng serve` | Inicia el servidor de desenvolupament |
+| `ng build` | Compila l'aplicació                   |
