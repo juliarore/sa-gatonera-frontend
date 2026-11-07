@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   afterNextRender,
   Component,
@@ -25,7 +24,6 @@ import { getAgeLabel } from './utils/age';
 type PageItem = number | 'ellipsis';
 
 @Component({
-  imports: [DatePipe],
   selector: 'app-cats',
   templateUrl: './cats.html',
   styleUrl: './cats.scss',

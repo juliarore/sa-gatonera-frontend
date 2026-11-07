@@ -28,10 +28,17 @@ export const VISIBILITY_LABELS = {
 
 export const URGENT_LABEL = 'Urgent';
 
-export const STATUS_OPTIONS = (
-  Object.entries(STATUS_LABELS) as [CatStatus, string][]
-).map(([value, label]) => ({ value, label }));
+export const STATUS_OPTIONS = (Object.entries(STATUS_LABELS) as [CatStatus, string][]).map(
+  ([value, label]) => ({ value, label }),
+);
+
+export const AGE_GROUP_RANGE_LABELS: Record<AgeGroup, string> = {
+  kitten: "Menys d'1 any",
+  young: "D'1 a 2 anys",
+  adult: 'De 2 a 7 anys',
+  senior: '7 anys o més',
+};
 
 export const AGE_GROUP_OPTIONS = (
-  Object.entries(AGE_GROUP_LABELS) as [AgeGroup, string][]
+  Object.entries(AGE_GROUP_RANGE_LABELS) as [AgeGroup, string][]
 ).map(([value, label]) => ({ value, label }));
