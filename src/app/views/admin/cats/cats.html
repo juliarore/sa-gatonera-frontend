@@ -63,24 +63,24 @@
   <div class="card__header">
     <h2 class="card__title" id="catalog-title">Catàleg de gats</h2>
     <p class="card__meta" aria-live="polite">
-      @if (data(); as page) {
-        {{ page.total }} registres · Ordenats pels més recents
+      @if (catsPage(); as result) {
+        {{ result.total }} registres · Ordenats pels més recents
       }
     </p>
   </div>
 
   @if (loading()) {
-    <p class="state">Carregant gats...</p>
+    <p class="state" role="status">Carregant gats...</p>
   } @else if (error()) {
     <div class="state" role="alert">
       <p>No s'han pogut carregar els gats. Torna-ho a provar.</p>
       <button type="button" class="btn btn--secondary" (click)="load()">Reintentar</button>
     </div>
-  } @else if (data(); as page) {
-    @if (page.items.length === 0) {
-      <p class="state">No s'ha trobat cap gat amb aquests filtres.</p>
+  } @else if (catsPage(); as result) {
+    @if (result.items.length === 0) {
+      <p class="state" role="status">No s'ha trobat cap gat amb aquests filtres.</p>
     } @else {
-      <div class="table-wrapper">
+      <div class="table-wrapper" role="region" aria-labelledby="catalog-title" tabindex="0">
         <table class="table">
           <caption class="sr-only">
             Llistat de gats de la protectora
@@ -96,7 +96,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (cat of page.items; track cat.id) {
+            @for (cat of result.items; track cat.id) {
               <tr>
                 <td>
                   <div class="cat">
@@ -125,7 +125,12 @@
                   {{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}
                 </td>
                 <td>
-                  <button type="button" class="btn-icon" disabled aria-label="Accions">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    disabled
+                    [attr.aria-label]="'Accions per a ' + cat.name"
+                  >
                     <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
                   </button>
                 </td>
@@ -137,15 +142,15 @@
 
       <footer class="card__footer">
         <p class="card__meta">
-          Mostrant {{ firstShown() }}–{{ lastShown() }} de {{ page.total }} gats
+          Mostrant {{ firstShown() }}–{{ lastShown() }} de {{ result.total }} gats
         </p>
         <nav class="pagination" aria-label="Paginació">
           <button
             type="button"
             class="pagination__btn"
             aria-label="Pàgina anterior"
-            [disabled]="page.page <= 1"
-            (click)="goToPage(page.page - 1)"
+            [disabled]="result.page <= 1"
+            (click)="goToPage(result.page - 1)"
           >
             <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
           </button>
@@ -156,8 +161,8 @@
               <button
                 type="button"
                 class="pagination__btn"
-                [class.pagination__btn--active]="item === page.page"
-                [attr.aria-current]="item === page.page ? 'page' : null"
+                [class.pagination__btn--active]="item === result.page"
+                [attr.aria-current]="item === result.page ? 'page' : null"
                 [attr.aria-label]="'Pàgina ' + item"
                 (click)="goToPage(item)"
               >
@@ -169,8 +174,8 @@
             type="button"
             class="pagination__btn"
             aria-label="Pàgina següent"
-            [disabled]="page.page >= page.totalPages"
-            (click)="goToPage(page.page + 1)"
+            [disabled]="result.page >= result.totalPages"
+            (click)="goToPage(result.page + 1)"
           >
             <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
           </button>

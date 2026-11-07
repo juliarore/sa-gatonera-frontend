@@ -42,12 +42,10 @@ export class Cats {
   protected readonly urgentLabel = URGENT_LABEL;
   protected readonly ageLabel = getAgeLabel;
 
-  // Valors dels controls (encara no aplicats)
   protected readonly searchDraft = signal('');
   protected readonly statusDraft = signal<CatStatus | ''>('');
   protected readonly ageGroupDraft = signal<AgeGroup | ''>('');
 
-  // Filtres aplicats a la consulta
   private readonly applied = signal<{
     search: string;
     status: CatStatus | '';
@@ -55,25 +53,25 @@ export class Cats {
   }>({ search: '', status: '', ageGroup: '' });
   private readonly page = signal(1);
 
-  protected readonly data = signal<AdminCatsPage | null>(null);
+  protected readonly catsPage = signal<AdminCatsPage | null>(null);
   protected readonly loading = signal(true);
   protected readonly error = signal(false);
 
   protected readonly firstShown = computed(() => {
-    const data = this.data();
-    return data ? (data.page - 1) * data.limit + 1 : 0;
+    const catsPage = this.catsPage();
+    return catsPage ? (catsPage.page - 1) * catsPage.limit + 1 : 0;
   });
   protected readonly lastShown = computed(() => {
-    const data = this.data();
-    return data ? Math.min(data.page * data.limit, data.total) : 0;
+    const catsPage = this.catsPage();
+    return catsPage ? Math.min(catsPage.page * catsPage.limit, catsPage.total) : 0;
   });
 
   protected readonly pageItems = computed<PageItem[]>(() => {
-    const data = this.data();
-    if (!data) {
+    const catsPage = this.catsPage();
+    if (!catsPage) {
       return [];
     }
-    const { page, totalPages } = data;
+    const { page, totalPages } = catsPage;
     const pages = new Set(
       [1, page - 1, page, page + 1, totalPages].filter(
         (n) => n >= 1 && n <= totalPages,
@@ -91,7 +89,6 @@ export class Cats {
   });
 
   constructor() {
-    // La càrrega només es fa al navegador: el prerender no ha de cridar l'API.
     afterNextRender(() => this.load());
     this.destroyRef.onDestroy(() => this.request?.unsubscribe());
   }
@@ -127,8 +124,8 @@ export class Cats {
   }
 
   protected goToPage(page: number): void {
-    const data = this.data();
-    if (!data || page < 1 || page > data.totalPages || page === data.page) {
+    const catsPage = this.catsPage();
+    if (!catsPage || page < 1 || page > catsPage.totalPages || page === catsPage.page) {
       return;
     }
     this.page.set(page);
@@ -143,8 +140,8 @@ export class Cats {
     this.request = this.adminCats
       .list({ ...this.applied(), page: this.page(), limit: PAGE_SIZE })
       .subscribe({
-        next: (data) => {
-          this.data.set(data);
+        next: (catsPage) => {
+          this.catsPage.set(catsPage);
           this.loading.set(false);
         },
         error: () => {

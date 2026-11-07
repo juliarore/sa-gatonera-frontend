@@ -4,7 +4,6 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { AdminCatsPage, AdminCatsQuery } from './cat.models';
 
-/** La API envia les dates en yyyy-mm-dd; la interfície les mostra en dd/mm/yyyy. */
 function toDisplayDate(isoDate: string): string {
   const [year, month, day] = isoDate.split('-');
   return `${day}/${month}/${year}`;

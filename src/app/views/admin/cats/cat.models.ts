@@ -7,11 +7,9 @@ export interface AdminCat {
   name: string;
   slug: string;
   gender: CatGender;
-  /** dd/mm/yyyy */
   birthDate: string;
   status: CatStatus;
   isUrgent: boolean;
-  /** dd/mm/yyyy */
   entryDate: string;
   ageGroup: AgeGroup;
   isVisible: boolean;

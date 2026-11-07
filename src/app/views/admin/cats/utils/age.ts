@@ -1,4 +1,3 @@
-/** Edat en text a partir d'una data de naixement dd/mm/yyyy: "N mesos", "1 any" o "N anys". */
 export function getAgeLabel(birthDate: string, now: Date = new Date()): string {
   const parts = birthDate.split('/').map(Number);
   if (parts.length !== 3 || parts.some(Number.isNaN)) {
