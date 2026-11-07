@@ -200,13 +200,17 @@ ul {
     z-index: 20;
     visibility: hidden;
     transform: translateX(-100%);
+    // El menú tancat s'amaga quan acaba l'animació, perquè quedi fora de l'ordre de tabulació; en obrir-lo es mostra de seguida.
     transition:
       transform 0.2s ease,
-      visibility 0.2s;
+      visibility 0s linear 0.2s;
 
     &--open {
       visibility: visible;
       transform: translateX(0);
+      transition:
+        transform 0.2s ease,
+        visibility 0s;
     }
   }
 

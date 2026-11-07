@@ -1,5 +1,5 @@
-<div class="admin" (keydown.escape)="closeMenu()">
-  <aside id="admin-sidebar" class="sidebar" [class.sidebar--open]="menuOpen()">
+<div class="admin" (keydown.escape)="closeMenuAndFocusToggle()">
+  <aside #sidebar id="admin-sidebar" class="sidebar" [class.sidebar--open]="menuOpen()">
     <div class="sidebar__brand">
       <span class="sidebar__logo"><i class="fa-solid fa-cat" aria-hidden="true"></i></span>
       <div>
@@ -84,17 +84,18 @@
   </aside>
 
   @if (menuOpen()) {
-    <div class="backdrop" (click)="closeMenu()" aria-hidden="true"></div>
+    <div class="backdrop" (click)="closeMenuAndFocusToggle()" aria-hidden="true"></div>
   }
 
   <div class="content">
     <header class="topbar">
       <button
+        #menuToggle
         type="button"
         class="topbar__toggle"
         aria-controls="admin-sidebar"
+        aria-label="Menú de navegació"
         [attr.aria-expanded]="menuOpen()"
-        [attr.aria-label]="menuOpen() ? 'Tanca el menú' : 'Obre el menú'"
         (click)="toggleMenu()"
       >
         <i class="fa-solid" [class.fa-bars]="!menuOpen()" [class.fa-xmark]="menuOpen()" aria-hidden="true"></i>
@@ -105,7 +106,7 @@
       </div>
     </header>
 
-    <main class="main">
+    <main id="main-content" class="main" tabindex="-1">
       <router-outlet />
     </main>
   </div>

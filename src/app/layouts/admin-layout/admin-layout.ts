@@ -1,4 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  ElementRef,
+  inject,
+  Injector,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   ActivatedRoute,
@@ -19,6 +27,10 @@ import { filter, map, startWith, tap } from 'rxjs';
 export class AdminLayout {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly injector = inject(Injector);
+
+  private readonly sidebar = viewChild.required<ElementRef<HTMLElement>>('sidebar');
+  private readonly menuToggle = viewChild.required<ElementRef<HTMLButtonElement>>('menuToggle');
 
   protected readonly menuOpen = signal(false);
 
@@ -39,10 +51,26 @@ export class AdminLayout {
   );
 
   protected toggleMenu(): void {
-    this.menuOpen.update((open) => !open);
+    if (this.menuOpen()) {
+      this.closeMenuAndFocusToggle();
+      return;
+    }
+    this.menuOpen.set(true);
+    afterNextRender(
+      () => this.sidebar().nativeElement.querySelector<HTMLElement>('a[href]')?.focus(),
+      { injector: this.injector },
+    );
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  protected closeMenuAndFocusToggle(): void {
+    if (!this.menuOpen()) {
+      return;
+    }
+    this.closeMenu();
+    this.menuToggle().nativeElement.focus();
   }
 }
