@@ -1,3 +1,6 @@
+@use 'styles/buttons';
+@use 'styles/status-pills';
+
 @import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 @import '@fortawesome/fontawesome-free/css/solid.min.css';
 @import '@fontsource/lora/500.css';
@@ -10,11 +13,19 @@
 :root {
   --color-primary: #f0ab6a;
   --color-primary-hover: #f3bb86;
-  --color-cream: #fcf5ed;
+  --color-surface-cream: #fcf5ed;
+  --color-surface-gray: #efedeb;
+  --color-accent-turquoise: #109dc0;
+  --color-text-primary: #29201b;
+  --color-text-muted: #69635f;
   --color-white: #ffffff;
-  --color-text: #29201b;
-  --color-accent: #109dc0;
-  --color-primary-dark: #8a4a12;
+  --color-border: #e5e4e4;
+  --color-border-input: #857c75;
+
+  --color-status-success: #e2f3e5;
+  --color-status-warning: #fff2c9;
+  --color-status-danger: #fce3e0;
+  --color-status-info: #dbf0f6;
 
   --font-heading: 'Lora', serif;
   --font-body: 'Nunito Sans', sans-serif;
@@ -42,7 +53,7 @@
 body {
   margin: 0;
   font-family: var(--font-body);
-  color: var(--color-text);
+  color: var(--color-text-primary);
   background-color: var(--color-white);
 }
 
@@ -54,7 +65,7 @@ h4 {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-text);
+  outline: 3px solid var(--color-text-primary);
   outline-offset: 2px;
   box-shadow: 0 0 0 5px var(--color-white);
 }
@@ -72,7 +83,7 @@ h4 {
   z-index: 100;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  background-color: var(--color-text);
+  background-color: var(--color-text-primary);
   color: var(--color-white);
   font-weight: 700;
   transform: translateY(-200%);

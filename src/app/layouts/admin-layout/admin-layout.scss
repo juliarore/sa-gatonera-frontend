@@ -1,6 +1,4 @@
 :host {
-  --muted: color-mix(in srgb, var(--color-text) 70%, var(--color-white));
-  --border: color-mix(in srgb, var(--color-text) 12%, var(--color-white));
   --sidebar-width: 280px;
 
   display: block;
@@ -30,7 +28,7 @@ ul {
   width: var(--sidebar-width);
   height: 100vh;
   background-color: var(--color-white);
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--color-border);
 
   &__brand {
     display: flex;
@@ -46,8 +44,8 @@ ul {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: var(--color-cream);
-    color: var(--color-primary-dark);
+    background-color: var(--color-surface-cream);
+    color: var(--color-text-primary);
     font-size: 1.25rem;
   }
 
@@ -58,7 +56,7 @@ ul {
 
   &__subtitle {
     font-size: 0.875rem;
-    color: var(--muted);
+    color: var(--color-text-muted);
   }
 
   &__nav {
@@ -73,7 +71,7 @@ ul {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--color-text-muted);
   }
 
   &__nav &__label:not(:first-child) {
@@ -82,7 +80,7 @@ ul {
 
   &__footer {
     padding: var(--space-4);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
   }
 
   &__public-link {
@@ -92,13 +90,13 @@ ul {
     gap: var(--space-2);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
-    background-color: var(--color-cream);
-    color: var(--color-text);
+    background-color: var(--color-surface-cream);
+    color: var(--color-text-primary);
     font-weight: 600;
     text-decoration: none;
 
     &:hover {
-      color: var(--color-primary-dark);
+      background-color: var(--color-primary-hover);
     }
   }
 }
@@ -109,38 +107,51 @@ ul {
   gap: var(--space-1);
 
   &__item {
+    position: relative;
     display: flex;
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-size: 1rem;
     text-decoration: none;
 
     i {
       width: 1.25rem;
       text-align: center;
-      color: var(--muted);
+      color: var(--color-text-muted);
     }
 
     &--muted {
-      color: var(--muted);
+      color: var(--color-text-muted);
     }
 
-    &--active {
-      background-color: var(--color-cream);
-      color: var(--color-primary-dark);
+    &--active,
+    &[aria-current='page'] {
+      background-color: var(--color-surface-cream);
+      color: var(--color-text-primary);
       font-weight: 700;
 
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+        background-color: var(--color-primary);
+      }
+
       i {
-        color: var(--color-primary-dark);
+        color: var(--color-text-primary);
       }
     }
   }
 
-  a.menu__item:hover:not(.menu__item--active) {
-    background-color: var(--color-cream);
+  a.menu__item:hover {
+    background-color: var(--color-surface-cream);
   }
 }
 
@@ -157,24 +168,24 @@ ul {
   gap: var(--space-4);
   padding: var(--space-4) var(--space-8);
   background-color: var(--color-white);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--color-border);
 
   &__toggle {
     display: none;
     place-items: center;
     width: 44px;
     height: 44px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background-color: var(--color-white);
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-size: 1.125rem;
     cursor: pointer;
   }
 
   &__breadcrumb {
     font-size: 0.875rem;
-    color: var(--muted);
+    color: var(--color-text-muted);
   }
 
   &__title {
@@ -186,7 +197,7 @@ ul {
 .main {
   flex: 1;
   padding: var(--space-8);
-  background-color: color-mix(in srgb, var(--color-cream) 35%, var(--color-white));
+  background-color: color-mix(in srgb, var(--color-surface-cream) 35%, var(--color-white));
 }
 
 .backdrop {
@@ -219,7 +230,7 @@ ul {
     inset: 0;
     z-index: 10;
     display: block;
-    background-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+    background-color: color-mix(in srgb, var(--color-text-primary) 40%, transparent);
   }
 
   .topbar {

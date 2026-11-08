@@ -1,0 +1,29 @@
+.pill {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+
+  &--available {
+    background-color: var(--color-status-success);
+  }
+
+  &--in_foster {
+    background-color: var(--color-status-warning);
+  }
+
+  &--urgent {
+    background-color: var(--color-status-danger);
+  }
+
+  &--reserved {
+    background-color: var(--color-status-info);
+  }
+
+  &--adopted {
+    background-color: var(--color-surface-gray);
+  }
+}

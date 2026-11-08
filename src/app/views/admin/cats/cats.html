@@ -74,7 +74,9 @@
   } @else if (error()) {
     <div class="state" role="alert">
       <p>No s'han pogut carregar els gats. Torna-ho a provar.</p>
-      <button type="button" class="btn btn--secondary" (click)="load()">Reintentar</button>
+      <button type="button" class="btn btn--secondary btn--auto-width" (click)="load()">
+        Reintentar
+      </button>
     </div>
   } @else if (catsPage(); as result) {
     @if (result.items.length === 0) {
