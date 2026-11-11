@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { afterNextRender, inject, Injectable, Injector } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, skip } from 'rxjs';
+import { filter, map, pairwise } from 'rxjs';
 
 export const MAIN_CONTENT_ID = 'main-content';
 
@@ -15,13 +15,13 @@ export class PageFocusService {
     inject(Router)
       .events.pipe(
         filter((event) => event instanceof NavigationEnd),
-        // La primera navegació és la càrrega inicial: no cal moure el focus.
-        skip(1),
+        map((event) => event.urlAfterRedirects.split(/[?#]/)[0]),
+        // Només movem el focus si canvia la pàgina; si només canvien els filtres, no.
+        pairwise(),
+        filter(([previous, current]) => previous !== current),
         takeUntilDestroyed(),
       )
-      .subscribe(() =>
-        afterNextRender(() => this.focusPageHeading(), { injector: this.injector }),
-      );
+      .subscribe(() => afterNextRender(() => this.focusPageHeading(), { injector: this.injector }));
   }
 
   skipToContent(event: Event): void {
@@ -35,7 +35,6 @@ export class PageFocusService {
     if (!target) {
       return;
     }
-    // El títol necessita tabindex="-1" per poder rebre el focus per codi.
     target.setAttribute('tabindex', '-1');
     target.focus();
   }

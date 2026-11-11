@@ -1,12 +1,17 @@
+import { isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
-  afterNextRender,
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
-import { Subscription } from 'rxjs';
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { AdminCatsService } from './admin-cats.service';
 import {
   AGE_GROUP_LABELS,
@@ -23,6 +28,30 @@ import { getAgeLabel } from './utils/age';
 
 type PageItem = number | 'ellipsis';
 
+interface CatsUrlState {
+  search: string;
+  status: CatStatus | '';
+  ageGroup: AgeGroup | '';
+  page: number;
+}
+
+const STATUS_VALUES: string[] = STATUS_OPTIONS.map((option) => option.value);
+const AGE_GROUP_VALUES: string[] = AGE_GROUP_OPTIONS.map((option) => option.value);
+
+function parseUrlState(params: ParamMap): CatsUrlState {
+  const search = (params.get('search') ?? '').trim();
+  const status = params.get('status') ?? '';
+  const ageGroup = params.get('ageGroup') ?? '';
+  const rawPage = params.get('page') ?? '';
+  const page = /^\d+$/.test(rawPage) ? Number(rawPage) : 1;
+  return {
+    search,
+    status: STATUS_VALUES.includes(status) ? (status as CatStatus) : '',
+    ageGroup: AGE_GROUP_VALUES.includes(ageGroup) ? (ageGroup as AgeGroup) : '',
+    page: Number.isSafeInteger(page) && page >= 1 ? page : 1,
+  };
+}
+
 @Component({
   selector: 'app-cats',
   templateUrl: './cats.html',
@@ -30,8 +59,10 @@ type PageItem = number | 'ellipsis';
 })
 export class Cats {
   private readonly adminCats = inject(AdminCatsService);
-  private readonly destroyRef = inject(DestroyRef);
-  private request?: Subscription;
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly retry$ = new BehaviorSubject<void>(undefined);
+  private readonly platformId = inject(PLATFORM_ID);
 
   protected readonly statusOptions = STATUS_OPTIONS;
   protected readonly ageGroupOptions = AGE_GROUP_OPTIONS;
@@ -46,12 +77,6 @@ export class Cats {
   protected readonly statusDraft = signal<CatStatus | ''>('');
   protected readonly ageGroupDraft = signal<AgeGroup | ''>('');
 
-  private readonly applied = signal<{
-    search: string;
-    status: CatStatus | '';
-    ageGroup: AgeGroup | '';
-  }>({ search: '', status: '', ageGroup: '' });
-  private readonly page = signal(1);
 
   protected readonly catsPage = signal<AdminCatsPage | null>(null);
   protected readonly loading = signal(true);
@@ -89,8 +114,38 @@ export class Cats {
   });
 
   constructor() {
-    afterNextRender(() => this.load());
-    this.destroyRef.onDestroy(() => this.request?.unsubscribe());
+    const state$ = this.route.queryParamMap.pipe(
+      map(parseUrlState),
+      tap((state) => {
+        this.searchDraft.set(state.search);
+        this.statusDraft.set(state.status);
+        this.ageGroupDraft.set(state.ageGroup);
+      }),
+    );
+
+    combineLatest([state$, this.retry$])
+      .pipe(
+        filter(() => isPlatformBrowser(this.platformId)),
+        tap(() => {
+          this.loading.set(true);
+          this.error.set(false);
+        }),
+        switchMap(([state]) =>
+          this.adminCats.list({ ...state, limit: PAGE_SIZE }).pipe(
+            tap((catsPage) => {
+              this.catsPage.set(catsPage);
+              this.loading.set(false);
+            }),
+            catchError(() => {
+              this.error.set(true);
+              this.loading.set(false);
+              return EMPTY;
+            }),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
   }
 
   protected onSearchInput(event: Event): void {
@@ -107,20 +162,16 @@ export class Cats {
 
   protected applyFilters(event?: Event): void {
     event?.preventDefault();
-    this.applied.set({
+    this.navigate({
       search: this.searchDraft().trim(),
       status: this.statusDraft(),
       ageGroup: this.ageGroupDraft(),
+      page: 1,
     });
-    this.page.set(1);
-    this.load();
   }
 
   protected clearFilters(): void {
-    this.searchDraft.set('');
-    this.statusDraft.set('');
-    this.ageGroupDraft.set('');
-    this.applyFilters();
+    this.router.navigate([], { relativeTo: this.route });
   }
 
   protected goToPage(page: number): void {
@@ -128,26 +179,22 @@ export class Cats {
     if (!catsPage || page < 1 || page > catsPage.totalPages || page === catsPage.page) {
       return;
     }
-    this.page.set(page);
-    this.load();
+    this.navigate({ ...parseUrlState(this.route.snapshot.queryParamMap), page });
   }
 
   protected load(): void {
-    this.request?.unsubscribe();
-    this.loading.set(true);
-    this.error.set(false);
+    this.retry$.next();
+  }
 
-    this.request = this.adminCats
-      .list({ ...this.applied(), page: this.page(), limit: PAGE_SIZE })
-      .subscribe({
-        next: (catsPage) => {
-          this.catsPage.set(catsPage);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.error.set(true);
-          this.loading.set(false);
-        },
-      });
+  private navigate(state: CatsUrlState): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: state.search || null,
+        status: state.status || null,
+        ageGroup: state.ageGroup || null,
+        page: state.page > 1 ? state.page : null,
+      },
+    });
   }
 }
