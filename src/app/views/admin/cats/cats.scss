@@ -131,9 +131,25 @@ p {
     padding-left: calc(var(--space-4) + 1em + var(--space-3));
   }
 
+  // Vora de 1px + contorn d'1px enganxat: un únic marc de 2px sense buit
+  &:focus-visible {
+    border-color: var(--color-text-primary);
+    outline: 1px solid var(--color-text-primary);
+    outline-offset: 0;
+  }
+
   &::placeholder {
     color: var(--color-text-muted);
   }
+}
+
+select.control {
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2329201B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px;
 }
 
 .table-wrapper {
@@ -233,6 +249,11 @@ p {
     color: var(--color-text-primary);
     font: inherit;
     cursor: pointer;
+
+    // Mateix criteri que .btn: contorn enganxat, sense buit
+    &:focus-visible {
+      outline-offset: 0;
+    }
 
     &:hover:not(:disabled) {
       background-color: var(--color-surface-cream);

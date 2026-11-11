@@ -66,9 +66,8 @@ h4 {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-text-primary);
+  outline: 2px solid var(--color-text-primary);
   outline-offset: 2px;
-  box-shadow: 0 0 0 5px var(--color-white);
 }
 
 // Aquests elements només reben el focus per codi i no són interactius; per això no necessiten contorn de focus.

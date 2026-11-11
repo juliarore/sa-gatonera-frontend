@@ -17,6 +17,11 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 
+  &:focus-visible {
+    outline: 2px solid var(--color-text-primary);
+    outline-offset: 0;
+  }
+
   &--primary {
     background-color: var(--color-primary);
 
@@ -35,8 +40,6 @@
       background-color: var(--color-surface-cream);
     }
   }
-
-  // Va l'últim perquè, amb la mateixa especificitat, guanyi sobre :hover i :active.
   &:disabled,
   &[aria-disabled='true'] {
     background-color: var(--color-surface-gray);
