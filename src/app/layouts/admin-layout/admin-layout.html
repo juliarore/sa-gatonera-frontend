@@ -1,11 +1,13 @@
 <div class="admin" (keydown.escape)="closeMenuAndFocusToggle()">
   <aside #sidebar id="admin-sidebar" class="sidebar" [class.sidebar--open]="menuOpen()">
     <div class="sidebar__brand">
-      <span class="sidebar__logo"><i class="fa-solid fa-cat" aria-hidden="true"></i></span>
-      <div>
-        <p class="sidebar__name">Sa Gatonera</p>
-        <p class="sidebar__subtitle">Panell d'administració</p>
-      </div>
+      <img
+        class="sidebar__logo"
+        src="images/sa-gatonera-logo.png"
+        alt="Sa Gatonera Blanes"
+        width="680"
+        height="268"
+      />
     </div>
 
     <nav class="sidebar__nav" aria-label="Menú principal">
@@ -89,6 +91,13 @@
 
   <div class="content">
     <header class="topbar">
+      <img
+        class="topbar__logo"
+        src="images/sa-gatonera-logo.png"
+        alt="Sa Gatonera Blanes"
+        width="680"
+        height="268"
+      />
       <button
         #menuToggle
         type="button"
@@ -100,13 +109,21 @@
       >
         <i class="fa-solid" [class.fa-bars]="!menuOpen()" [class.fa-xmark]="menuOpen()" aria-hidden="true"></i>
       </button>
-      <div>
-        <p class="topbar__breadcrumb">Sa Gatonera / Administració</p>
-        <p class="topbar__title">{{ pageTitle() }}</p>
-      </div>
+      <nav class="breadcrumb" aria-label="Camí de navegació">
+        <ol class="breadcrumb__list">
+          @if (onDashboard()) {
+            <li class="breadcrumb__item" aria-current="page">Panell d'administració</li>
+          } @else {
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" routerLink="/admin">Panell d'administració</a>
+            </li>
+            <li class="breadcrumb__item" aria-current="page">{{ pageTitle() }}</li>
+          }
+        </ol>
+      </nav>
     </header>
 
-    <main id="main-content" class="main" tabindex="-1">
+    <main id="main-content" class="main" tabindex="-1" [attr.inert]="menuOpen() ? '' : null">
       <router-outlet />
     </main>
   </div>

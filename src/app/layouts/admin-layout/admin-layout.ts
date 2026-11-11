@@ -50,6 +50,16 @@ export class AdminLayout {
     { initialValue: '' },
   );
 
+  // Al dashboard la miga només mostra «Panell d'administració», sense enllaç, perquè ja som a la pàgina.
+  protected readonly onDashboard = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      startWith(null),
+      map(() => this.router.url.split(/[?#]/)[0] === '/admin'),
+    ),
+    { initialValue: false },
+  );
+
   protected toggleMenu(): void {
     if (this.menuOpen()) {
       this.closeMenuAndFocusToggle();
