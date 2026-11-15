@@ -105,8 +105,12 @@
                     <span class="cat__avatar">
                       <i class="fa-solid fa-cat" aria-hidden="true"></i>
                     </span>
-                    <div>
-                      <p class="cat__name">{{ cat.name }}</p>
+                    <div class="cat__info">
+                      <p class="cat__name">
+                        <a class="cat__link" [routerLink]="['/admin/cats', cat.id]">{{
+                          cat.name
+                        }}</a>
+                      </p>
                       <p class="cat__detail">
                         {{ genderLabels[cat.gender] }} · {{ ageLabel(cat.birthDate) }}
                       </p>

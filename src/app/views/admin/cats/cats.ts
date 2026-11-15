@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
@@ -54,6 +54,7 @@ function parseUrlState(params: ParamMap): CatsUrlState {
 
 @Component({
   selector: 'app-cats',
+  imports: [RouterLink],
   templateUrl: './cats.html',
   styleUrl: './cats.scss',
 })

@@ -83,7 +83,7 @@ p {
   &__title {
     font-family: var(--font-body);
     font-size: 1.125rem;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &__meta {
@@ -174,7 +174,7 @@ select.control {
 
   th {
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -208,7 +208,17 @@ select.control {
   }
 
   &__name {
-    font-weight: 700;
+    font-weight: 600;
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: underline;
+    }
   }
 
   &__detail {
@@ -264,7 +274,7 @@ select.control {
       background-color: var(--color-primary);
       border-color: var(--color-primary);
       color: var(--color-text-primary);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     &:disabled {
@@ -282,6 +292,14 @@ select.control {
 }
 
 @media (max-width: 767px) {
+  .cat__info {
+    min-width: 200px;
+  }
+
+  .cat__detail {
+    white-space: nowrap;
+  }
+
   .filters {
     grid-template-columns: 1fr;
 

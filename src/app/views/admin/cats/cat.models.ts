@@ -30,3 +30,47 @@ export interface AdminCatsQuery {
   page?: number;
   limit?: number;
 }
+
+export type Compatibility = 'yes' | 'no' | 'unknown';
+export type ActivityLevel = 'low' | 'medium' | 'high';
+
+export interface AdoptionGroupMate {
+  id: string;
+  name: string;
+}
+
+export interface CatCharacteristic {
+  id: string;
+  code: string;
+  label: string;
+}
+
+export interface AdminCatDetail {
+  id: string;
+  name: string;
+  slug: string;
+  gender: CatGender;
+  story: string;
+  entryDate: string;
+  healthStatus: string;
+  specialNeeds: string | null;
+  birthDate: string;
+  birthDateIsEstimated: boolean;
+  vaccinated: boolean;
+  sterilized: boolean;
+  compatibleWithCats: Compatibility;
+  compatibleWithDogs: Compatibility;
+  compatibleWithChildren: Compatibility;
+  activityLevel: ActivityLevel;
+  status: CatStatus;
+  isFeatured: boolean;
+  isUrgent: boolean;
+  adoptionGroupId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  adoptionFee: number;
+  ageGroup: AgeGroup;
+  isVisible: boolean;
+  adoptionGroupMates: AdoptionGroupMate[];
+  characteristics: CatCharacteristic[];
+}

@@ -78,7 +78,7 @@
     </nav>
 
     <div class="sidebar__footer">
-      <a class="sidebar__public-link" routerLink="/">
+      <a class="sidebar__public-link" routerLink="/" target="_blank" rel="noopener">
         <span>Veure la web pública</span>
         <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
       </a>
@@ -107,7 +107,12 @@
         [attr.aria-expanded]="menuOpen()"
         (click)="toggleMenu()"
       >
-        <i class="fa-solid" [class.fa-bars]="!menuOpen()" [class.fa-xmark]="menuOpen()" aria-hidden="true"></i>
+        <i
+          class="fa-solid"
+          [class.fa-bars]="!menuOpen()"
+          [class.fa-xmark]="menuOpen()"
+          aria-hidden="true"
+        ></i>
       </button>
       <nav class="breadcrumb" aria-label="Camí de navegació">
         <ol class="breadcrumb__list">

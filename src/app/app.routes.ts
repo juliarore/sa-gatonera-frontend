@@ -28,6 +28,13 @@ export const routes: Routes = [
           import('./views/admin/cats/cats').then((m) => m.Cats),
       },
       {
+        path: 'cats/:id',
+        title: 'Detall del gat | Sa Gatonera',
+        data: { title: 'Detall del gat' },
+        loadComponent: () =>
+          import('./views/admin/cat-detail/cat-detail').then((m) => m.CatDetail),
+      },
+      {
         path: 'requests',
         title: "Sol·licituds d'adopció | Sa Gatonera",
         data: { title: "Sol·licituds d'adopció" },
