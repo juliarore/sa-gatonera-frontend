@@ -1,8 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  Injector,
+  PLATFORM_ID,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
@@ -23,18 +34,47 @@ import {
   URGENT_LABEL,
   VISIBILITY_LABELS,
 } from '../cats/cat.constants';
-import { AdminCatDetail } from '../cats/cat.models';
+import { AdminCatDetail, UpdateCatRequest } from '../cats/cat.models';
 import { getAgeLabel } from '../cats/utils/age';
+import { toInputDate } from '../cats/utils/date';
+import { CatForm } from '../cat-form/cat-form';
+
+const SAVED_MESSAGE_MS = 8000;
+
+function toFormValue(cat: AdminCatDetail): UpdateCatRequest {
+  return {
+    name: cat.name,
+    status: cat.status,
+    isUrgent: cat.isUrgent,
+    isFeatured: cat.isFeatured,
+    gender: cat.gender,
+    birthDate: toInputDate(cat.birthDate),
+    birthDateIsEstimated: cat.birthDateIsEstimated,
+    entryDate: toInputDate(cat.entryDate),
+    vaccinated: cat.vaccinated,
+    sterilized: cat.sterilized,
+    activityLevel: cat.activityLevel,
+    compatibleWithCats: cat.compatibleWithCats,
+    compatibleWithDogs: cat.compatibleWithDogs,
+    compatibleWithChildren: cat.compatibleWithChildren,
+    story: cat.story,
+    healthStatus: cat.healthStatus,
+    specialNeeds: cat.specialNeeds,
+  };
+}
 
 @Component({
   selector: 'app-cat-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, CatForm],
   templateUrl: './cat-detail.html',
   styleUrl: './cat-detail.scss',
 })
 export class CatDetail {
   private readonly adminCats = inject(AdminCatsService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly retry$ = new BehaviorSubject<void>(undefined);
 
@@ -51,8 +91,20 @@ export class CatDetail {
   protected readonly loading = signal(true);
   protected readonly notFound = signal(false);
   protected readonly error = signal(false);
+  protected readonly editing = signal(false);
+  protected readonly saving = signal(false);
+  protected readonly saved = signal(false);
+  private savedTimer?: ReturnType<typeof setTimeout>;
+  protected readonly saveError = signal<string | null>(null);
+  protected readonly formValue = computed(() => {
+    const cat = this.cat();
+    return cat ? toFormValue(cat) : null;
+  });
+  private readonly heading = viewChild<ElementRef<HTMLElement>>('heading');
 
   constructor() {
+    this.destroyRef.onDestroy(() => clearTimeout(this.savedTimer));
+
     const id$ = this.route.paramMap.pipe(map((params) => params.get('id') ?? ''));
 
     combineLatest([id$, this.retry$])
@@ -62,6 +114,7 @@ export class CatDetail {
           this.loading.set(true);
           this.notFound.set(false);
           this.error.set(false);
+          this.hideSaved();
         }),
         switchMap(([id]) =>
           this.adminCats.getById(id).pipe(
@@ -84,6 +137,94 @@ export class CatDetail {
         takeUntilDestroyed(),
       )
       .subscribe();
+
+    this.route.queryParamMap
+      .pipe(
+        map((params) => params.get('edit') === 'true'),
+        takeUntilDestroyed(),
+      )
+      .subscribe((editing) => {
+        const wasEditing = this.editing();
+        this.editing.set(editing);
+        if (editing) {
+          this.hideSaved();
+          this.saveError.set(null);
+        } else if (wasEditing) {
+          this.focusHeading();
+        }
+      });
+  }
+
+  protected save(body: UpdateCatRequest): void {
+    const cat = this.cat();
+    if (!cat || this.saving()) {
+      return;
+    }
+    this.saving.set(true);
+    this.saveError.set(null);
+
+    this.adminCats
+      .update(cat.id, body)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.cat.set(updated);
+          this.saving.set(false);
+          this.showSaved();
+          this.leaveEdit();
+        },
+        error: (error: unknown) => {
+          this.saving.set(false);
+          if (error instanceof HttpErrorResponse && error.status === 404) {
+            this.cat.set(null);
+            this.notFound.set(true);
+          } else if (error instanceof HttpErrorResponse && error.status === 400) {
+            this.saveError.set(this.text.badRequest);
+          } else {
+            this.saveError.set(this.text.saveError);
+          }
+        },
+      });
+  }
+
+  protected closeSaved(): void {
+    this.hideSaved();
+    this.focusHeading();
+  }
+
+  protected leaveEdit(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { edit: null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private showSaved(): void {
+    this.hideSaved();
+    this.saved.set(true);
+    if (isPlatformBrowser(this.platformId)) {
+      this.savedTimer = setTimeout(() => this.hideSaved(), SAVED_MESSAGE_MS);
+    }
+  }
+
+  private hideSaved(): void {
+    clearTimeout(this.savedTimer);
+    this.saved.set(false);
+  }
+
+  private focusHeading(): void {
+    afterNextRender(
+      () => {
+        const heading = this.heading()?.nativeElement;
+        if (!heading) {
+          return;
+        }
+        heading.setAttribute('tabindex', '-1');
+        heading.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   protected reload(): void {

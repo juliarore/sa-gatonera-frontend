@@ -92,8 +92,37 @@ export const CAT_DETAIL_TEXT = {
     title: 'Adopció conjunta',
     intro: "S'ha d'adoptar juntament amb:",
   },
+  edit: 'Editar',
+  editHeading: 'Editar',
+  saved: 'Canvis desats',
+  closeMessage: 'Tanca el missatge',
+  badRequest:
+    "No s'han pogut desar els canvis perquè alguna dada no és vàlida. Revisa el formulari.",
+  saveError: "No s'han pogut desar els canvis. Torna-ho a provar.",
   loading: 'Carregant el gat...',
   notFound: "No s'ha trobat aquest gat.",
   error: "No s'ha pogut carregar el gat. Torna-ho a provar.",
   retry: 'Reintentar',
+} as const;
+
+export const CAT_FORM_TEXT = {
+  requiredNote: 'Els camps marcats amb * són obligatoris.',
+  summary: 'Revisa els camps marcats',
+  name: 'Nom',
+  status: 'Estat',
+  statusHelp: "Només es mostra a la web pública si l'estat és «En adopció».",
+  urgent: 'Adopció urgent',
+  featured: "Destacar a la pàgina d'inici",
+  featuredHelp: 'Es poden destacar com a màxim 3 gats.',
+  feeNote: "Depèn del sexe i de l'esterilització. S'actualitza en desar.",
+  birthDateEstimated: 'Data de naixement aproximada',
+  errors: {
+    required: 'Aquest camp és obligatori.',
+    nameMaxLength: 'El nom no pot tenir més de 100 caràcters.',
+    namePattern: 'El nom només pot contenir lletres, espais, guions, apòstrofs i punts.',
+    invalidDate: 'Introdueix una data vàlida.',
+  },
+  save: 'Desa els canvis',
+  saving: 'Desant...',
+  cancel: 'Cancel·la',
 } as const;

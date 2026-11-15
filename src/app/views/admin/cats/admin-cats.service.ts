@@ -2,11 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AdminCatDetail, AdminCatsPage, AdminCatsQuery } from './cat.models';
+import { toDisplayDate } from './utils/date';
+import { AdminCatDetail, AdminCatsPage, AdminCatsQuery, UpdateCatRequest } from './cat.models';
 
-function toDisplayDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split('-');
-  return `${day}/${month}/${year}`;
+function toDisplayDetail(cat: AdminCatDetail): AdminCatDetail {
+  return {
+    ...cat,
+    birthDate: toDisplayDate(cat.birthDate),
+    entryDate: toDisplayDate(cat.entryDate),
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -34,12 +38,14 @@ export class AdminCatsService {
   }
 
   getById(id: string): Observable<AdminCatDetail> {
-    return this.http.get<AdminCatDetail>(`${this.url}/${encodeURIComponent(id)}`).pipe(
-      map((cat) => ({
-        ...cat,
-        birthDate: toDisplayDate(cat.birthDate),
-        entryDate: toDisplayDate(cat.entryDate),
-      })),
-    );
+    return this.http
+      .get<AdminCatDetail>(`${this.url}/${encodeURIComponent(id)}`)
+      .pipe(map(toDisplayDetail));
+  }
+
+  update(id: string, body: UpdateCatRequest): Observable<AdminCatDetail> {
+    return this.http
+      .patch<AdminCatDetail>(`${this.url}/${encodeURIComponent(id)}`, body)
+      .pipe(map(toDisplayDetail));
   }
 }

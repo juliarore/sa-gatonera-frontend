@@ -13,7 +13,7 @@
   <h2 class="card__title" id="filters-title">Cerca i filtres</h2>
   <form class="filters" (submit)="applyFilters($event)">
     <div class="field field--search">
-      <label class="sr-only" for="cats-search">Cerca pel nom del gat</label>
+      <label class="visually-hidden" for="cats-search">Cerca pel nom del gat</label>
       <i class="fa-solid fa-magnifying-glass field__icon" aria-hidden="true"></i>
       <input
         id="cats-search"
@@ -27,7 +27,7 @@
     </div>
 
     <div class="field">
-      <label class="sr-only" for="cats-status">Estat</label>
+      <label class="visually-hidden" for="cats-status">Estat</label>
       <select id="cats-status" class="control" (change)="onStatusChange($event)">
         <option value="" [selected]="statusDraft() === ''">Tots els estats</option>
         @for (option of statusOptions; track option.value) {
@@ -39,7 +39,7 @@
     </div>
 
     <div class="field">
-      <label class="sr-only" for="cats-age">Edat</label>
+      <label class="visually-hidden" for="cats-age">Edat</label>
       <select id="cats-age" class="control" (change)="onAgeGroupChange($event)">
         <option value="" [selected]="ageGroupDraft() === ''">Totes les edats</option>
         @for (option of ageGroupOptions; track option.value) {
@@ -84,7 +84,7 @@
     } @else {
       <div class="table-wrapper" role="region" aria-labelledby="catalog-title" tabindex="0">
         <table class="table">
-          <caption class="sr-only">
+          <caption class="visually-hidden">
             Llistat de gats de la protectora
           </caption>
           <thead>
@@ -131,14 +131,14 @@
                   {{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}
                 </td>
                 <td>
-                  <button
-                    type="button"
+                  <a
                     class="btn-icon"
-                    disabled
-                    [attr.aria-label]="'Accions per a ' + cat.name"
+                    [routerLink]="['/admin/cats', cat.id]"
+                    [queryParams]="{ edit: true }"
+                    [attr.aria-label]="'Editar ' + cat.name"
                   >
-                    <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-                  </button>
+                    <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                  </a>
                 </td>
               </tr>
             }

@@ -1,0 +1,312 @@
+<form class="cat-form" novalidate [formGroup]="form" (ngSubmit)="submit()">
+  @if (errorMessage(); as message) {
+    <div class="alert" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <p>{{ message }}</p>
+    </div>
+  }
+
+  @if (showSummary()) {
+    <div class="alert" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <p>{{ formText.summary }}</p>
+    </div>
+  }
+
+  <header class="cat-header">
+    <h1 class="cat-header__title" #headingEl>{{ heading() }}</h1>
+    <p class="note">{{ formText.requiredNote }}</p>
+  </header>
+
+  <div class="sections">
+    <section class="card" aria-labelledby="general-title">
+      <h2 class="card__title" id="general-title">{{ text.general.title }}</h2>
+      <div class="form-rows">
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-name"
+            >{{ formText.name }} <span aria-hidden="true">*</span></label
+          >
+          <div class="form-row__control">
+            <input
+              id="cat-form-name"
+              class="control"
+              type="text"
+              formControlName="name"
+              autocomplete="off"
+              [attr.aria-invalid]="error('name') ? 'true' : null"
+              [attr.aria-describedby]="error('name') ? 'cat-form-name-error' : null"
+              aria-required="true"
+            />
+          </div>
+          @if (error('name'); as message) {
+            <p class="form-row__message" id="cat-form-name-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-status">{{ formText.status }}</label>
+          <div class="form-row__control">
+            <select
+              id="cat-form-status"
+              class="control"
+              formControlName="status"
+              aria-describedby="cat-form-status-help"
+            >
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+          <p class="form-row__help" id="cat-form-status-help">{{ formText.statusHelp }}</p>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-isUrgent">{{ formText.urgent }}</label>
+          <div class="form-row__control">
+            <input id="cat-form-isUrgent" type="checkbox" formControlName="isUrgent" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-isFeatured">{{ formText.featured }}</label>
+          <div class="form-row__control">
+            <input
+              id="cat-form-isFeatured"
+              type="checkbox"
+              formControlName="isFeatured"
+              aria-describedby="cat-form-isFeatured-help"
+            />
+          </div>
+          <p class="form-row__help" id="cat-form-isFeatured-help">{{ formText.featuredHelp }}</p>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-gender">{{ text.general.gender }}</label>
+          <div class="form-row__control">
+            <select id="cat-form-gender" class="control" formControlName="gender">
+              @for (option of genderOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-birthDate"
+            >{{ text.general.birthDate }} <span aria-hidden="true">*</span></label
+          >
+          <div class="form-row__control">
+            <input
+              id="cat-form-birthDate"
+              class="control"
+              type="date"
+              formControlName="birthDate"
+              [attr.aria-invalid]="error('birthDate') ? 'true' : null"
+              [attr.aria-describedby]="error('birthDate') ? 'cat-form-birthDate-error' : null"
+              aria-required="true"
+            />
+          </div>
+          @if (error('birthDate'); as message) {
+            <p class="form-row__message" id="cat-form-birthDate-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-birthDateIsEstimated">{{
+            formText.birthDateEstimated
+          }}</label>
+          <div class="form-row__control">
+            <input
+              id="cat-form-birthDateIsEstimated"
+              type="checkbox"
+              formControlName="birthDateIsEstimated"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-entryDate"
+            >{{ text.general.entryDate }} <span aria-hidden="true">*</span></label
+          >
+          <div class="form-row__control">
+            <input
+              id="cat-form-entryDate"
+              class="control"
+              type="date"
+              formControlName="entryDate"
+              [attr.aria-invalid]="error('entryDate') ? 'true' : null"
+              [attr.aria-describedby]="error('entryDate') ? 'cat-form-entryDate-error' : null"
+              aria-required="true"
+            />
+          </div>
+          @if (error('entryDate'); as message) {
+            <p class="form-row__message" id="cat-form-entryDate-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-vaccinated">{{
+            text.general.vaccinated
+          }}</label>
+          <div class="form-row__control">
+            <select id="cat-form-vaccinated" class="control" formControlName="vaccinated">
+              @for (option of yesNoOptions; track option.value) {
+                <option [ngValue]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-sterilized">{{
+            text.general.sterilized
+          }}</label>
+          <div class="form-row__control">
+            <select id="cat-form-sterilized" class="control" formControlName="sterilized">
+              @for (option of yesNoOptions; track option.value) {
+                <option [ngValue]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-activityLevel">{{
+            text.general.activityLevel
+          }}</label>
+          <div class="form-row__control">
+            <select id="cat-form-activityLevel" class="control" formControlName="activityLevel">
+              @for (option of activityOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        @if (adoptionFee() !== null) {
+          <div class="form-row">
+            <span class="form-row__label">{{ text.general.adoptionFee }}</span>
+            <div class="form-row__control">
+              <span>{{ adoptionFee() }} €</span>
+            </div>
+            <p class="form-row__help">{{ formText.feeNote }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="sections__side">
+      <section class="card" aria-labelledby="compatibility-title">
+        <h2 class="card__title" id="compatibility-title">{{ text.compatibility.title }}</h2>
+        <div class="form-rows">
+          <fieldset class="form-row form-row--group">
+            <legend class="form-row__label">{{ text.compatibility.cats }}</legend>
+            <div class="form-row__control form-row__control--options">
+              @for (option of compatibilityOptions; track option.value) {
+                <label class="check">
+                  <input type="radio" formControlName="compatibleWithCats" [value]="option.value" />
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+            </div>
+          </fieldset>
+          <fieldset class="form-row form-row--group">
+            <legend class="form-row__label">{{ text.compatibility.dogs }}</legend>
+            <div class="form-row__control form-row__control--options">
+              @for (option of compatibilityOptions; track option.value) {
+                <label class="check">
+                  <input type="radio" formControlName="compatibleWithDogs" [value]="option.value" />
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+            </div>
+          </fieldset>
+          <fieldset class="form-row form-row--group">
+            <legend class="form-row__label">{{ text.compatibility.children }}</legend>
+            <div class="form-row__control form-row__control--options">
+              @for (option of compatibilityOptions; track option.value) {
+                <label class="check">
+                  <input
+                    type="radio"
+                    formControlName="compatibleWithChildren"
+                    [value]="option.value"
+                  />
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+            </div>
+          </fieldset>
+        </div>
+      </section>
+      <ng-content select="[data-slot=side]" />
+    </div>
+
+    <ng-content select="[data-slot=wide]" />
+
+    <section class="card card--wide" aria-labelledby="story-title">
+      <h2 class="card__title" id="story-title">
+        {{ text.story.title }} <span aria-hidden="true">*</span>
+      </h2>
+      <div class="field">
+        <label class="visually-hidden" for="cat-form-story">{{ text.story.title }}</label>
+        <textarea
+          id="cat-form-story"
+          class="control control--textarea"
+          rows="4"
+          formControlName="story"
+          [attr.aria-invalid]="error('story') ? 'true' : null"
+          [attr.aria-describedby]="error('story') ? 'cat-form-story-error' : null"
+          aria-required="true"
+        ></textarea>
+        @if (error('story'); as message) {
+          <p class="field__error" id="cat-form-story-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            {{ message }}
+          </p>
+        }
+      </div>
+    </section>
+
+    <section class="card card--wide" aria-labelledby="health-title">
+      <h2 class="card__title" id="health-title">{{ text.health.title }}</h2>
+      <div class="field">
+        <label class="field__label" for="cat-form-healthStatus"
+          >{{ text.health.healthStatus }} <span aria-hidden="true">*</span></label
+        >
+        <textarea
+          id="cat-form-healthStatus"
+          class="control control--textarea"
+          rows="4"
+          formControlName="healthStatus"
+          [attr.aria-invalid]="error('healthStatus') ? 'true' : null"
+          [attr.aria-describedby]="error('healthStatus') ? 'cat-form-healthStatus-error' : null"
+          aria-required="true"
+        ></textarea>
+        @if (error('healthStatus'); as message) {
+          <p class="field__error" id="cat-form-healthStatus-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            {{ message }}
+          </p>
+        }
+      </div>
+      <div class="field">
+        <label class="field__label" for="cat-form-specialNeeds">{{
+          text.health.specialNeeds
+        }}</label>
+        <textarea
+          id="cat-form-specialNeeds"
+          class="control control--textarea"
+          rows="4"
+          formControlName="specialNeeds"
+        ></textarea>
+      </div>
+    </section>
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn btn--primary" [disabled]="saving()">
+      {{ saving() ? formText.saving : formText.save }}
+    </button>
+    <button type="button" class="btn btn--secondary" (click)="cancel()">
+      {{ formText.cancel }}
+    </button>
+  </div>
+</form>

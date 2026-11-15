@@ -74,3 +74,23 @@ export interface AdminCatDetail {
   adoptionGroupMates: AdoptionGroupMate[];
   characteristics: CatCharacteristic[];
 }
+
+export interface UpdateCatRequest {
+  name: string;
+  status: CatStatus;
+  isUrgent: boolean;
+  isFeatured: boolean;
+  gender: CatGender;
+  birthDate: string;
+  birthDateIsEstimated: boolean;
+  entryDate: string;
+  vaccinated: boolean;
+  sterilized: boolean;
+  activityLevel: ActivityLevel;
+  compatibleWithCats: Compatibility;
+  compatibleWithDogs: Compatibility;
+  compatibleWithChildren: Compatibility;
+  story: string;
+  healthStatus: string;
+  specialNeeds: string | null;
+}

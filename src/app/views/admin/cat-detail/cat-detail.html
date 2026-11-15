@@ -1,3 +1,26 @@
+<div class="visually-hidden" role="status">
+  @if (saved()) {
+    {{ text.saved }}
+  }
+</div>
+
+@if (saved()) {
+  <div class="notice">
+    <p class="notice__text" aria-hidden="true">
+      <i class="fa-solid fa-circle-check"></i>
+      {{ text.saved }}
+    </p>
+    <button
+      type="button"
+      class="notice__close"
+      [attr.aria-label]="text.closeMessage"
+      (click)="closeSaved()"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </div>
+}
+
 <a class="back-link" routerLink="/admin/cats">
   <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
   <span class="back-link__text">{{ text.backToList }}</span>
@@ -18,129 +41,178 @@
     </button>
   </div>
 } @else if (cat(); as cat) {
-  <header class="cat-header">
-    <h1 class="cat-header__title">{{ cat.name }}</h1>
-    <div class="pills">
-      <span class="pill pill--{{ cat.status }}">{{ statusLabels[cat.status] }}</span>
-      @if (cat.isUrgent) {
-        <span class="pill pill--urgent">{{ urgentLabel }}</span>
-      }
-      @if (cat.isFeatured) {
-        <span class="pill pill--featured">{{ text.featured }}</span>
-      }
-    </div>
-  </header>
+  @if (editing()) {
+    @if (formValue(); as initial) {
+      <app-cat-form
+        [heading]="text.editHeading + ' ' + cat.name"
+        [initialValue]="initial"
+        [adoptionFee]="cat.adoptionFee"
+        [saving]="saving()"
+        [errorMessage]="saveError()"
+        (submitted)="save($event)"
+        (cancelled)="leaveEdit()"
+      >
+        @if (cat.adoptionGroupMates.length > 0) {
+          <section class="card" data-slot="side" aria-labelledby="group-title">
+            <h2 class="card__title" id="group-title">{{ text.group.title }}</h2>
+            <p>{{ text.group.intro }}</p>
+            <ul class="mates">
+              @for (mate of cat.adoptionGroupMates; track mate.id) {
+                <li>
+                  <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
+                    {{ mate.name }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </section>
+        }
 
-  <div class="sections">
-    <section class="card" aria-labelledby="general-title">
-      <h2 class="card__title" id="general-title">{{ text.general.title }}</h2>
-      <dl class="details">
-        <div class="details__row">
-          <dt>{{ text.general.gender }}</dt>
-          <dd>{{ genderLabels[cat.gender] }}</dd>
+        <section class="card card--wide" data-slot="wide" aria-labelledby="character-title">
+          <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
+          @if (cat.characteristics.length > 0) {
+            <ul class="tags">
+              @for (characteristic of cat.characteristics; track characteristic.id) {
+                <li class="tags__item">{{ characteristic.label }}</li>
+              }
+            </ul>
+          } @else {
+            <p class="muted">{{ text.character.empty }}</p>
+          }
+        </section>
+      </app-cat-form>
+    }
+  } @else {
+    <header class="cat-header">
+      <div class="cat-header__main">
+        <h1 class="cat-header__title" #heading>{{ cat.name }}</h1>
+        <div class="pills">
+          <span class="pill pill--{{ cat.status }}">{{ statusLabels[cat.status] }}</span>
+          @if (cat.isUrgent) {
+            <span class="pill pill--urgent">{{ urgentLabel }}</span>
+          }
+          @if (cat.isFeatured) {
+            <span class="pill pill--featured">{{ text.featured }}</span>
+          }
         </div>
-        <div class="details__row">
-          <dt>{{ text.general.birthDate }}</dt>
-          <dd>
-            {{ cat.birthDate }} ({{ cat.birthDateIsEstimated ? text.approximate + ' ' : ''
-            }}{{ ageLabel(cat.birthDate) }})
-          </dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.entryDate }}</dt>
-          <dd>{{ cat.entryDate }}</dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.vaccinated }}</dt>
-          <dd>{{ cat.vaccinated ? text.yes : text.no }}</dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.sterilized }}</dt>
-          <dd>{{ cat.sterilized ? text.yes : text.no }}</dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.activityLevel }}</dt>
-          <dd>{{ activityLabels[cat.activityLevel] }}</dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.visibility }}</dt>
-          <dd>{{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}</dd>
-        </div>
-        <div class="details__row">
-          <dt>{{ text.general.adoptionFee }}</dt>
-          <dd>{{ cat.adoptionFee }} €</dd>
-        </div>
-      </dl>
-    </section>
+      </div>
+      <a class="btn btn--secondary" [routerLink]="[]" [queryParams]="{ edit: true }">
+        <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+        {{ text.edit }}
+      </a>
+    </header>
 
-    <div class="sections__side">
-      <section class="card" aria-labelledby="compatibility-title">
-        <h2 class="card__title" id="compatibility-title">{{ text.compatibility.title }}</h2>
+    <div class="sections">
+      <section class="card" aria-labelledby="general-title">
+        <h2 class="card__title" id="general-title">{{ text.general.title }}</h2>
         <dl class="details">
           <div class="details__row">
-            <dt>{{ text.compatibility.cats }}</dt>
-            <dd>{{ compatibilityLabels[cat.compatibleWithCats] }}</dd>
+            <dt>{{ text.general.gender }}</dt>
+            <dd>{{ genderLabels[cat.gender] }}</dd>
           </div>
           <div class="details__row">
-            <dt>{{ text.compatibility.dogs }}</dt>
-            <dd>{{ compatibilityLabels[cat.compatibleWithDogs] }}</dd>
+            <dt>{{ text.general.birthDate }}</dt>
+            <dd>
+              {{ cat.birthDate }} ({{ cat.birthDateIsEstimated ? text.approximate + ' ' : ''
+              }}{{ ageLabel(cat.birthDate) }})
+            </dd>
           </div>
           <div class="details__row">
-            <dt>{{ text.compatibility.children }}</dt>
-            <dd>{{ compatibilityLabels[cat.compatibleWithChildren] }}</dd>
+            <dt>{{ text.general.entryDate }}</dt>
+            <dd>{{ cat.entryDate }}</dd>
+          </div>
+          <div class="details__row">
+            <dt>{{ text.general.vaccinated }}</dt>
+            <dd>{{ cat.vaccinated ? text.yes : text.no }}</dd>
+          </div>
+          <div class="details__row">
+            <dt>{{ text.general.sterilized }}</dt>
+            <dd>{{ cat.sterilized ? text.yes : text.no }}</dd>
+          </div>
+          <div class="details__row">
+            <dt>{{ text.general.activityLevel }}</dt>
+            <dd>{{ activityLabels[cat.activityLevel] }}</dd>
+          </div>
+          <div class="details__row">
+            <dt>{{ text.general.visibility }}</dt>
+            <dd>{{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}</dd>
+          </div>
+          <div class="details__row">
+            <dt>{{ text.general.adoptionFee }}</dt>
+            <dd>{{ cat.adoptionFee }} €</dd>
           </div>
         </dl>
       </section>
 
-      @if (cat.adoptionGroupMates.length > 0) {
-        <section class="card" aria-labelledby="group-title">
-          <h2 class="card__title" id="group-title">{{ text.group.title }}</h2>
-          <p>{{ text.group.intro }}</p>
-          <ul class="mates">
-            @for (mate of cat.adoptionGroupMates; track mate.id) {
-              <li>
-                <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
-                  {{ mate.name }}
-                </a>
-              </li>
+      <div class="sections__side">
+        <section class="card" aria-labelledby="compatibility-title">
+          <h2 class="card__title" id="compatibility-title">{{ text.compatibility.title }}</h2>
+          <dl class="details">
+            <div class="details__row">
+              <dt>{{ text.compatibility.cats }}</dt>
+              <dd>{{ compatibilityLabels[cat.compatibleWithCats] }}</dd>
+            </div>
+            <div class="details__row">
+              <dt>{{ text.compatibility.dogs }}</dt>
+              <dd>{{ compatibilityLabels[cat.compatibleWithDogs] }}</dd>
+            </div>
+            <div class="details__row">
+              <dt>{{ text.compatibility.children }}</dt>
+              <dd>{{ compatibilityLabels[cat.compatibleWithChildren] }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        @if (cat.adoptionGroupMates.length > 0) {
+          <section class="card" aria-labelledby="group-title">
+            <h2 class="card__title" id="group-title">{{ text.group.title }}</h2>
+            <p>{{ text.group.intro }}</p>
+            <ul class="mates">
+              @for (mate of cat.adoptionGroupMates; track mate.id) {
+                <li>
+                  <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
+                    {{ mate.name }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+
+      <section class="card card--wide" aria-labelledby="character-title">
+        <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
+        @if (cat.characteristics.length > 0) {
+          <ul class="tags">
+            @for (characteristic of cat.characteristics; track characteristic.id) {
+              <li class="tags__item">{{ characteristic.label }}</li>
             }
           </ul>
-        </section>
-      }
-    </div>
-
-    <section class="card card--wide" aria-labelledby="character-title">
-      <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
-      @if (cat.characteristics.length > 0) {
-        <ul class="tags">
-          @for (characteristic of cat.characteristics; track characteristic.id) {
-            <li class="tags__item">{{ characteristic.label }}</li>
-          }
-        </ul>
-      } @else {
-        <p class="muted">{{ text.character.empty }}</p>
-      }
-    </section>
-
-    <section class="card card--wide" aria-labelledby="story-title">
-      <h2 class="card__title" id="story-title">{{ text.story.title }}</h2>
-      <p class="story">{{ cat.story }}</p>
-    </section>
-
-    <section class="card card--wide" aria-labelledby="health-title">
-      <h2 class="card__title" id="health-title">{{ text.health.title }}</h2>
-      <dl class="details details--stacked">
-        <div class="details__row">
-          <dt>{{ text.health.healthStatus }}</dt>
-          <dd class="details__text">{{ cat.healthStatus }}</dd>
-        </div>
-        @if (cat.specialNeeds) {
-          <div class="details__row">
-            <dt>{{ text.health.specialNeeds }}</dt>
-            <dd class="details__text">{{ cat.specialNeeds }}</dd>
-          </div>
+        } @else {
+          <p class="muted">{{ text.character.empty }}</p>
         }
-      </dl>
-    </section>
-  </div>
+      </section>
+
+      <section class="card card--wide" aria-labelledby="story-title">
+        <h2 class="card__title" id="story-title">{{ text.story.title }}</h2>
+        <p class="story">{{ cat.story }}</p>
+      </section>
+
+      <section class="card card--wide" aria-labelledby="health-title">
+        <h2 class="card__title" id="health-title">{{ text.health.title }}</h2>
+        <dl class="details details--stacked">
+          <div class="details__row">
+            <dt>{{ text.health.healthStatus }}</dt>
+            <dd class="details__text">{{ cat.healthStatus }}</dd>
+          </div>
+          @if (cat.specialNeeds) {
+            <div class="details__row">
+              <dt>{{ text.health.specialNeeds }}</dt>
+              <dd class="details__text">{{ cat.specialNeeds }}</dd>
+            </div>
+          }
+        </dl>
+      </section>
+    </div>
+  }
 }
