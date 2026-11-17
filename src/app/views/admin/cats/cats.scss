@@ -19,10 +19,6 @@ p {
   gap: var(--space-4);
   flex-wrap: wrap;
 
-  &__title {
-    font-size: 2rem;
-  }
-
   &__subtitle {
     margin-top: var(--space-1);
     color: var(--color-text-muted);
@@ -34,9 +30,7 @@ p {
   place-items: center;
   width: 36px;
   height: 36px;
-  border: 0;
   border-radius: var(--radius-md);
-  background: transparent;
   color: var(--color-text-muted);
   text-decoration: none;
 
@@ -46,11 +40,6 @@ p {
 }
 
 .card {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-
   &--table {
     padding: 0;
     overflow: hidden;
@@ -189,7 +178,6 @@ select.control {
     height: 44px;
     border-radius: var(--radius-md);
     background-color: var(--color-surface-cream);
-    color: var(--color-text-primary);
   }
 
   &__name {
@@ -210,12 +198,6 @@ select.control {
     font-size: 0.875rem;
     color: var(--color-text-muted);
   }
-}
-
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
 }
 
 .state {

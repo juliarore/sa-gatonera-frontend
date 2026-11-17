@@ -47,10 +47,6 @@ p {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-
-  &__title {
-    font-size: 2rem;
-  }
 }
 
 .sections {
@@ -66,24 +62,14 @@ p {
   }
 }
 
-.card {
+.sections .card {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  background-color: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
+}
 
-  &--wide {
-    grid-column: 1 / -1;
-  }
-
-  &__title {
-    font-family: var(--font-body);
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
+.card--wide {
+  grid-column: 1 / -1;
 }
 
 .field {
@@ -122,6 +108,12 @@ select.control {
   @include controls.select-control;
 }
 
+fieldset {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+}
+
 .form-rows {
   display: flex;
   flex-direction: column;
@@ -132,10 +124,7 @@ select.control {
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: var(--space-1);
-  min-width: 0;
-  margin: 0;
   padding: var(--space-3) 0;
-  border: 0;
   border-bottom: 1px solid var(--color-border);
 
   &:last-child {
@@ -197,10 +186,7 @@ select.control {
 }
 
 .fieldset {
-  min-width: 0;
-  margin: 0;
   padding: 0;
-  border: 0;
 
   &__legend {
     padding: 0;

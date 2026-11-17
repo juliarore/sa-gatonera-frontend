@@ -101,7 +101,6 @@ ol {
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
     color: var(--color-text-primary);
-    font-size: 1rem;
     text-decoration: none;
 
     i {
@@ -114,11 +113,9 @@ ol {
       color: var(--color-text-muted);
     }
 
-    &--active,
-    &[aria-current='page'] {
+    &--active {
       background-color: var(--color-surface-cream);
-      color: var(--color-text-primary);
-      font-weight: 700;
+      font-weight: 600;
 
       &::before {
         content: '';

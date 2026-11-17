@@ -1,14 +1,12 @@
 @use 'styles/buttons';
+@use 'styles/cards';
 @use 'styles/checkable';
 @use 'styles/status-pills';
 
 @import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 @import '@fortawesome/fontawesome-free/css/solid.min.css';
-@import '@fontsource/lora/500.css';
 @import '@fontsource/lora/600.css';
-@import '@fontsource/lora/700.css';
 @import '@fontsource/nunito-sans/400.css';
-@import '@fontsource/nunito-sans/500.css';
 @import '@fontsource/nunito-sans/600.css';
 @import '@fontsource/nunito-sans/700.css';
 
