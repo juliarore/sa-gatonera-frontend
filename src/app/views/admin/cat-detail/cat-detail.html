@@ -48,6 +48,7 @@
           [heading]="text.editHeading + ' ' + cat.name"
           [initialValue]="initial"
           [adoptionFee]="cat.adoptionFee"
+          [images]="cat.images"
           [characteristics]="data.characteristics"
           [pairedCatOptions]="data.pairedCatOptions"
           [apiError]="fieldError()"
@@ -119,6 +120,22 @@
             <dt>{{ text.general.adoptionFee }}</dt>
             <dd>{{ cat.adoptionFee }} €</dd>
           </div>
+          @if (cat.adoptionGroupMates.length > 0) {
+            <div class="details__row">
+              <dt>{{ text.group.title }}</dt>
+              <dd>
+                <ul class="mates">
+                  @for (mate of cat.adoptionGroupMates; track mate.id) {
+                    <li>
+                      <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
+                        {{ mate.name }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </dd>
+            </div>
+          }
         </dl>
       </section>
 
@@ -141,21 +158,7 @@
           </dl>
         </section>
 
-        @if (cat.adoptionGroupMates.length > 0) {
-          <section class="card" aria-labelledby="group-title">
-            <h2 class="card__title" id="group-title">{{ text.group.title }}</h2>
-            <p>{{ text.group.intro }}</p>
-            <ul class="mates">
-              @for (mate of cat.adoptionGroupMates; track mate.id) {
-                <li>
-                  <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
-                    {{ mate.name }}
-                  </a>
-                </li>
-              }
-            </ul>
-          </section>
-        }
+        <app-cat-gallery [images]="cat.images" />
       </div>
 
       <section class="card card--wide" aria-labelledby="character-title">

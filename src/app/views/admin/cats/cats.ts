@@ -25,6 +25,7 @@ import {
 } from './cat.constants';
 import { AdminCatsPage, AgeGroup, CatStatus } from './cat.models';
 import { getAgeLabel } from './utils/age';
+import { imageUrl } from './utils/image-url';
 
 type PageItem = number | 'ellipsis';
 
@@ -73,6 +74,7 @@ export class Cats {
   protected readonly visibilityLabels = VISIBILITY_LABELS;
   protected readonly urgentLabel = URGENT_LABEL;
   protected readonly ageLabel = getAgeLabel;
+  protected readonly imageUrl = imageUrl;
 
   protected readonly searchDraft = signal('');
   protected readonly statusDraft = signal<CatStatus | ''>('');

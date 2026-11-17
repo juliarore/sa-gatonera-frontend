@@ -201,6 +201,31 @@
             <p class="form-row__help">{{ formText.feeNote }}</p>
           </div>
         }
+        <div class="form-row">
+          <label class="form-row__label" for="cat-form-pairedCatId">{{
+            formText.pairedWith
+          }}</label>
+          <div class="form-row__control">
+            <select
+              id="cat-form-pairedCatId"
+              class="control"
+              formControlName="pairedCatId"
+              [attr.aria-invalid]="error('pairedCatId') ? 'true' : null"
+              [attr.aria-describedby]="error('pairedCatId') ? 'cat-form-pairedCatId-error' : null"
+            >
+              <option value="">{{ formText.pairedNone }}</option>
+              @for (option of pairedCatOptions(); track option.id) {
+                <option [value]="option.id">{{ option.name }}</option>
+              }
+            </select>
+          </div>
+          @if (error('pairedCatId'); as message) {
+            <p class="form-row__message" id="cat-form-pairedCatId-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
+        </div>
       </div>
     </section>
 
@@ -247,41 +272,7 @@
           </fieldset>
         </div>
       </section>
-      <section class="card" aria-labelledby="pairing-title">
-        <h2 class="card__title" id="pairing-title">{{ text.group.title }}</h2>
-        <div class="form-rows">
-          <div class="form-row">
-            <label class="form-row__label" for="cat-form-pairedCatId">{{
-              formText.pairedWith
-            }}</label>
-            <div class="form-row__control">
-              <select
-                id="cat-form-pairedCatId"
-                class="control"
-                formControlName="pairedCatId"
-                [attr.aria-invalid]="error('pairedCatId') ? 'true' : null"
-                [attr.aria-describedby]="
-                  error('pairedCatId')
-                    ? 'cat-form-pairedCatId-error cat-form-pairedCatId-help'
-                    : 'cat-form-pairedCatId-help'
-                "
-              >
-                <option value="">{{ formText.pairedNone }}</option>
-                @for (option of pairedCatOptions(); track option.id) {
-                  <option [value]="option.id">{{ option.name }}</option>
-                }
-              </select>
-            </div>
-            <p class="form-row__help" id="cat-form-pairedCatId-help">{{ formText.pairedHelp }}</p>
-            @if (error('pairedCatId'); as message) {
-              <p class="form-row__message" id="cat-form-pairedCatId-error">
-                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-                {{ message }}
-              </p>
-            }
-          </div>
-        </div>
-      </section>
+      <app-cat-gallery [images]="images()" />
     </div>
 
     <section class="card card--wide">

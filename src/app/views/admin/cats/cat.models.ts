@@ -13,6 +13,8 @@ export interface AdminCat {
   entryDate: string;
   ageGroup: AgeGroup;
   isVisible: boolean;
+  coverImageUrl: string | null;
+  coverImageAlt: string | null;
 }
 
 export interface AdminCatsPage {
@@ -33,6 +35,13 @@ export interface AdminCatsQuery {
 
 export type Compatibility = 'yes' | 'no' | 'unknown';
 export type ActivityLevel = 'low' | 'medium' | 'high';
+
+export interface CatImage {
+  id: string;
+  imageUrl: string;
+  altText: string;
+  displayOrder: number;
+}
 
 export interface AdoptionGroupMate {
   id: string;
@@ -72,6 +81,7 @@ export interface AdminCatDetail {
   ageGroup: AgeGroup;
   isVisible: boolean;
   adoptionGroupMates: AdoptionGroupMate[];
+  images: CatImage[];
   characteristics: CatCharacteristic[];
 }
 

@@ -17,6 +17,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { CatGallery } from '../cat-gallery/cat-gallery';
 import {
   ACTIVITY_LEVEL_LABELS,
   CAT_DETAIL_TEXT,
@@ -30,6 +31,7 @@ import {
   AdoptionGroupMate,
   CatFieldError,
   CatGender,
+  CatImage,
   CatStatus,
   Characteristic,
   Compatibility,
@@ -60,7 +62,7 @@ function toOptions<T extends string>(labels: Record<T, string>): { value: T; lab
 
 @Component({
   selector: 'app-cat-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CatGallery],
   templateUrl: './cat-form.html',
   styleUrl: './cat-form.scss',
 })
@@ -74,6 +76,7 @@ export class CatForm {
   readonly adoptionFee = input<number | null>(null);
   readonly saving = input(false);
   readonly errorMessage = input<string | null>(null);
+  readonly images = input<CatImage[]>([]);
   readonly characteristics = input<Characteristic[]>([]);
   readonly pairedCatOptions = input<AdoptionGroupMate[]>([]);
   readonly apiError = input<CatFieldError | null>(null);

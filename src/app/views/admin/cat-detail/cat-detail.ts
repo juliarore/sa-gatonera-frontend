@@ -46,6 +46,7 @@ import {
 import { getAgeLabel } from '../cats/utils/age';
 import { toInputDate } from '../cats/utils/date';
 import { CatForm } from '../cat-form/cat-form';
+import { CatGallery } from '../cat-gallery/cat-gallery';
 
 const SAVED_MESSAGE_MS = 8000;
 
@@ -75,7 +76,7 @@ function toFormValue(cat: AdminCatDetail): UpdateCatRequest {
 
 @Component({
   selector: 'app-cat-detail',
-  imports: [RouterLink, CatForm],
+  imports: [RouterLink, CatForm, CatGallery],
   templateUrl: './cat-detail.html',
   styleUrl: './cat-detail.scss',
 })

@@ -97,7 +97,10 @@ export const CAT_DETAIL_TEXT = {
   },
   group: {
     title: 'Adopció conjunta',
-    intro: "S'ha d'adoptar juntament amb:",
+  },
+  photos: {
+    title: 'Fotos',
+    empty: 'Aquest gat encara no té fotos.',
   },
   edit: 'Editar',
   editHeading: 'Editar',
@@ -132,7 +135,6 @@ export const CAT_FORM_TEXT = {
   },
   pairedWith: 'Adopció conjunta amb',
   pairedNone: 'Cap',
-  pairedHelp: 'Només es poden emparellar dos gats.',
   save: 'Desa els canvis',
   saving: 'Desant...',
   cancel: 'Cancel·la',

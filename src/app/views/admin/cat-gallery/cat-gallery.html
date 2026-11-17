@@ -1,0 +1,26 @@
+<section class="card" aria-labelledby="photos-title">
+  <h2 class="card__title" id="photos-title">{{ text.title }}</h2>
+  @if (images().length > 0) {
+    <ul class="gallery">
+      @for (image of images(); track image.id) {
+        <li class="gallery__item">
+          @if (failed().has(image.id)) {
+            <p class="gallery__fallback">{{ image.altText }}</p>
+          } @else {
+            <img
+              class="gallery__image"
+              [src]="imageUrl(image.imageUrl)"
+              [alt]="image.altText"
+              width="800"
+              height="600"
+              loading="lazy"
+              (error)="markFailed(image.id)"
+            />
+          }
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="muted">{{ text.empty }}</p>
+  }
+</section>

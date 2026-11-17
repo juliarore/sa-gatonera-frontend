@@ -89,7 +89,6 @@ ul {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
-  align-items: start;
 
   &__side {
     display: flex;
@@ -120,6 +119,7 @@ ul {
     border-bottom: 1px solid var(--color-border);
 
     &:last-child {
+      padding-bottom: 0;
       border-bottom: 0;
     }
   }
