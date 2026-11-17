@@ -3,7 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { toDisplayDate } from './utils/date';
-import { AdminCatDetail, AdminCatsPage, AdminCatsQuery, UpdateCatRequest } from './cat.models';
+import {
+  AdminCatDetail,
+  AdminCatsPage,
+  AdminCatsQuery,
+  AdoptionGroupMate,
+  Characteristic,
+  UpdateCatRequest,
+} from './cat.models';
 
 function toDisplayDetail(cat: AdminCatDetail): AdminCatDetail {
   return {
@@ -17,6 +24,7 @@ function toDisplayDetail(cat: AdminCatDetail): AdminCatDetail {
 export class AdminCatsService {
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.apiUrl}/admin/cats`;
+  private readonly characteristicsUrl = `${environment.apiUrl}/admin/characteristics`;
 
   list(query: AdminCatsQuery): Observable<AdminCatsPage> {
     let params = new HttpParams();
@@ -47,5 +55,15 @@ export class AdminCatsService {
     return this.http
       .patch<AdminCatDetail>(`${this.url}/${encodeURIComponent(id)}`, body)
       .pipe(map(toDisplayDetail));
+  }
+
+  getCharacteristics(): Observable<Characteristic[]> {
+    return this.http.get<Characteristic[]>(this.characteristicsUrl);
+  }
+
+  getPairedCatOptions(id: string): Observable<AdoptionGroupMate[]> {
+    return this.http.get<AdoptionGroupMate[]>(
+      `${this.url}/${encodeURIComponent(id)}/paired-cat-options`,
+    );
   }
 }

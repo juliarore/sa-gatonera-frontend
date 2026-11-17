@@ -93,4 +93,18 @@ export interface UpdateCatRequest {
   story: string;
   healthStatus: string;
   specialNeeds: string | null;
+  characteristicIds: string[];
+  pairedCatId?: string | null;
+}
+
+export interface Characteristic {
+  id: string;
+  code: string;
+  labelMasculine: string;
+  labelFeminine: string;
+}
+
+export interface CatFieldError {
+  field: 'isFeatured' | 'pairedCatId' | 'characteristicIds';
+  message: string;
 }
