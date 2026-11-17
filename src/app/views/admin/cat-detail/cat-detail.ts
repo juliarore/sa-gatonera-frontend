@@ -20,6 +20,7 @@ import {
   combineLatest,
   EMPTY,
   filter,
+  forkJoin,
   map,
   switchMap,
   tap,
@@ -27,6 +28,7 @@ import {
 import { AdminCatsService } from '../cats/admin-cats.service';
 import {
   ACTIVITY_LEVEL_LABELS,
+  CAT_API_FIELD_ERRORS,
   CAT_DETAIL_TEXT,
   COMPATIBILITY_LABELS,
   GENDER_LABELS,
@@ -34,7 +36,13 @@ import {
   URGENT_LABEL,
   VISIBILITY_LABELS,
 } from '../cats/cat.constants';
-import { AdminCatDetail, UpdateCatRequest } from '../cats/cat.models';
+import {
+  AdminCatDetail,
+  AdoptionGroupMate,
+  CatFieldError,
+  Characteristic,
+  UpdateCatRequest,
+} from '../cats/cat.models';
 import { getAgeLabel } from '../cats/utils/age';
 import { toInputDate } from '../cats/utils/date';
 import { CatForm } from '../cat-form/cat-form';
@@ -60,6 +68,8 @@ function toFormValue(cat: AdminCatDetail): UpdateCatRequest {
     story: cat.story,
     healthStatus: cat.healthStatus,
     specialNeeds: cat.specialNeeds,
+    characteristicIds: cat.characteristics.map(({ id }) => id),
+    pairedCatId: cat.adoptionGroupMates[0]?.id ?? null,
   };
 }
 
@@ -96,6 +106,11 @@ export class CatDetail {
   protected readonly saved = signal(false);
   private savedTimer?: ReturnType<typeof setTimeout>;
   protected readonly saveError = signal<string | null>(null);
+  protected readonly fieldError = signal<CatFieldError | null>(null);
+  protected readonly editData = signal<{
+    characteristics: Characteristic[];
+    pairedCatOptions: AdoptionGroupMate[];
+  } | null>(null);
   protected readonly formValue = computed(() => {
     const cat = this.cat();
     return cat ? toFormValue(cat) : null;
@@ -106,6 +121,7 @@ export class CatDetail {
     this.destroyRef.onDestroy(() => clearTimeout(this.savedTimer));
 
     const id$ = this.route.paramMap.pipe(map((params) => params.get('id') ?? ''));
+    const edit$ = this.route.queryParamMap.pipe(map((params) => params.get('edit') === 'true'));
 
     combineLatest([id$, this.retry$])
       .pipe(
@@ -138,21 +154,37 @@ export class CatDetail {
       )
       .subscribe();
 
-    this.route.queryParamMap
+    combineLatest([id$, edit$, this.retry$])
       .pipe(
-        map((params) => params.get('edit') === 'true'),
+        filter(([, editing]) => editing && isPlatformBrowser(this.platformId)),
+        tap(() => this.editData.set(null)),
+        switchMap(([id]) =>
+          forkJoin({
+            characteristics: this.adminCats.getCharacteristics(),
+            pairedCatOptions: this.adminCats.getPairedCatOptions(id),
+          }).pipe(
+            tap((data) => this.editData.set(data)),
+            catchError(() => {
+              this.error.set(true);
+              return EMPTY;
+            }),
+          ),
+        ),
         takeUntilDestroyed(),
       )
-      .subscribe((editing) => {
-        const wasEditing = this.editing();
-        this.editing.set(editing);
-        if (editing) {
-          this.hideSaved();
-          this.saveError.set(null);
-        } else if (wasEditing) {
-          this.focusHeading();
-        }
-      });
+      .subscribe();
+
+    edit$.pipe(takeUntilDestroyed()).subscribe((editing) => {
+      const wasEditing = this.editing();
+      this.editing.set(editing);
+      if (editing) {
+        this.hideSaved();
+        this.saveError.set(null);
+        this.fieldError.set(null);
+      } else if (wasEditing) {
+        this.focusHeading();
+      }
+    });
   }
 
   protected save(body: UpdateCatRequest): void {
@@ -162,6 +194,7 @@ export class CatDetail {
     }
     this.saving.set(true);
     this.saveError.set(null);
+    this.fieldError.set(null);
 
     this.adminCats
       .update(cat.id, body)
@@ -175,10 +208,15 @@ export class CatDetail {
         },
         error: (error: unknown) => {
           this.saving.set(false);
-          if (error instanceof HttpErrorResponse && error.status === 404) {
+          const http = error instanceof HttpErrorResponse ? error : null;
+          const code = (http?.error as { code?: string } | null)?.code;
+          const fieldError = code ? CAT_API_FIELD_ERRORS[code] : undefined;
+          if (fieldError) {
+            this.fieldError.set({ ...fieldError });
+          } else if (http?.status === 404 && !code) {
             this.cat.set(null);
             this.notFound.set(true);
-          } else if (error instanceof HttpErrorResponse && error.status === 400) {
+          } else if (http?.status === 400) {
             this.saveError.set(this.text.badRequest);
           } else {
             this.saveError.set(this.text.saveError);

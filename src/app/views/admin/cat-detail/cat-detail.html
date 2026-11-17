@@ -43,44 +43,22 @@
 } @else if (cat(); as cat) {
   @if (editing()) {
     @if (formValue(); as initial) {
-      <app-cat-form
-        [heading]="text.editHeading + ' ' + cat.name"
-        [initialValue]="initial"
-        [adoptionFee]="cat.adoptionFee"
-        [saving]="saving()"
-        [errorMessage]="saveError()"
-        (submitted)="save($event)"
-        (cancelled)="leaveEdit()"
-      >
-        @if (cat.adoptionGroupMates.length > 0) {
-          <section class="card" data-slot="side" aria-labelledby="group-title">
-            <h2 class="card__title" id="group-title">{{ text.group.title }}</h2>
-            <p>{{ text.group.intro }}</p>
-            <ul class="mates">
-              @for (mate of cat.adoptionGroupMates; track mate.id) {
-                <li>
-                  <a class="mates__link" [routerLink]="['/admin/cats', mate.id]">
-                    {{ mate.name }}
-                  </a>
-                </li>
-              }
-            </ul>
-          </section>
-        }
-
-        <section class="card card--wide" data-slot="wide" aria-labelledby="character-title">
-          <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
-          @if (cat.characteristics.length > 0) {
-            <ul class="tags">
-              @for (characteristic of cat.characteristics; track characteristic.id) {
-                <li class="tags__item">{{ characteristic.label }}</li>
-              }
-            </ul>
-          } @else {
-            <p class="muted">{{ text.character.empty }}</p>
-          }
-        </section>
-      </app-cat-form>
+      @if (editData(); as data) {
+        <app-cat-form
+          [heading]="text.editHeading + ' ' + cat.name"
+          [initialValue]="initial"
+          [adoptionFee]="cat.adoptionFee"
+          [characteristics]="data.characteristics"
+          [pairedCatOptions]="data.pairedCatOptions"
+          [apiError]="fieldError()"
+          [saving]="saving()"
+          [errorMessage]="saveError()"
+          (submitted)="save($event)"
+          (cancelled)="leaveEdit()"
+        />
+      } @else {
+        <p class="state" role="status">{{ text.loading }}</p>
+      }
     }
   } @else {
     <header class="cat-header">

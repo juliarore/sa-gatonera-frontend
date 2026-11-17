@@ -1,4 +1,11 @@
-import { ActivityLevel, AgeGroup, CatGender, CatStatus, Compatibility } from './cat.models';
+import {
+  ActivityLevel,
+  AgeGroup,
+  CatFieldError,
+  CatGender,
+  CatStatus,
+  Compatibility,
+} from './cat.models';
 
 export const PAGE_SIZE = 10;
 
@@ -121,8 +128,31 @@ export const CAT_FORM_TEXT = {
     nameMaxLength: 'El nom no pot tenir més de 100 caràcters.',
     namePattern: 'El nom només pot contenir lletres, espais, guions, apòstrofs i punts.',
     invalidDate: 'Introdueix una data vàlida.',
+    characteristicsRequired: 'Selecciona almenys una característica.',
   },
+  pairedWith: 'Adopció conjunta amb',
+  pairedNone: 'Cap',
+  pairedHelp: 'Només es poden emparellar dos gats.',
   save: 'Desa els canvis',
   saving: 'Desant...',
   cancel: 'Cancel·la',
 } as const;
+
+export const CAT_API_FIELD_ERRORS: Partial<Record<string, CatFieldError>> = {
+  FEATURED_LIMIT_REACHED: {
+    field: 'isFeatured',
+    message: "Ja hi ha 3 gats destacats. Desmarca'n un abans de destacar aquest.",
+  },
+  PAIRED_CAT_TAKEN: {
+    field: 'pairedCatId',
+    message: "Aquest gat ja té una adopció conjunta amb un altre. Separa'ls primer.",
+  },
+  PAIRED_CAT_ADOPTED: {
+    field: 'pairedCatId',
+    message: 'No es pot emparellar amb un gat adoptat.',
+  },
+  UNKNOWN_CHARACTERISTICS: {
+    field: 'characteristicIds',
+    message: 'Alguna de les característiques ja no existeix. Recarrega la pàgina.',
+  },
+};

@@ -74,10 +74,21 @@
               id="cat-form-isFeatured"
               type="checkbox"
               formControlName="isFeatured"
-              aria-describedby="cat-form-isFeatured-help"
+              [attr.aria-invalid]="error('isFeatured') ? 'true' : null"
+              [attr.aria-describedby]="
+                error('isFeatured')
+                  ? 'cat-form-isFeatured-error cat-form-isFeatured-help'
+                  : 'cat-form-isFeatured-help'
+              "
             />
           </div>
           <p class="form-row__help" id="cat-form-isFeatured-help">{{ formText.featuredHelp }}</p>
+          @if (error('isFeatured'); as message) {
+            <p class="form-row__message" id="cat-form-isFeatured-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
         </div>
         <div class="form-row">
           <label class="form-row__label" for="cat-form-gender">{{ text.general.gender }}</label>
@@ -236,10 +247,75 @@
           </fieldset>
         </div>
       </section>
-      <ng-content select="[data-slot=side]" />
+      <section class="card" aria-labelledby="pairing-title">
+        <h2 class="card__title" id="pairing-title">{{ text.group.title }}</h2>
+        <div class="form-rows">
+          <div class="form-row">
+            <label class="form-row__label" for="cat-form-pairedCatId">{{
+              formText.pairedWith
+            }}</label>
+            <div class="form-row__control">
+              <select
+                id="cat-form-pairedCatId"
+                class="control"
+                formControlName="pairedCatId"
+                [attr.aria-invalid]="error('pairedCatId') ? 'true' : null"
+                [attr.aria-describedby]="
+                  error('pairedCatId')
+                    ? 'cat-form-pairedCatId-error cat-form-pairedCatId-help'
+                    : 'cat-form-pairedCatId-help'
+                "
+              >
+                <option value="">{{ formText.pairedNone }}</option>
+                @for (option of pairedCatOptions(); track option.id) {
+                  <option [value]="option.id">{{ option.name }}</option>
+                }
+              </select>
+            </div>
+            <p class="form-row__help" id="cat-form-pairedCatId-help">{{ formText.pairedHelp }}</p>
+            @if (error('pairedCatId'); as message) {
+              <p class="form-row__message" id="cat-form-pairedCatId-error">
+                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                {{ message }}
+              </p>
+            }
+          </div>
+        </div>
+      </section>
     </div>
 
-    <ng-content select="[data-slot=wide]" />
+    <section class="card card--wide">
+      <fieldset
+        class="fieldset"
+        [attr.aria-invalid]="error('characteristicIds') ? 'true' : null"
+        [attr.aria-describedby]="
+          error('characteristicIds') ? 'cat-form-characteristicIds-error' : null
+        "
+      >
+        <legend class="fieldset__legend card__title">
+          {{ text.character.title }} <span aria-hidden="true">*</span>
+        </legend>
+        <div class="checks">
+          @for (characteristic of characteristics(); track characteristic.id; let first = $first) {
+            <label class="check">
+              <input
+                type="checkbox"
+                [attr.id]="first ? 'cat-form-characteristicIds' : null"
+                [checked]="isCharacteristicChecked(characteristic.id)"
+                (change)="toggleCharacteristic(characteristic.id, $event)"
+              />
+              <span>{{ characteristicLabel(characteristic) }}</span>
+            </label>
+          }
+        </div>
+        @if (error('characteristicIds'); as message) {
+          <p class="field__error" id="cat-form-characteristicIds-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            {{ message }}
+          </p>
+        }
+      </fieldset>
+    </section>
 
     <section class="card card--wide" aria-labelledby="story-title">
       <h2 class="card__title" id="story-title">
