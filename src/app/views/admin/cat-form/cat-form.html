@@ -61,13 +61,13 @@
           </div>
           <p class="form-row__help" id="cat-form-status-help">{{ formText.statusHelp }}</p>
         </div>
-        <div class="form-row">
+        <div class="form-row form-row--check">
           <label class="form-row__label" for="cat-form-isUrgent">{{ formText.urgent }}</label>
           <div class="form-row__control">
             <input id="cat-form-isUrgent" type="checkbox" formControlName="isUrgent" />
           </div>
         </div>
-        <div class="form-row">
+        <div class="form-row form-row--check">
           <label class="form-row__label" for="cat-form-isFeatured">{{ formText.featured }}</label>
           <div class="form-row__control">
             <input
@@ -122,7 +122,7 @@
             </p>
           }
         </div>
-        <div class="form-row">
+        <div class="form-row form-row--check">
           <label class="form-row__label" for="cat-form-birthDateIsEstimated">{{
             formText.birthDateEstimated
           }}</label>
