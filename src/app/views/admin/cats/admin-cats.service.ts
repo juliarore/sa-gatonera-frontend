@@ -61,9 +61,9 @@ export class AdminCatsService {
     return this.http.get<Characteristic[]>(this.characteristicsUrl);
   }
 
-  getPairedCatOptions(id: string): Observable<AdoptionGroupMate[]> {
-    return this.http.get<AdoptionGroupMate[]>(
-      `${this.url}/${encodeURIComponent(id)}/paired-cat-options`,
-    );
+  getPairedCatOptions(catId?: string): Observable<AdoptionGroupMate[]> {
+    return this.http.get<AdoptionGroupMate[]>(`${this.url}/paired-cat-options`, {
+      params: catId ? new HttpParams().set('catId', catId) : undefined,
+    });
   }
 }
