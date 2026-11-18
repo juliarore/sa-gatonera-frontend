@@ -53,6 +53,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
+  align-items: start;
 
   &__side {
     display: flex;
@@ -93,7 +94,7 @@ p {
 
   &--textarea {
     padding: var(--space-3) var(--space-4);
-    line-height: 1.5;
+    line-height: var(--line-height-body);
     resize: vertical;
   }
 
@@ -110,6 +111,7 @@ select.control {
 fieldset {
   min-width: 0;
   margin: 0;
+  padding: 0;
   border: 0;
 }
 
@@ -154,7 +156,7 @@ fieldset {
 
   &__help {
     color: var(--color-text-muted);
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -186,8 +188,6 @@ fieldset {
 }
 
 .fieldset {
-  padding: 0;
-
   &__legend {
     padding: 0;
     margin-bottom: var(--space-4);
@@ -224,15 +224,6 @@ fieldset {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .sections__side {
-    height: 0;
-    min-height: 100%;
-  }
-
-  .checks {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
   .form-row {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
     gap: var(--space-2) var(--space-4);
@@ -263,7 +254,7 @@ fieldset {
 
 @media (max-width: 767px) {
   .checks .check {
-    min-height: 44px;
+    min-height: var(--size-touch);
   }
 
   .card {

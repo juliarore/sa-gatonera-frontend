@@ -14,7 +14,7 @@
   }
 
   <header class="cat-header">
-    <h1 class="cat-header__title" #headingEl>{{ heading() }}</h1>
+    <h1 #headingEl>{{ heading() }}</h1>
     <p class="note">{{ formText.requiredNote }}</p>
   </header>
 
@@ -239,7 +239,7 @@
       <section class="card" aria-labelledby="compatibility-title">
         <h2 class="card__title" id="compatibility-title">{{ text.compatibility.title }}</h2>
         <div class="form-rows">
-          <fieldset class="form-row form-row--group">
+          <fieldset class="form-row">
             <legend class="form-row__label">{{ text.compatibility.cats }}</legend>
             <div class="form-row__control form-row__control--options">
               @for (option of compatibilityOptions; track option.value) {
@@ -250,7 +250,7 @@
               }
             </div>
           </fieldset>
-          <fieldset class="form-row form-row--group">
+          <fieldset class="form-row">
             <legend class="form-row__label">{{ text.compatibility.dogs }}</legend>
             <div class="form-row__control form-row__control--options">
               @for (option of compatibilityOptions; track option.value) {
@@ -261,7 +261,7 @@
               }
             </div>
           </fieldset>
-          <fieldset class="form-row form-row--group">
+          <fieldset class="form-row">
             <legend class="form-row__label">{{ text.compatibility.children }}</legend>
             <div class="form-row__control form-row__control--options">
               @for (option of compatibilityOptions; track option.value) {
@@ -278,43 +278,50 @@
           </fieldset>
         </div>
       </section>
-      @if (images(); as photos) {
-        <app-cat-gallery [images]="photos" />
-      }
+
+      <section class="card">
+        <fieldset
+          class="fieldset"
+          [attr.aria-invalid]="error('characteristicIds') ? 'true' : null"
+          [attr.aria-describedby]="
+            error('characteristicIds') ? 'cat-form-characteristicIds-error' : null
+          "
+        >
+          <legend class="fieldset__legend card__title">
+            {{ text.character.title }} <span aria-hidden="true">*</span>
+          </legend>
+          <div class="checks">
+            @for (characteristic of characteristics(); track characteristic.id; let first = $first) {
+              <label class="check">
+                <input
+                  type="checkbox"
+                  [attr.id]="first ? 'cat-form-characteristicIds' : null"
+                  [checked]="isCharacteristicChecked(characteristic.id)"
+                  (change)="toggleCharacteristic(characteristic.id, $event)"
+                />
+                <span>{{ characteristicLabel(characteristic) }}</span>
+              </label>
+            }
+          </div>
+          @if (error('characteristicIds'); as message) {
+            <p class="field__error" id="cat-form-characteristicIds-error">
+              <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+              {{ message }}
+            </p>
+          }
+        </fieldset>
+      </section>
     </div>
 
-    <section class="card card--wide">
-      <fieldset
-        class="fieldset"
-        [attr.aria-invalid]="error('characteristicIds') ? 'true' : null"
-        [attr.aria-describedby]="
-          error('characteristicIds') ? 'cat-form-characteristicIds-error' : null
-        "
-      >
-        <legend class="fieldset__legend card__title">
-          {{ text.character.title }} <span aria-hidden="true">*</span>
-        </legend>
-        <div class="checks">
-          @for (characteristic of characteristics(); track characteristic.id; let first = $first) {
-            <label class="check">
-              <input
-                type="checkbox"
-                [attr.id]="first ? 'cat-form-characteristicIds' : null"
-                [checked]="isCharacteristicChecked(characteristic.id)"
-                (change)="toggleCharacteristic(characteristic.id, $event)"
-              />
-              <span>{{ characteristicLabel(characteristic) }}</span>
-            </label>
-          }
-        </div>
-        @if (error('characteristicIds'); as message) {
-          <p class="field__error" id="cat-form-characteristicIds-error">
-            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-            {{ message }}
-          </p>
-        }
-      </fieldset>
-    </section>
+    @if (images(); as photos) {
+      <app-cat-gallery
+        class="card--wide"
+        [editable]="true"
+        [images]="photos"
+        [catId]="catId()"
+        (imagesChange)="imagesChange.emit($event)"
+      />
+    }
 
     <section class="card card--wide" aria-labelledby="story-title">
       <h2 class="card__title" id="story-title">

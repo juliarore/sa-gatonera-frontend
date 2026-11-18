@@ -1,26 +1,214 @@
-<section class="card" aria-labelledby="photos-title">
-  <h2 class="card__title" id="photos-title">{{ text.title }}</h2>
-  @if (images().length > 0) {
-    <ul class="gallery">
-      @for (image of images(); track image.id) {
-        <li class="gallery__item">
-          @if (failed().has(image.id)) {
-            <p class="gallery__fallback">{{ image.altText }}</p>
-          } @else {
-            <img
-              class="gallery__image"
-              [src]="imageUrl(image.imageUrl)"
-              [alt]="image.altText"
-              width="800"
-              height="600"
-              loading="lazy"
-              (error)="markFailed(image.id)"
-            />
+<section class="card" id="fotos" aria-labelledby="photos-title">
+  <div class="card__header">
+    <h2 class="card__title" id="photos-title" [attr.tabindex]="uploadable() ? -1 : null">
+      {{ t.title }}
+    </h2>
+    @if (showAdd()) {
+      <button
+        type="button"
+        class="btn btn--primary btn--auto-width"
+        [disabled]="busy()"
+        (click)="fileInput.click()"
+      >
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        {{ t.addPhotos }}
+      </button>
+      <input
+        #fileInput
+        hidden
+        type="file"
+        multiple
+        [accept]="accept"
+        [attr.aria-label]="t.filesLabel"
+        (change)="onFilesChange($event)"
+      />
+    } @else if (editable()) {
+      <p class="muted">{{ t.limit }}</p>
+    } @else if (images().length > 0) {
+      <a
+        class="btn btn--secondary btn--auto-width"
+        fragment="fotos"
+        [routerLink]="[]"
+        [queryParams]="{ edit: true }"
+      >
+        <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+        {{ t.editPhotos }}
+      </a>
+    }
+  </div>
+
+  @if (uploadable()) {
+    <div class="visually-hidden" id="gallery-announcer" aria-live="polite">
+      {{ announcement() }}
+    </div>
+    @if (progress(); as current) {
+      <p role="status">{{ t.progress(current.done, current.total) }}</p>
+    }
+    @if (!editing() && error(); as message) {
+      <p class="message" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        {{ message }}
+      </p>
+    }
+  }
+
+  @if (images().length === 0) {
+    <p class="empty muted" [class.empty--editable]="editable()">{{ t.empty }}</p>
+  } @else {
+    <ul
+      class="photos"
+      [class.photos--strip]="!editable()"
+      [attr.tabindex]="editable() ? null : 0"
+      [attr.aria-label]="editable() ? null : t.stripLabel"
+    >
+      @for (
+        image of images();
+        track image.id;
+        let index = $index;
+        let first = $first;
+        let last = $last
+      ) {
+        <li class="photo" [id]="'gallery-photo-' + image.id" tabindex="-1">
+          <div class="photo__media">
+            @if (failed().has(image.id)) {
+              <p class="photo__fallback">{{ image.altText }}</p>
+            } @else {
+              <img
+                class="photo__image"
+                [src]="imageUrl(image.imageUrl)"
+                [alt]="image.altText"
+                width="800"
+                height="600"
+                loading="lazy"
+                (error)="markFailed(image.id)"
+              />
+            }
+            @if (first) {
+              <span class="photo__badge">{{ t.cover }}</span>
+            }
+          </div>
+
+          @if (editable()) {
+            @if (editMode(image.id) === 'remove') {
+              <div class="photo__panel">
+                <p class="photo__question">{{ t.confirmText }}</p>
+                @if (error(); as message) {
+                  <p class="message" role="alert">
+                    <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                    {{ message }}
+                  </p>
+                }
+                <div class="photo__row">
+                  <button
+                    type="button"
+                    class="btn btn--primary btn--small"
+                    [disabled]="busy()"
+                    (click)="submitEdit(image)"
+                  >
+                    {{ t.confirm }}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--secondary btn--small"
+                    [id]="'gallery-cancel-' + image.id"
+                    (click)="cancelEdit()"
+                  >
+                    {{ t.cancel }}
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <div class="photo__row photo__row--bar">
+                <button
+                  type="button"
+                  class="photo__button"
+                  [id]="'gallery-move-before-' + image.id"
+                  [disabled]="first"
+                  [attr.aria-label]="t.moveBefore(index + 1)"
+                  (click)="move(image, index, -1)"
+                >
+                  <i class="fa-solid fa-arrow-left photo__icon--wide" aria-hidden="true"></i>
+                  <i class="fa-solid fa-arrow-up photo__icon--narrow" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="photo__button"
+                  [id]="'gallery-move-after-' + image.id"
+                  [disabled]="last"
+                  [attr.aria-label]="t.moveAfter(index + 1)"
+                  (click)="move(image, index, 1)"
+                >
+                  <i class="fa-solid fa-arrow-right photo__icon--wide" aria-hidden="true"></i>
+                  <i class="fa-solid fa-arrow-down photo__icon--narrow" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="photo__button"
+                  [id]="'gallery-edit-' + image.id"
+                  [attr.aria-label]="t.edit(index + 1)"
+                  (click)="startEdit('alt', image)"
+                >
+                  <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="photo__button"
+                  [id]="'gallery-remove-' + image.id"
+                  [attr.aria-label]="t.remove(index + 1)"
+                  (click)="startEdit('remove', image)"
+                >
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+              @if (editMode(image.id) === 'alt') {
+                <div class="photo__field">
+                  <div class="photo__input">
+                    <label class="photo__label" [for]="'gallery-alt-' + image.id">{{
+                      t.altLabel
+                    }}</label>
+                    <textarea
+                      class="control"
+                      rows="2"
+                      aria-required="true"
+                      [id]="'gallery-alt-' + image.id"
+                      [value]="altDraft()"
+                      [attr.aria-invalid]="error() ? 'true' : null"
+                      [attr.aria-describedby]="error() ? 'gallery-alt-error-' + image.id : null"
+                      (input)="onAltInput($event)"
+                    ></textarea>
+                    @if (error(); as message) {
+                      <p class="message" role="alert" [id]="'gallery-alt-error-' + image.id">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        {{ message }}
+                      </p>
+                    }
+                  </div>
+                  <div class="photo__row photo__row--actions">
+                    <button
+                      type="button"
+                      class="btn btn--primary btn--small"
+                      [disabled]="busy()"
+                      (click)="submitEdit(image)"
+                    >
+                      {{ t.save }}
+                    </button>
+                    <button type="button" class="btn btn--secondary btn--small" (click)="cancelEdit()">
+                      {{ t.cancel }}
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <p class="photo__alt">
+                  @if (first) {
+                    <span class="photo__badge photo__badge--inline">{{ t.cover }}</span>
+                  }
+                  {{ image.altText }}
+                </p>
+              }
+            }
           }
         </li>
       }
     </ul>
-  } @else {
-    <p class="muted">{{ text.empty }}</p>
   }
 </section>

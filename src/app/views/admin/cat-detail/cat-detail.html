@@ -48,13 +48,15 @@
           [heading]="text.editHeading + ' ' + cat.name"
           [initialValue]="initial"
           [adoptionFee]="cat.adoptionFee"
-          [images]="cat.images"
+          [catId]="cat.id"
+          [images]="images()"
           [characteristics]="data.characteristics"
           [pairedCatOptions]="data.pairedCatOptions"
           [apiError]="fieldError()"
           [saving]="saving()"
           [errorMessage]="saveError()"
           (submitted)="save($event)"
+          (imagesChange)="images.set($event)"
           (cancelled)="leaveEdit()"
         />
       } @else {
@@ -64,7 +66,7 @@
   } @else {
     <header class="cat-header">
       <div class="cat-header__main">
-        <h1 class="cat-header__title" #heading>{{ cat.name }}</h1>
+        <h1 #heading>{{ cat.name }}</h1>
         <div class="pills">
           <span class="pill pill--{{ cat.status }}">{{ statusLabels[cat.status] }}</span>
           @if (cat.isUrgent) {
@@ -158,21 +160,27 @@
           </dl>
         </section>
 
-        <app-cat-gallery [images]="cat.images" />
+        <section class="card" aria-labelledby="character-title">
+          <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
+          @if (cat.characteristics.length > 0) {
+            <ul class="tags">
+              @for (characteristic of cat.characteristics; track characteristic.id) {
+                <li class="tags__item">{{ characteristic.label }}</li>
+              }
+            </ul>
+          } @else {
+            <p class="muted">{{ text.character.empty }}</p>
+          }
+        </section>
       </div>
 
-      <section class="card card--wide" aria-labelledby="character-title">
-        <h2 class="card__title" id="character-title">{{ text.character.title }}</h2>
-        @if (cat.characteristics.length > 0) {
-          <ul class="tags">
-            @for (characteristic of cat.characteristics; track characteristic.id) {
-              <li class="tags__item">{{ characteristic.label }}</li>
-            }
-          </ul>
-        } @else {
-          <p class="muted">{{ text.character.empty }}</p>
-        }
-      </section>
+      <app-cat-gallery
+        class="card--wide"
+        [catId]="cat.id"
+        [images]="images()"
+        (imagesChange)="images.set($event)"
+        (uploadFinished)="onUploadFinished($event)"
+      />
 
       <section class="card card--wide" aria-labelledby="story-title">
         <h2 class="card__title" id="story-title">{{ text.story.title }}</h2>

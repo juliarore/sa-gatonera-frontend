@@ -98,10 +98,6 @@ export const CAT_DETAIL_TEXT = {
   group: {
     title: 'Adopció conjunta',
   },
-  photos: {
-    title: 'Fotos',
-    empty: 'Aquest gat encara no té fotos.',
-  },
   edit: 'Editar',
   editHeading: 'Editar',
   saved: 'Canvis desats',
@@ -183,4 +179,46 @@ export const CAT_CREATE_TEXT = {
   retry: CAT_DETAIL_TEXT.retry,
   badRequest: "No s'ha pogut crear el gat perquè alguna dada no és vàlida. Revisa el formulari.",
   saveError: "No s'ha pogut crear el gat. Torna-ho a provar.",
+} as const;
+
+export const IMAGE_ACCEPT = 'image/jpeg,image/png,image/webp';
+export const IMAGE_TYPES: readonly string[] = IMAGE_ACCEPT.split(',');
+export const IMAGE_MAX_BYTES = 8 * 1024 * 1024;
+export const IMAGE_MAX_COUNT = 8;
+export const ALT_TEXT_MIN = 10;
+export const ALT_TEXT_MAX = 250;
+
+export const IMAGE_TEXT = {
+  title: 'Fotos',
+  empty: 'Aquest gat encara no té fotos.',
+  editPhotos: 'Editar fotos',
+  cover: 'Portada',
+  stripLabel: 'Fotos del gat',
+  addPhotos: 'Afegir fotos',
+  limit: 'Màxim de 8 fotos.',
+  filesLabel: 'Fotos',
+  progress: (done: number, total: number) => `Pujant ${done} de ${total}...`,
+  moveBefore: (n: number) => `Mou la foto ${n} abans`,
+  moveAfter: (n: number) => `Mou la foto ${n} després`,
+  edit: (n: number) => `Edita el text alternatiu de la foto ${n}`,
+  remove: (n: number) => `Elimina la foto ${n}`,
+  uploaded: 'Foto pujada',
+  altSaved: 'Text desat',
+  moved: (n: number) => `Foto moguda a la posició ${n}`,
+  removed: 'Foto eliminada',
+  altLabel: 'Text alternatiu',
+  save: 'Desa',
+  confirmText: 'Segur que vols eliminar aquesta foto?',
+  confirm: 'Elimina',
+  cancel: 'Cancel·la',
+  errors: {
+    fileType: 'Les fotos han de ser JPG, PNG o WebP.',
+    fileSize: 'Cada foto pot fer com a màxim 8 MB.',
+    tooMany: (room: number) =>
+      room === 1
+        ? "Només s'ha pujat la primera foto: el màxim és de 8 fotos."
+        : `Només s'han pujat les ${room} primeres fotos: el màxim és de 8 fotos.`,
+    altLength: 'El text alternatiu ha de tenir entre 10 i 250 caràcters.',
+    request: "No s'ha pogut completar l'acció. Torna-ho a provar.",
+  },
 } as const;

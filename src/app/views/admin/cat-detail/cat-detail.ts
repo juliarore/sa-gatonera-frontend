@@ -39,6 +39,7 @@ import {
   AdminCatDetail,
   AdoptionGroupMate,
   CatFieldError,
+  CatImage,
   Characteristic,
   UpdateCatRequest,
 } from '../cats/cat.models';
@@ -99,6 +100,7 @@ export class CatDetail {
   protected readonly ageLabel = getAgeLabel;
 
   protected readonly cat = signal<AdminCatDetail | null>(null);
+  protected readonly images = signal<CatImage[]>([]);
   protected readonly loading = signal(true);
   protected readonly notFound = signal(false);
   protected readonly error = signal(false);
@@ -138,6 +140,7 @@ export class CatDetail {
           this.adminCats.getById(id).pipe(
             tap((cat) => {
               this.cat.set(cat);
+              this.images.set(cat.images);
               this.loading.set(false);
               if (this.createdPending) {
                 this.createdPending = false;
@@ -209,6 +212,7 @@ export class CatDetail {
       .subscribe({
         next: (updated) => {
           this.cat.set(updated);
+          this.images.set(updated.images);
           this.saving.set(false);
           this.showSaved(this.text.saved);
           this.leaveEdit();
@@ -227,6 +231,21 @@ export class CatDetail {
             this.saveError.set(this.text.saveError);
           }
         },
+      });
+  }
+
+  protected onUploadFinished(message: string | null): void {
+    this.router
+      .navigate([], {
+        relativeTo: this.route,
+        queryParams: { edit: true },
+        queryParamsHandling: 'merge',
+        fragment: 'fotos',
+      })
+      .then(() => {
+        if (message) {
+          this.saveError.set(message);
+        }
       });
   }
 

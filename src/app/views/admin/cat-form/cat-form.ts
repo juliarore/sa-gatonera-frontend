@@ -79,6 +79,7 @@ export class CatForm {
   readonly submitLabel = input<string>(CAT_FORM_TEXT.save);
   readonly savingLabel = input<string>(CAT_FORM_TEXT.saving);
   readonly errorMessage = input<string | null>(null);
+  readonly catId = input<string | null>(null);
   readonly images = input<CatImage[] | null>(null);
   readonly characteristics = input<Characteristic[]>([]);
   readonly pairedCatOptions = input<AdoptionGroupMate[]>([]);
@@ -86,6 +87,7 @@ export class CatForm {
 
   readonly submitted = output<UpdateCatRequest>();
   readonly cancelled = output<void>();
+  readonly imagesChange = output<CatImage[]>();
 
   protected readonly text = CAT_DETAIL_TEXT;
   protected readonly formText = CAT_FORM_TEXT;

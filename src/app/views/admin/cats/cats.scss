@@ -60,7 +60,7 @@ p {
   }
 
   &__meta {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 }
@@ -211,7 +211,7 @@ select.control {
   }
 
   &__detail {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 }

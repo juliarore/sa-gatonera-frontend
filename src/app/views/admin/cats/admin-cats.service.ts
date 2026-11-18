@@ -9,6 +9,7 @@ import {
   AdminCatsQuery,
   AdoptionGroupMate,
   Characteristic,
+  CatImage,
   CreateCatRequest,
   FeaturedSummary,
   UpdateCatRequest,
@@ -65,6 +66,32 @@ export class AdminCatsService {
 
   getFeaturedSummary(): Observable<FeaturedSummary> {
     return this.http.get<FeaturedSummary>(`${this.url}/featured-summary`);
+  }
+
+  uploadImage(catId: string, file: File): Observable<CatImage> {
+    const body = new FormData();
+    body.append('file', file);
+    return this.http.post<CatImage>(`${this.url}/${encodeURIComponent(catId)}/images`, body);
+  }
+
+  updateImageAltText(catId: string, imageId: string, altText: string): Observable<CatImage> {
+    return this.http.patch<CatImage>(
+      `${this.url}/${encodeURIComponent(catId)}/images/${encodeURIComponent(imageId)}`,
+      { altText },
+    );
+  }
+
+  moveImage(catId: string, imageId: string, position: number): Observable<CatImage[]> {
+    return this.http.patch<CatImage[]>(
+      `${this.url}/${encodeURIComponent(catId)}/images/${encodeURIComponent(imageId)}/position`,
+      { position },
+    );
+  }
+
+  deleteImage(catId: string, imageId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.url}/${encodeURIComponent(catId)}/images/${encodeURIComponent(imageId)}`,
+    );
   }
 
   getCharacteristics(): Observable<Characteristic[]> {
