@@ -10,43 +10,43 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () =>
-      import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
+    loadComponent: () => import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
     children: [
       {
         path: '',
         title: 'Panell de control | Sa Gatonera',
         data: { title: 'Panell de control' },
-        loadComponent: () =>
-          import('./views/admin/dashboard/dashboard').then((m) => m.Dashboard),
+        loadComponent: () => import('./views/admin/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'cats',
         title: 'Gestió dels gats | Sa Gatonera',
         data: { title: 'Gestió dels gats' },
-        loadComponent: () =>
-          import('./views/admin/cats/cats').then((m) => m.Cats),
+        loadComponent: () => import('./views/admin/cats/cats').then((m) => m.Cats),
+      },
+      {
+        path: 'cats/create',
+        title: 'Crear gat | Sa Gatonera',
+        data: { title: 'Crear gat' },
+        loadComponent: () => import('./views/admin/cat-create/cat-create').then((m) => m.CatCreate),
       },
       {
         path: 'cats/:id',
         title: 'Detall del gat | Sa Gatonera',
         data: { title: 'Detall del gat' },
-        loadComponent: () =>
-          import('./views/admin/cat-detail/cat-detail').then((m) => m.CatDetail),
+        loadComponent: () => import('./views/admin/cat-detail/cat-detail').then((m) => m.CatDetail),
       },
       {
         path: 'requests',
         title: "Sol·licituds d'adopció | Sa Gatonera",
         data: { title: "Sol·licituds d'adopció" },
-        loadComponent: () =>
-          import('./views/admin/requests/requests').then((m) => m.Requests),
+        loadComponent: () => import('./views/admin/requests/requests').then((m) => m.Requests),
       },
       {
         path: 'news',
         title: 'Publicacions | Sa Gatonera',
         data: { title: 'Publicacions' },
-        loadComponent: () =>
-          import('./views/admin/news/news').then((m) => m.News),
+        loadComponent: () => import('./views/admin/news/news').then((m) => m.News),
       },
     ],
   },
