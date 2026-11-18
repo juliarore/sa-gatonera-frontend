@@ -3,10 +3,10 @@
     <h1 class="page-header__title">Gats</h1>
     <p class="page-header__subtitle">Consulta i gestiona els gats de l'associació.</p>
   </div>
-  <button type="button" class="btn btn--primary">
+  <a class="btn btn--primary" routerLink="/admin/cats/create">
     <i class="fa-solid fa-plus" aria-hidden="true"></i>
     Afegir un gat
-  </button>
+  </a>
 </header>
 
 <section class="card" aria-labelledby="filters-title">
@@ -58,6 +58,13 @@
     </div>
   </form>
 </section>
+
+@if (featuredNotice(); as message) {
+  <p class="notice" role="status">
+    <i class="fa-solid fa-circle-info notice__icon" aria-hidden="true"></i>
+    <span>{{ message }}</span>
+  </p>
+}
 
 <section class="card card--table" aria-labelledby="catalog-title">
   <div class="card__header">
@@ -126,6 +133,10 @@
                         <a class="cat__link" [routerLink]="['/admin/cats', cat.id]">{{
                           cat.name
                         }}</a>
+                        @if (cat.isFeatured) {
+                          <i class="fa-solid fa-star cat__star" aria-hidden="true"></i>
+                          <span class="visually-hidden">{{ featuredLabel }}</span>
+                        }
                       </p>
                       <p class="cat__detail">
                         {{ genderLabels[cat.gender] }} · {{ ageLabel(cat.birthDate) }}

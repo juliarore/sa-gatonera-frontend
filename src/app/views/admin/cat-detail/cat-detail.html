@@ -1,14 +1,14 @@
 <div class="visually-hidden" role="status">
-  @if (saved()) {
-    {{ text.saved }}
+  @if (saved(); as message) {
+    {{ message }}
   }
 </div>
 
-@if (saved()) {
+@if (saved(); as message) {
   <div class="notice">
     <p class="notice__text" aria-hidden="true">
       <i class="fa-solid fa-circle-check"></i>
-      {{ text.saved }}
+      {{ message }}
     </p>
     <button
       type="button"

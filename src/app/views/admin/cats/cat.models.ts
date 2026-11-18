@@ -10,6 +10,7 @@ export interface AdminCat {
   birthDate: string;
   status: CatStatus;
   isUrgent: boolean;
+  isFeatured: boolean;
   entryDate: string;
   ageGroup: AgeGroup;
   isVisible: boolean;
@@ -23,6 +24,11 @@ export interface AdminCatsPage {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+export interface FeaturedSummary {
+  count: number;
+  max: number;
 }
 
 export interface AdminCatsQuery {
@@ -118,3 +124,5 @@ export interface CatFieldError {
   field: 'isFeatured' | 'pairedCatId' | 'characteristicIds';
   message: string;
 }
+
+export type CreateCatRequest = UpdateCatRequest;

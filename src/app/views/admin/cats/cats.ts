@@ -16,6 +16,7 @@ import { AdminCatsService } from './admin-cats.service';
 import {
   AGE_GROUP_LABELS,
   AGE_GROUP_OPTIONS,
+  FEATURED_TEXT,
   GENDER_LABELS,
   PAGE_SIZE,
   STATUS_LABELS,
@@ -23,7 +24,7 @@ import {
   URGENT_LABEL,
   VISIBILITY_LABELS,
 } from './cat.constants';
-import { AdminCatsPage, AgeGroup, CatStatus } from './cat.models';
+import { AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
 import { getAgeLabel } from './utils/age';
 import { imageUrl } from './utils/image-url';
 
@@ -76,6 +77,16 @@ export class Cats {
   protected readonly ageLabel = getAgeLabel;
   protected readonly imageUrl = imageUrl;
 
+  protected readonly featuredLabel = FEATURED_TEXT.label;
+  protected readonly featuredCount = signal<number | null>(null);
+  protected readonly featuredNotice = computed(() => {
+    const count = this.featuredCount();
+    if (count === null || count >= 3) {
+      return null;
+    }
+    return count === 0 ? FEATURED_TEXT.summaryNone : FEATURED_TEXT.summaryFew(count);
+  });
+
   protected readonly searchDraft = signal('');
   protected readonly statusDraft = signal<CatStatus | ''>('');
   protected readonly ageGroupDraft = signal<AgeGroup | ''>('');
@@ -125,6 +136,16 @@ export class Cats {
         this.ageGroupDraft.set(state.ageGroup);
       }),
     );
+
+    if (isPlatformBrowser(this.platformId)) {
+      this.adminCats
+        .getFeaturedSummary()
+        .pipe(
+          catchError(() => EMPTY),
+          takeUntilDestroyed(),
+        )
+        .subscribe((summary: FeaturedSummary) => this.featuredCount.set(summary.count));
+    }
 
     combineLatest([state$, this.retry$])
       .pipe(

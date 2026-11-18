@@ -105,6 +105,7 @@ export const CAT_DETAIL_TEXT = {
   edit: 'Editar',
   editHeading: 'Editar',
   saved: 'Canvis desats',
+  created: 'Gat creat',
   closeMessage: 'Tanca el missatge',
   badRequest:
     "No s'han pogut desar els canvis perquè alguna dada no és vàlida. Revisa el formulari.",
@@ -115,15 +116,21 @@ export const CAT_DETAIL_TEXT = {
   retry: 'Reintentar',
 } as const;
 
+export const FEATURED_TEXT = {
+  label: "Destacat a la pàgina d'inici",
+  summaryNone: "Cap gat destacat. La pàgina d'inici mostrarà gats en adopció.",
+  summaryFew: (count: number) =>
+    `Només hi ha ${count} ${count === 1 ? 'gat destacat' : 'gats destacats'}. La pàgina d'inici completarà els que falten amb gats en adopció.`,
+} as const;
+
 export const CAT_FORM_TEXT = {
   requiredNote: 'Els camps marcats amb * són obligatoris.',
   summary: 'Revisa els camps marcats',
   name: 'Nom',
   status: 'Estat',
-  statusHelp: "Només es mostra a la web pública si l'estat és «En adopció».",
   urgent: 'Adopció urgent',
   featured: "Destacar a la pàgina d'inici",
-  featuredHelp: 'Es poden destacar com a màxim 3 gats.',
+  featuredUnavailableHelp: 'Només es poden destacar els gats en adopció.',
   feeNote: "Depèn del sexe i de l'esterilització. S'actualitza en desar.",
   birthDateEstimated: 'Data de naixement aproximada',
   errors: {
@@ -145,9 +152,17 @@ export const CAT_API_FIELD_ERRORS: Partial<Record<string, CatFieldError>> = {
     field: 'isFeatured',
     message: "Ja hi ha 3 gats destacats. Desmarca'n un abans de destacar aquest.",
   },
+  FEATURED_NOT_AVAILABLE: {
+    field: 'isFeatured',
+    message: 'Només es poden destacar els gats en adopció.',
+  },
   PAIRED_CAT_TAKEN: {
     field: 'pairedCatId',
     message: "Aquest gat ja té una adopció conjunta amb un altre. Separa'ls primer.",
+  },
+  PAIRED_CAT_NOT_FOUND: {
+    field: 'pairedCatId',
+    message: "El gat escollit per a l'adopció conjunta ja no existeix. Recarrega la pàgina.",
   },
   PAIRED_CAT_ADOPTED: {
     field: 'pairedCatId',
@@ -158,3 +173,14 @@ export const CAT_API_FIELD_ERRORS: Partial<Record<string, CatFieldError>> = {
     message: 'Alguna de les característiques ja no existeix. Recarrega la pàgina.',
   },
 };
+
+export const CAT_CREATE_TEXT = {
+  heading: 'Crear gat',
+  submit: 'Crea el gat',
+  saving: 'Creant...',
+  loading: 'Carregant el formulari...',
+  loadError: "No s'ha pogut carregar el formulari. Torna-ho a provar.",
+  retry: CAT_DETAIL_TEXT.retry,
+  badRequest: "No s'ha pogut crear el gat perquè alguna dada no és vàlida. Revisa el formulari.",
+  saveError: "No s'ha pogut crear el gat. Torna-ho a provar.",
+} as const;

@@ -9,6 +9,8 @@ import {
   AdminCatsQuery,
   AdoptionGroupMate,
   Characteristic,
+  CreateCatRequest,
+  FeaturedSummary,
   UpdateCatRequest,
 } from './cat.models';
 
@@ -55,6 +57,14 @@ export class AdminCatsService {
     return this.http
       .patch<AdminCatDetail>(`${this.url}/${encodeURIComponent(id)}`, body)
       .pipe(map(toDisplayDetail));
+  }
+
+  create(body: CreateCatRequest): Observable<AdminCatDetail> {
+    return this.http.post<AdminCatDetail>(this.url, body).pipe(map(toDisplayDetail));
+  }
+
+  getFeaturedSummary(): Observable<FeaturedSummary> {
+    return this.http.get<FeaturedSummary>(`${this.url}/featured-summary`);
   }
 
   getCharacteristics(): Observable<Characteristic[]> {

@@ -28,7 +28,6 @@ import {
 import { AdminCatsService } from '../cats/admin-cats.service';
 import {
   ACTIVITY_LEVEL_LABELS,
-  CAT_API_FIELD_ERRORS,
   CAT_DETAIL_TEXT,
   COMPATIBILITY_LABELS,
   GENDER_LABELS,
@@ -45,6 +44,7 @@ import {
 } from '../cats/cat.models';
 import { getAgeLabel } from '../cats/utils/age';
 import { toInputDate } from '../cats/utils/date';
+import { parseSaveError } from '../cats/utils/save-error';
 import { CatForm } from '../cat-form/cat-form';
 import { CatGallery } from '../cat-gallery/cat-gallery';
 
@@ -104,7 +104,8 @@ export class CatDetail {
   protected readonly error = signal(false);
   protected readonly editing = signal(false);
   protected readonly saving = signal(false);
-  protected readonly saved = signal(false);
+  protected readonly saved = signal<string | null>(null);
+  private createdPending = this.router.currentNavigation()?.extras.state?.['created'] === true;
   private savedTimer?: ReturnType<typeof setTimeout>;
   protected readonly saveError = signal<string | null>(null);
   protected readonly fieldError = signal<CatFieldError | null>(null);
@@ -138,6 +139,11 @@ export class CatDetail {
             tap((cat) => {
               this.cat.set(cat);
               this.loading.set(false);
+              if (this.createdPending) {
+                this.createdPending = false;
+                this.showSaved(this.text.created);
+                this.focusHeading();
+              }
             }),
             catchError((error: unknown) => {
               this.cat.set(null);
@@ -204,20 +210,18 @@ export class CatDetail {
         next: (updated) => {
           this.cat.set(updated);
           this.saving.set(false);
-          this.showSaved();
+          this.showSaved(this.text.saved);
           this.leaveEdit();
         },
         error: (error: unknown) => {
           this.saving.set(false);
-          const http = error instanceof HttpErrorResponse ? error : null;
-          const code = (http?.error as { code?: string } | null)?.code;
-          const fieldError = code ? CAT_API_FIELD_ERRORS[code] : undefined;
+          const { fieldError, status, code } = parseSaveError(error);
           if (fieldError) {
-            this.fieldError.set({ ...fieldError });
-          } else if (http?.status === 404 && !code) {
+            this.fieldError.set(fieldError);
+          } else if (status === 404 && !code) {
             this.cat.set(null);
             this.notFound.set(true);
-          } else if (http?.status === 400) {
+          } else if (status === 400) {
             this.saveError.set(this.text.badRequest);
           } else {
             this.saveError.set(this.text.saveError);
@@ -239,9 +243,9 @@ export class CatDetail {
     });
   }
 
-  private showSaved(): void {
+  private showSaved(message: string): void {
     this.hideSaved();
-    this.saved.set(true);
+    this.saved.set(message);
     if (isPlatformBrowser(this.platformId)) {
       this.savedTimer = setTimeout(() => this.hideSaved(), SAVED_MESSAGE_MS);
     }
@@ -249,7 +253,7 @@ export class CatDetail {
 
   private hideSaved(): void {
     clearTimeout(this.savedTimer);
-    this.saved.set(false);
+    this.saved.set(null);
   }
 
   private focusHeading(): void {

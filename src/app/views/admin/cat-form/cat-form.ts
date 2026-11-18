@@ -1,6 +1,7 @@
 import {
   afterNextRender,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -75,8 +76,10 @@ export class CatForm {
   readonly heading = input.required<string>();
   readonly adoptionFee = input<number | null>(null);
   readonly saving = input(false);
+  readonly submitLabel = input<string>(CAT_FORM_TEXT.save);
+  readonly savingLabel = input<string>(CAT_FORM_TEXT.saving);
   readonly errorMessage = input<string | null>(null);
-  readonly images = input<CatImage[]>([]);
+  readonly images = input<CatImage[] | null>(null);
   readonly characteristics = input<Characteristic[]>([]);
   readonly pairedCatOptions = input<AdoptionGroupMate[]>([]);
   readonly apiError = input<CatFieldError | null>(null);
@@ -120,6 +123,11 @@ export class CatForm {
     specialNeeds: [''],
   });
 
+  protected readonly status = toSignal(this.form.controls.status.valueChanges, {
+    initialValue: this.form.controls.status.value,
+  });
+  protected readonly featuredDisabled = computed(() => this.status() !== 'available');
+
   protected readonly gender = toSignal(this.form.controls.gender.valueChanges, {
     initialValue: this.form.controls.gender.value,
   });
@@ -133,6 +141,7 @@ export class CatForm {
         specialNeeds: initial.specialNeeds ?? '',
         pairedCatId: initial.pairedCatId ?? '',
       });
+      this.syncFeatured();
     });
     effect(() => {
       const apiError = this.apiError();
@@ -140,6 +149,9 @@ export class CatForm {
       if (apiError) {
         this.focusField(apiError.field);
       }
+    });
+    this.form.controls.status.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.syncFeatured();
     });
     for (const field of API_ERROR_FIELDS) {
       const control: AbstractControl = this.form.controls[field];
@@ -150,6 +162,16 @@ export class CatForm {
       });
     }
     afterNextRender(() => this.focusHeading());
+  }
+
+  private syncFeatured(): void {
+    const control = this.form.controls.isFeatured;
+    if (this.form.controls.status.value === 'available') {
+      control.enable({ emitEvent: false });
+    } else {
+      control.setValue(false, { emitEvent: false });
+      control.disable({ emitEvent: false });
+    }
   }
 
   private focusField(name: string): void {
@@ -232,6 +254,7 @@ export class CatForm {
     const { pairedCatId, ...value } = this.form.getRawValue();
     const body: UpdateCatRequest = {
       ...value,
+      isFeatured: value.status === 'available' && value.isFeatured,
       name: value.name.trim(),
       story: value.story.trim(),
       healthStatus: value.healthStatus.trim(),

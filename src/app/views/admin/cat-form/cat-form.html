@@ -52,14 +52,12 @@
               id="cat-form-status"
               class="control"
               formControlName="status"
-              aria-describedby="cat-form-status-help"
             >
               @for (option of statusOptions; track option.value) {
                 <option [value]="option.value">{{ option.label }}</option>
               }
             </select>
           </div>
-          <p class="form-row__help" id="cat-form-status-help">{{ formText.statusHelp }}</p>
         </div>
         <div class="form-row form-row--check">
           <label class="form-row__label" for="cat-form-isUrgent">{{ formText.urgent }}</label>
@@ -77,12 +75,20 @@
               [attr.aria-invalid]="error('isFeatured') ? 'true' : null"
               [attr.aria-describedby]="
                 error('isFeatured')
-                  ? 'cat-form-isFeatured-error cat-form-isFeatured-help'
-                  : 'cat-form-isFeatured-help'
+                  ? featuredDisabled()
+                    ? 'cat-form-isFeatured-error cat-form-isFeatured-help'
+                    : 'cat-form-isFeatured-error'
+                  : featuredDisabled()
+                    ? 'cat-form-isFeatured-help'
+                    : null
               "
             />
           </div>
-          <p class="form-row__help" id="cat-form-isFeatured-help">{{ formText.featuredHelp }}</p>
+          @if (featuredDisabled()) {
+            <p class="form-row__help" id="cat-form-isFeatured-help">
+              {{ formText.featuredUnavailableHelp }}
+            </p>
+          }
           @if (error('isFeatured'); as message) {
             <p class="form-row__message" id="cat-form-isFeatured-error">
               <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
@@ -272,7 +278,9 @@
           </fieldset>
         </div>
       </section>
-      <app-cat-gallery [images]="images()" />
+      @if (images(); as photos) {
+        <app-cat-gallery [images]="photos" />
+      }
     </div>
 
     <section class="card card--wide">
@@ -370,7 +378,7 @@
 
   <div class="actions">
     <button type="submit" class="btn btn--primary" [disabled]="saving()">
-      {{ saving() ? formText.saving : formText.save }}
+      {{ saving() ? savingLabel() : submitLabel() }}
     </button>
     <button type="button" class="btn btn--secondary" (click)="cancel()">
       {{ formText.cancel }}
