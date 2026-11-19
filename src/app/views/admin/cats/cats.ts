@@ -1,5 +1,15 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  Injector,
+  PLATFORM_ID,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import {
@@ -13,9 +23,12 @@ import {
   tap,
 } from 'rxjs';
 import { AdminCatsService } from './admin-cats.service';
+import { StatusNotice, StatusNoticeMessage } from '../status-notice/status-notice';
+import { DeleteCatDialog } from '../delete-cat-dialog/delete-cat-dialog';
 import {
   AGE_GROUP_LABELS,
   AGE_GROUP_OPTIONS,
+  DELETE_CAT_TEXT,
   FEATURED_TEXT,
   GENDER_LABELS,
   PAGE_SIZE,
@@ -24,8 +37,9 @@ import {
   URGENT_LABEL,
   VISIBILITY_LABELS,
 } from './cat.constants';
-import { AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
+import { AdminCat, AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
 import { getAgeLabel } from './utils/age';
+import { focusHeading } from './utils/focus-heading';
 import { imageUrl } from './utils/image-url';
 
 type PageItem = number | 'ellipsis';
@@ -56,7 +70,7 @@ function parseUrlState(params: ParamMap): CatsUrlState {
 
 @Component({
   selector: 'app-cats',
-  imports: [RouterLink],
+  imports: [RouterLink, DeleteCatDialog, StatusNotice],
   templateUrl: './cats.html',
   styleUrl: './cats.scss',
 })
@@ -66,6 +80,9 @@ export class Cats {
   private readonly route = inject(ActivatedRoute);
   private readonly retry$ = new BehaviorSubject<void>(undefined);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly heading = viewChild<ElementRef<HTMLElement>>('heading');
 
   protected readonly statusOptions = STATUS_OPTIONS;
   protected readonly ageGroupOptions = AGE_GROUP_OPTIONS;
@@ -86,6 +103,10 @@ export class Cats {
     }
     return count === 0 ? FEATURED_TEXT.summaryNone : FEATURED_TEXT.summaryFew(count);
   });
+
+  protected readonly deleteText = DELETE_CAT_TEXT;
+  protected readonly deleteTarget = signal<AdminCat | null>(null);
+  protected readonly notice = signal<StatusNoticeMessage | null>(null);
 
   protected readonly searchDraft = signal('');
   protected readonly statusDraft = signal<CatStatus | ''>('');
@@ -138,13 +159,13 @@ export class Cats {
     );
 
     if (isPlatformBrowser(this.platformId)) {
-      this.adminCats
-        .getFeaturedSummary()
-        .pipe(
-          catchError(() => EMPTY),
-          takeUntilDestroyed(),
-        )
-        .subscribe((summary: FeaturedSummary) => this.featuredCount.set(summary.count));
+      this.loadFeaturedSummary();
+      const navState = this.router.currentNavigation()?.extras.state;
+      if (navState?.['deleted']) {
+        this.showNotice(DELETE_CAT_TEXT.deleted);
+      } else if (navState?.['gone']) {
+        this.showNotice(DELETE_CAT_TEXT.gone);
+      }
     }
 
     combineLatest([state$, this.retry$])
@@ -208,6 +229,50 @@ export class Cats {
 
   protected load(): void {
     this.retry$.next();
+  }
+
+  protected onDeleted(): void {
+    this.afterDelete(DELETE_CAT_TEXT.deleted);
+  }
+
+  protected onGone(): void {
+    this.afterDelete(DELETE_CAT_TEXT.gone);
+  }
+
+  protected closeNotice(): void {
+    this.notice.set(null);
+    this.focusHeading();
+  }
+
+  private afterDelete(message: string): void {
+    this.deleteTarget.set(null);
+    this.showNotice(message);
+    this.loadFeaturedSummary();
+    const current = this.catsPage();
+    if (current && current.items.length === 1 && current.page > 1) {
+      this.navigate({ ...parseUrlState(this.route.snapshot.queryParamMap), page: current.page - 1 });
+    } else {
+      this.load();
+    }
+  }
+
+  private showNotice(message: string): void {
+    this.notice.set({ text: message });
+    this.focusHeading();
+  }
+
+  private loadFeaturedSummary(): void {
+    this.adminCats
+      .getFeaturedSummary()
+      .pipe(
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((summary: FeaturedSummary) => this.featuredCount.set(summary.count));
+  }
+
+  private focusHeading(): void {
+    focusHeading(this.injector, this.heading);
   }
 
   private navigate(state: CatsUrlState): void {

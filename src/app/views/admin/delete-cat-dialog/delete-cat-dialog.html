@@ -1,0 +1,34 @@
+<dialog
+  #dialog
+  class="dialog"
+  aria-labelledby="delete-cat-text"
+  (cancel)="onNativeCancel($event)"
+  (close)="cancelled.emit()"
+>
+  <p class="dialog__text" id="delete-cat-text">{{ t.question(catName()) }}</p>
+  @if (error()) {
+    <p class="message dialog__error" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      {{ t.error }}
+    </p>
+  }
+  <div class="dialog__actions">
+    <button
+      type="button"
+      class="btn btn--primary btn--danger btn--auto-width"
+      [disabled]="busy()"
+      (click)="confirm()"
+    >
+      {{ busy() ? t.deleting : t.confirm }}
+    </button>
+    <button
+      type="button"
+      class="btn btn--secondary btn--auto-width"
+      autofocus
+      [disabled]="busy()"
+      (click)="cancel()"
+    >
+      {{ t.cancel }}
+    </button>
+  </div>
+</dialog>

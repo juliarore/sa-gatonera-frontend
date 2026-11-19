@@ -1,7 +1,5 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import {
-  afterNextRender,
   Component,
   computed,
   DestroyRef,
@@ -30,6 +28,7 @@ import {
   ACTIVITY_LEVEL_LABELS,
   CAT_DETAIL_TEXT,
   COMPATIBILITY_LABELS,
+  DELETE_CAT_TEXT,
   GENDER_LABELS,
   STATUS_LABELS,
   URGENT_LABEL,
@@ -45,11 +44,12 @@ import {
 } from '../cats/cat.models';
 import { getAgeLabel } from '../cats/utils/age';
 import { toInputDate } from '../cats/utils/date';
+import { focusHeading } from '../cats/utils/focus-heading';
 import { parseSaveError } from '../cats/utils/save-error';
 import { CatForm } from '../cat-form/cat-form';
 import { CatGallery } from '../cat-gallery/cat-gallery';
-
-const SAVED_MESSAGE_MS = 8000;
+import { DeleteCatDialog } from '../delete-cat-dialog/delete-cat-dialog';
+import { StatusNotice, StatusNoticeMessage } from '../status-notice/status-notice';
 
 function toFormValue(cat: AdminCatDetail): UpdateCatRequest {
   return {
@@ -77,7 +77,7 @@ function toFormValue(cat: AdminCatDetail): UpdateCatRequest {
 
 @Component({
   selector: 'app-cat-detail',
-  imports: [RouterLink, CatForm, CatGallery],
+  imports: [RouterLink, CatForm, CatGallery, DeleteCatDialog, StatusNotice],
   templateUrl: './cat-detail.html',
   styleUrl: './cat-detail.scss',
 })
@@ -91,6 +91,7 @@ export class CatDetail {
   private readonly retry$ = new BehaviorSubject<void>(undefined);
 
   protected readonly text = CAT_DETAIL_TEXT;
+  protected readonly deleteText = DELETE_CAT_TEXT;
   protected readonly genderLabels = GENDER_LABELS;
   protected readonly statusLabels = STATUS_LABELS;
   protected readonly activityLabels = ACTIVITY_LEVEL_LABELS;
@@ -106,9 +107,9 @@ export class CatDetail {
   protected readonly error = signal(false);
   protected readonly editing = signal(false);
   protected readonly saving = signal(false);
-  protected readonly saved = signal<string | null>(null);
+  protected readonly saved = signal<StatusNoticeMessage | null>(null);
   private createdPending = this.router.currentNavigation()?.extras.state?.['created'] === true;
-  private savedTimer?: ReturnType<typeof setTimeout>;
+  protected readonly deleting = signal(false);
   protected readonly saveError = signal<string | null>(null);
   protected readonly fieldError = signal<CatFieldError | null>(null);
   protected readonly editData = signal<{
@@ -122,8 +123,6 @@ export class CatDetail {
   private readonly heading = viewChild<ElementRef<HTMLElement>>('heading');
 
   constructor() {
-    this.destroyRef.onDestroy(() => clearTimeout(this.savedTimer));
-
     const id$ = this.route.paramMap.pipe(map((params) => params.get('id') ?? ''));
     const edit$ = this.route.queryParamMap.pipe(map((params) => params.get('edit') === 'true'));
 
@@ -150,7 +149,7 @@ export class CatDetail {
             }),
             catchError((error: unknown) => {
               this.cat.set(null);
-              if (error instanceof HttpErrorResponse && error.status === 404) {
+              if (parseSaveError(error).status === 404) {
                 this.notFound.set(true);
               } else {
                 this.error.set(true);
@@ -249,6 +248,14 @@ export class CatDetail {
       });
   }
 
+  protected onDeleted(): void {
+    this.router.navigate(['/admin/cats'], { state: { deleted: true } });
+  }
+
+  protected onGone(): void {
+    this.router.navigate(['/admin/cats'], { state: { gone: true } });
+  }
+
   protected closeSaved(): void {
     this.hideSaved();
     this.focusHeading();
@@ -263,30 +270,15 @@ export class CatDetail {
   }
 
   private showSaved(message: string): void {
-    this.hideSaved();
-    this.saved.set(message);
-    if (isPlatformBrowser(this.platformId)) {
-      this.savedTimer = setTimeout(() => this.hideSaved(), SAVED_MESSAGE_MS);
-    }
+    this.saved.set({ text: message });
   }
 
-  private hideSaved(): void {
-    clearTimeout(this.savedTimer);
+  protected hideSaved(): void {
     this.saved.set(null);
   }
 
   private focusHeading(): void {
-    afterNextRender(
-      () => {
-        const heading = this.heading()?.nativeElement;
-        if (!heading) {
-          return;
-        }
-        heading.setAttribute('tabindex', '-1');
-        heading.focus();
-      },
-      { injector: this.injector },
-    );
+    focusHeading(this.injector, this.heading);
   }
 
   protected reload(): void {

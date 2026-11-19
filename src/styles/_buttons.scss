@@ -39,6 +39,27 @@
       background-color: var(--color-surface-cream);
     }
   }
+
+  &--danger {
+    &.btn--secondary {
+      border-color: var(--color-error-icon);
+      color: var(--color-error-icon);
+
+      &:is(:hover, :focus-visible, :active):not(:disabled) {
+        background-color: var(--color-status-danger);
+      }
+    }
+
+    &.btn--primary {
+      background-color: var(--color-error-icon);
+      color: var(--color-white);
+
+      &:is(:hover, :active):not(:disabled) {
+        background-color: color-mix(in srgb, var(--color-error-icon), black 15%);
+      }
+    }
+  }
+
   &:disabled,
   &[aria-disabled='true'] {
     background-color: var(--color-surface-gray);

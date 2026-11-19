@@ -1,25 +1,4 @@
-<div class="visually-hidden" role="status">
-  @if (saved(); as message) {
-    {{ message }}
-  }
-</div>
-
-@if (saved(); as message) {
-  <div class="notice">
-    <p class="notice__text" aria-hidden="true">
-      <i class="fa-solid fa-circle-check"></i>
-      {{ message }}
-    </p>
-    <button
-      type="button"
-      class="notice__close"
-      [attr.aria-label]="text.closeMessage"
-      (click)="closeSaved()"
-    >
-      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-    </button>
-  </div>
-}
+<app-status-notice [notice]="saved()" (closed)="closeSaved()" (expired)="hideSaved()" />
 
 <a class="back-link" routerLink="/admin/cats">
   <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -77,11 +56,32 @@
           }
         </div>
       </div>
-      <a class="btn btn--secondary" [routerLink]="[]" [queryParams]="{ edit: true }">
-        <i class="fa-solid fa-pencil" aria-hidden="true"></i>
-        {{ text.edit }}
-      </a>
+      <div class="cat-header__actions">
+        <a class="btn btn--secondary" [routerLink]="[]" [queryParams]="{ edit: true }">
+          <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+          {{ text.edit }}
+        </a>
+        <button
+          type="button"
+          class="btn btn--secondary btn--danger"
+          [attr.aria-label]="deleteText.actionFor(cat.name)"
+          (click)="deleting.set(true)"
+        >
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+          {{ deleteText.confirm }}
+        </button>
+      </div>
     </header>
+
+    @if (deleting()) {
+      <app-delete-cat-dialog
+        [catId]="cat.id"
+        [catName]="cat.name"
+        (deleted)="onDeleted()"
+        (gone)="onGone()"
+        (cancelled)="deleting.set(false)"
+      />
+    }
 
     <div class="sections">
       <section class="card" aria-labelledby="general-title">

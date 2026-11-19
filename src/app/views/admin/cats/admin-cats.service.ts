@@ -64,6 +64,10 @@ export class AdminCatsService {
     return this.http.post<AdminCatDetail>(this.url, body).pipe(map(toDisplayDetail));
   }
 
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${encodeURIComponent(id)}`);
+  }
+
   getFeaturedSummary(): Observable<FeaturedSummary> {
     return this.http.get<FeaturedSummary>(`${this.url}/featured-summary`);
   }

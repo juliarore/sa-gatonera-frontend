@@ -32,41 +32,6 @@ ul {
   }
 }
 
-.notice {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-text-primary);
-  border-radius: var(--radius-md);
-  background-color: var(--color-status-success);
-
-  &__text {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  &__close {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    min-width: 24px;
-    min-height: 24px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: color 150ms ease;
-
-    &:hover {
-      color: var(--color-text-muted);
-    }
-  }
-}
-
 .cat-header {
   display: flex;
   align-items: flex-start;
@@ -78,6 +43,12 @@ ul {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
 }
 
@@ -189,6 +160,11 @@ ul {
 }
 
 @media (max-width: 767px) {
+  .cat-header__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
   .tags__item,
   .pill {
     padding: 6px var(--space-3);

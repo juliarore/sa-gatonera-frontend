@@ -1,0 +1,22 @@
+<div class="visually-hidden" role="status">
+  @if (notice(); as current) {
+    {{ current.text }}
+  }
+</div>
+
+@if (notice(); as current) {
+  <div class="notice notice--success">
+    <p class="notice__text" aria-hidden="true">
+      <i class="fa-solid fa-circle-check"></i>
+      {{ current.text }}
+    </p>
+    <button
+      type="button"
+      class="notice__close"
+      [attr.aria-label]="closeLabel"
+      (click)="closed.emit()"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </div>
+}

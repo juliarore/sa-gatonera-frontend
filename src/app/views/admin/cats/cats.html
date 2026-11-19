@@ -1,6 +1,6 @@
 <header class="page-header">
   <div>
-    <h1 class="page-header__title">Gats</h1>
+    <h1 class="page-header__title" #heading>Gats</h1>
     <p class="page-header__subtitle">Consulta i gestiona els gats de l'associació.</p>
   </div>
   <a class="btn btn--primary" routerLink="/admin/cats/create">
@@ -8,6 +8,8 @@
     Afegir un gat
   </a>
 </header>
+
+<app-status-notice [notice]="notice()" (closed)="closeNotice()" (expired)="notice.set(null)" />
 
 <section class="card" aria-labelledby="filters-title">
   <h2 class="card__title" id="filters-title">Cerca i filtres</h2>
@@ -60,7 +62,7 @@
 </section>
 
 @if (featuredNotice(); as message) {
-  <p class="notice" role="status">
+  <p class="notice notice--info" role="status">
     <i class="fa-solid fa-circle-info notice__icon" aria-hidden="true"></i>
     <span>{{ message }}</span>
   </p>
@@ -158,14 +160,24 @@
                   {{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}
                 </td>
                 <td>
-                  <a
-                    class="btn-icon"
-                    [routerLink]="['/admin/cats', cat.id]"
-                    [queryParams]="{ edit: true }"
-                    [attr.aria-label]="'Editar ' + cat.name"
-                  >
-                    <i class="fa-solid fa-pencil" aria-hidden="true"></i>
-                  </a>
+                  <div class="actions">
+                    <a
+                      class="btn-icon"
+                      [routerLink]="['/admin/cats', cat.id]"
+                      [queryParams]="{ edit: true }"
+                      [attr.aria-label]="'Editar ' + cat.name"
+                    >
+                      <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <button
+                      type="button"
+                      class="btn-icon btn-icon--danger"
+                      [attr.aria-label]="deleteText.actionFor(cat.name)"
+                      (click)="deleteTarget.set(cat)"
+                    >
+                      <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
@@ -217,3 +229,13 @@
     }
   }
 </section>
+
+@if (deleteTarget(); as target) {
+  <app-delete-cat-dialog
+    [catId]="target.id"
+    [catName]="target.name"
+    (deleted)="onDeleted()"
+    (gone)="onGone()"
+    (cancelled)="deleteTarget.set(null)"
+  />
+}

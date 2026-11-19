@@ -222,3 +222,14 @@ export const IMAGE_TEXT = {
     request: "No s'ha pogut completar l'acció. Torna-ho a provar.",
   },
 } as const;
+
+export const DELETE_CAT_TEXT = {
+  actionFor: (name: string) => `Eliminar ${name}`,
+  question: (name: string) => `Vols eliminar a ${name}? Aquesta acció no es pot desfer.`,
+  confirm: 'Eliminar',
+  deleting: 'Eliminant...',
+  cancel: 'Cancel·lar',
+  error: "No s'ha pogut eliminar el gat. Torna-ho a provar.",
+  deleted: 'Gat eliminat',
+  gone: 'Aquest gat ja no existeix.',
+} as const;
