@@ -1,0 +1,34 @@
+@use '../../../styles/breakpoints' as bp;
+
+:host {
+  --public-logo-height: 56px;
+  --public-header-height: calc(var(--public-logo-height) + 20px);
+  --public-gutter: 64px;
+  --public-edge-fade: linear-gradient(to left, var(--color-white) 14.68%, transparent 78.87%);
+
+  display: block;
+}
+
+@include bp.ultrawide {
+  :host {
+    --public-logo-height: 64px;
+  }
+}
+
+@include bp.mobile {
+  :host {
+    --public-logo-height: 44px;
+    --public-header-height: 64px;
+    --public-gutter: var(--space-6);
+  }
+}
+
+.public {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__main {
+    flex: 1;
+  }
+}

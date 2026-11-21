@@ -1,4 +1,7 @@
-<main id="main-content" tabindex="-1">
-  Layout públic
-  <router-outlet />
-</main>
+<div class="public">
+  <app-public-header [(isMobileMenuOpen)]="isMenuOpen" />
+
+  <main id="main-content" class="public__main" tabindex="-1" [attr.inert]="isMenuOpen() ? '' : null">
+    <router-outlet />
+  </main>
+</div>

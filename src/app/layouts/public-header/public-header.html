@@ -1,0 +1,135 @@
+<header class="header" (keydown.escape)="closeOpenMenuOnEscape()">
+  <div class="header__bar" [attr.inert]="isMobileMenuOpen() ? '' : null">
+    <a class="header__brand" routerLink="/">
+      <img
+        class="header__logo"
+        src="images/sa-gatonera-logo.png"
+        alt="Sa Gatonera Blanes, inici"
+        width="485"
+        height="191"
+      />
+    </a>
+    <button
+      #mobileToggle
+      type="button"
+      class="icon-button header__toggle"
+      aria-controls="public-menu"
+      aria-label="Obre el menú"
+      [attr.aria-expanded]="isMobileMenuOpen()"
+      (click)="toggleMobileMenu()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M3 6h18M3 12h18M3 18h18" />
+      </svg>
+    </button>
+  </div>
+
+  <div
+    #panel
+    id="public-menu"
+    class="panel"
+    [class.panel--open]="isMobileMenuOpen()"
+    [attr.inert]="isMobileViewport() && !isMobileMenuOpen() ? '' : null"
+    (keydown)="trapFocusInPanel($event)"
+  >
+    <div class="panel__bar">
+      <a class="header__brand" routerLink="/">
+        <img
+          class="header__logo"
+          src="images/sa-gatonera-logo.png"
+          alt="Sa Gatonera Blanes, inici"
+          width="485"
+          height="191"
+        />
+      </a>
+      <button
+        #closeButton
+        type="button"
+        class="icon-button"
+        aria-label="Tanca el menú"
+        (click)="closeMobileMenuAndFocusToggle()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M5 5l14 14M19 5L5 19" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="nav" aria-label="Menú principal">
+      <ul class="nav__list">
+        @for (item of menuItems; track item.label) {
+          @if (item.kind === 'group') {
+            <li
+              class="nav__item"
+              (mouseenter)="openDropdownOnHover(item.key)"
+              (mouseleave)="closeDropdownOnHoverEnd(item.key)"
+              (focusout)="closeDropdownOnFocusLeave($event, item.key)"
+            >
+              <button
+                type="button"
+                class="nav__control"
+                [id]="getButtonId(item.key)"
+                [class.nav__control--active]="isRouteInGroup(item)"
+                [attr.aria-expanded]="openGroupKey() === item.key"
+                [attr.aria-controls]="getDropdownId(item.key)"
+                (click)="toggleDropdown(item.key)"
+              >
+                <span class="nav__label">{{ item.label }}</span>
+                <i class="nav__chevron fa-solid fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <ul
+                class="dropdown"
+                [id]="getDropdownId(item.key)"
+                [hidden]="openGroupKey() !== item.key"
+              >
+                @for (link of item.links; track link.path) {
+                  <li>
+                    <a
+                      class="dropdown__link"
+                      [routerLink]="link.path"
+                      routerLinkActive="dropdown__link--active"
+                      ariaCurrentWhenActive="page"
+                      >{{ link.label }}</a
+                    >
+                  </li>
+                }
+              </ul>
+            </li>
+          } @else {
+            <li class="nav__item">
+              <a
+                class="nav__control"
+                [routerLink]="item.path"
+                routerLinkActive="nav__control--active"
+                ariaCurrentWhenActive="page"
+                [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+              >
+                <span class="nav__label">{{ item.label }}</span>
+              </a>
+            </li>
+          }
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
