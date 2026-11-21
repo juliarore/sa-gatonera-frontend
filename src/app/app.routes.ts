@@ -1,12 +1,79 @@
 import { Routes } from '@angular/router';
-import { PublicLayout } from './layouts/public-layout/public-layout';
-import { Home } from './views/public/home/home';
-
 export const routes: Routes = [
   {
     path: '',
-    component: PublicLayout,
-    children: [{ path: '', title: 'Sa Gatonera', component: Home }],
+    loadComponent: () =>
+      import('./layouts/public-layout/public-layout').then((m) => m.PublicLayout),
+    children: [
+      {
+        path: '',
+        title: 'Inici | Sa Gatonera',
+        data: { title: 'Inici' },
+        loadComponent: () => import('./views/public/home/home').then((m) => m.Home),
+      },
+      { path: 'adopta', redirectTo: 'adopta/gats-adopcio', pathMatch: 'full' },
+      { path: 'collabora', redirectTo: 'collabora/donacions', pathMatch: 'full' },
+      {
+        path: 'adopta/gats-adopcio',
+        title: 'Gats en adopció | Sa Gatonera',
+        data: { title: 'Gats en adopció' },
+        loadComponent: () => import('./views/public/adopt/catalog/catalog').then((m) => m.Catalog),
+      },
+      {
+        path: 'adopta/troba-el-teu-company',
+        title: 'Troba el teu company de vida | Sa Gatonera',
+        data: { title: 'Troba el teu company de vida' },
+        loadComponent: () => import('./views/public/adopt/compatibility-quiz/compatibility-quiz').then((m) => m.CompatibilityQuiz),
+      },
+      {
+        path: 'adopta/proces-adopcio',
+        title: "Procés d'adopció | Sa Gatonera",
+        data: { title: "Procés d'adopció" },
+        loadComponent: () => import('./views/public/adopt/process/process').then((m) => m.Process),
+      },
+      {
+        path: 'adopta/condicions-adopcio',
+        title: "Condicions d'adopció | Sa Gatonera",
+        data: { title: "Condicions d'adopció" },
+        loadComponent: () => import('./views/public/adopt/conditions/conditions').then((m) => m.Conditions),
+      },
+      {
+        path: 'collabora/donacions',
+        title: 'Donacions | Sa Gatonera',
+        data: { title: 'Donacions' },
+        loadComponent: () => import('./views/public/collaborate/donations/donations').then((m) => m.Donations),
+      },
+      {
+        path: 'collabora/voluntariat',
+        title: 'Voluntariat | Sa Gatonera',
+        data: { title: 'Voluntariat' },
+        loadComponent: () => import('./views/public/collaborate/volunteering/volunteering').then((m) => m.Volunteering),
+      },
+      {
+        path: 'collabora/socis',
+        title: 'Fes-te soci/sòcia | Sa Gatonera',
+        data: { title: 'Fes-te soci/sòcia' },
+        loadComponent: () => import('./views/public/collaborate/membership/membership').then((m) => m.Membership),
+      },
+      {
+        path: 'actualitat',
+        title: 'Actualitat | Sa Gatonera',
+        data: { title: 'Actualitat' },
+        loadComponent: () => import('./views/public/news/news').then((m) => m.News),
+      },
+      {
+        path: 'sobre-nosaltres',
+        title: 'Sobre nosaltres | Sa Gatonera',
+        data: { title: 'Sobre nosaltres' },
+        loadComponent: () => import('./views/public/about/about').then((m) => m.About),
+      },
+      {
+        path: 'contacte',
+        title: 'Contacte | Sa Gatonera',
+        data: { title: 'Contacte' },
+        loadComponent: () => import('./views/public/contact/contact').then((m) => m.Contact),
+      },
+    ],
   },
   {
     path: 'admin',
