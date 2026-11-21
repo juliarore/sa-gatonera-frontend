@@ -1,0 +1,40 @@
+$desktop-min: 960px;
+$tablet-min: 768px;
+$wide-min: 1280px;
+$ultrawide-min: 1440px;
+
+@mixin desktop {
+  @media (min-width: $desktop-min) {
+    @content;
+  }
+}
+
+@mixin desktop-hover {
+  @media (min-width: $desktop-min) and (hover: hover) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (width < #{$desktop-min}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (width >= #{$tablet-min}) and (width < #{$desktop-min}) {
+    @content;
+  }
+}
+
+@mixin wide {
+  @media (min-width: $wide-min) {
+    @content;
+  }
+}
+
+@mixin ultrawide {
+  @media (min-width: $ultrawide-min) {
+    @content;
+  }
+}
