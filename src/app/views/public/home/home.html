@@ -1,11 +1,13 @@
 <section class="hero">
-  <img
+  <app-responsive-image
     class="hero__image"
-    src="images/hero-cat.jpg"
+    src="images/hero/hero"
     alt=""
-    width="1920"
-    height="1280"
-    fetchpriority="high"
+    sizes="max(100vw, 840px)"
+    [widths]="[960, 1440, 1920, 2880]"
+    [width]="2880"
+    [height]="1920"
+    priority
   />
   <div class="hero__content">
     <h1 class="hero__title">
