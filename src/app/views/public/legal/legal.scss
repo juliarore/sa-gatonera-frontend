@@ -1,4 +1,4 @@
-@use '../../../../styles/section' as section;
+@use '../../../../styles/abstracts/section' as section;
 
 :host {
   @include section.section;

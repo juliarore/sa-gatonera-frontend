@@ -1,5 +1,5 @@
-@use '../../../../../styles/breakpoints' as bp;
-@use '../../../../../styles/section' as section;
+@use '../../../../../styles/abstracts/breakpoints' as bp;
+@use '../../../../../styles/abstracts/section' as section;
 
 :host {
   display: block;

@@ -1,0 +1,50 @@
+:root {
+  --color-primary: #f0ab6a;
+  --color-primary-hover: #f3bb86;
+  --color-surface-cream: #fcf5ed;
+  --color-surface-cream-strong: #f7efe6;
+  --color-surface-gray: #efedeb;
+  --color-accent-turquoise: #109dc0;
+  --color-accent-turquoise-strong: color-mix(in srgb, var(--color-accent-turquoise) 80%, black);
+  --color-urgent: #c75000;
+  --color-gender-female: #df8cc5;
+  --color-text-primary: #29201b;
+  --color-text-muted: #69635f;
+  --color-white: #ffffff;
+  --color-border: #e5e4e4;
+  --color-border-cream: #e8d7c7;
+  --color-border-input: #857c75;
+
+  --color-status-success: #e2f3e5;
+  --color-status-warning: #fff2c9;
+  --color-status-danger: #fce3e0;
+  --color-status-info: #dbf0f6;
+  --color-error-icon: #b91c1c;
+
+  --font-heading: 'Lora', serif;
+  --font-body: 'Nunito Sans', sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-btn: 12px;
+  --radius-card: 12px;
+  --radius-media: 12px;
+  --radius-tag: 6px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --font-size-sm: 0.875rem;
+  --line-height-body: 1.5;
+  --size-touch: 44px;
+  --cat-card-min-height: 525px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+}

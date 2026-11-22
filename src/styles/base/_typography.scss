@@ -1,4 +1,15 @@
-@use 'breakpoints' as bp;
+@use '../abstracts/breakpoints' as bp;
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+
+h1 {
+  font-weight: 600;
+}
 
 .public__main {
   h1,
