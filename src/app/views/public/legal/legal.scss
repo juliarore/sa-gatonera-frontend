@@ -1,0 +1,11 @@
+@use '../../../../styles/section' as section;
+
+:host {
+  @include section.section;
+
+  display: block;
+}
+
+h1 {
+  margin-bottom: var(--space-6);
+}

@@ -4,4 +4,6 @@
   <main id="main-content" class="public__main" tabindex="-1" [attr.inert]="isMenuOpen() ? '' : null">
     <router-outlet />
   </main>
+
+  <app-public-footer [attr.inert]="isMenuOpen() ? '' : null" />
 </div>

@@ -1,5 +1,5 @@
 @use '../../../../../styles/breakpoints' as bp;
-@use '../../../../../styles/home-section' as home;
+@use '../../../../../styles/section' as section;
 
 :host {
   display: block;
@@ -7,7 +7,7 @@
 }
 
 .about {
-  @include home.section-split(minmax(0, 656fr) minmax(0, 600fr));
+  @include section.section-split(minmax(0, 656fr) minmax(0, 600fr));
 
   &__content {
     display: flex;

@@ -1,12 +1,12 @@
 @use '../../../../../styles/breakpoints' as bp;
-@use '../../../../../styles/home-section' as home;
+@use '../../../../../styles/section' as section;
 
 :host {
   display: block;
 }
 
 .find-companion {
-  @include home.section-split(minmax(0, 600fr) minmax(0, 656fr));
+  @include section.section-split(minmax(0, 600fr) minmax(0, 656fr));
 
   &__content {
     display: flex;

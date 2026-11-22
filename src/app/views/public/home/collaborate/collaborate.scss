@@ -1,12 +1,12 @@
 @use '../../../../../styles/breakpoints' as bp;
-@use '../../../../../styles/home-section' as home;
+@use '../../../../../styles/section' as section;
 
 :host {
   display: block;
 }
 
 .collaborate {
-  @include home.section;
+  @include section.section;
 
   display: flex;
   flex-direction: column;

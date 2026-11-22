@@ -60,6 +60,18 @@ export const routes: Routes = [
         data: { title: 'Contacte' },
         loadComponent: () => import('./views/public/contact/contact').then((m) => m.Contact),
       },
+      {
+        path: 'avis-legal',
+        title: 'Avís legal | Sa Gatonera',
+        data: { title: 'Avís legal' },
+        loadComponent: () => import('./views/public/legal/legal').then((m) => m.Legal),
+      },
+      {
+        path: 'politica-privacitat',
+        title: 'Política de privacitat | Sa Gatonera',
+        data: { title: 'Política de privacitat' },
+        loadComponent: () => import('./views/public/legal/legal').then((m) => m.Legal),
+      },
     ],
   },
   {

@@ -1,0 +1,59 @@
+<footer class="footer">
+  <div class="footer__main">
+    <nav class="footer__nav" aria-label="Navegació del peu de pàgina">
+      @for (column of columns; track column.title) {
+        <div class="footer__column">
+          <h2 class="footer__title">{{ column.title }}</h2>
+          <ul class="footer__list">
+            @for (link of column.links; track link.label) {
+              <li>
+                <a class="footer__link" [routerLink]="link.path" [fragment]="link.fragment">{{
+                  link.label
+                }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </nav>
+    <div class="footer__column footer__column--social">
+      <h2 class="footer__title">Segueix-nos</h2>
+      <ul class="footer__list footer__list--social">
+        @for (social of socialLinks; track social.url) {
+          <li>
+            <a
+              class="footer__social"
+              [href]="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="social.label"
+            >
+              <i class="fa-brands" [class]="social.icon" aria-hidden="true"></i>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="footer__legal">
+    <a class="footer__brand" routerLink="/" aria-label="Sa Gatonera, inici">
+      <img
+        class="footer__logo"
+        src="images/logos/logo-sa-gatonera-horizontal.png"
+        alt="Sa Gatonera Blanes"
+        width="1722"
+        height="573"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+    <p>© {{ year }} Sa Gatonera. Tots els drets reservats.</p>
+    <ul class="footer__list footer__list--legal">
+      @for (link of legalLinks; track link.label) {
+        <li>
+          <a class="footer__link" [routerLink]="link.path">{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+  </div>
+</footer>

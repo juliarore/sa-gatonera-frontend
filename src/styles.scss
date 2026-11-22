@@ -9,6 +9,7 @@
 
 @import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 @import '@fortawesome/fontawesome-free/css/solid.min.css';
+@import '@fortawesome/fontawesome-free/css/brands.min.css';
 @import '@fontsource/lora/500.css';
 @import '@fontsource/lora/500-italic.css';
 @import '@fontsource/lora/600.css';
@@ -21,14 +22,17 @@
   --color-primary: #f0ab6a;
   --color-primary-hover: #f3bb86;
   --color-surface-cream: #fcf5ed;
+  --color-surface-cream-strong: #f7efe6;
   --color-surface-gray: #efedeb;
   --color-accent-turquoise: #109dc0;
+  --color-accent-turquoise-strong: color-mix(in srgb, var(--color-accent-turquoise) 80%, black);
   --color-urgent: #c75000;
   --color-gender-female: #df8cc5;
   --color-text-primary: #29201b;
   --color-text-muted: #69635f;
   --color-white: #ffffff;
   --color-border: #e5e4e4;
+  --color-border-cream: #e8d7c7;
   --color-border-input: #857c75;
 
   --color-status-success: #e2f3e5;
