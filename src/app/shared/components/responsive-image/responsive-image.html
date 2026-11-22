@@ -10,6 +10,6 @@
     [attr.height]="height()"
     [attr.loading]="priority() ? 'eager' : 'lazy'"
     [attr.fetchpriority]="priority() ? 'high' : null"
-    [attr.decoding]="priority() ? null : 'async'"
+    decoding="async"
   />
 </picture>

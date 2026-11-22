@@ -12,7 +12,6 @@ export const routes: Routes = [
         loadComponent: () => import('./views/public/home/home').then((m) => m.Home),
       },
       { path: 'adopta', redirectTo: 'adopta/gats-adopcio', pathMatch: 'full' },
-      { path: 'collabora', redirectTo: 'collabora/donacions', pathMatch: 'full' },
       {
         path: 'adopta/gats-adopcio',
         title: 'Gats en adopció | Sa Gatonera',
@@ -38,22 +37,10 @@ export const routes: Routes = [
         loadComponent: () => import('./views/public/adopt/conditions/conditions').then((m) => m.Conditions),
       },
       {
-        path: 'collabora/donacions',
-        title: 'Donacions | Sa Gatonera',
-        data: { title: 'Donacions' },
-        loadComponent: () => import('./views/public/collaborate/donations/donations').then((m) => m.Donations),
-      },
-      {
-        path: 'collabora/voluntariat',
-        title: 'Voluntariat | Sa Gatonera',
-        data: { title: 'Voluntariat' },
-        loadComponent: () => import('./views/public/collaborate/volunteering/volunteering').then((m) => m.Volunteering),
-      },
-      {
-        path: 'collabora/socis',
-        title: 'Fes-te soci/sòcia | Sa Gatonera',
-        data: { title: 'Fes-te soci/sòcia' },
-        loadComponent: () => import('./views/public/collaborate/membership/membership').then((m) => m.Membership),
+        path: 'collabora',
+        title: 'Col·labora | Sa Gatonera',
+        data: { title: 'Col·labora' },
+        loadComponent: () => import('./views/public/collaborate/collaborate').then((m) => m.CollaboratePage),
       },
       {
         path: 'actualitat',

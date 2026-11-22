@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { IsActiveMatchOptions, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { MENU_ITEMS, MenuGroupItem } from './public-menu';
 
@@ -40,6 +40,12 @@ export class PublicHeader {
   private hoverOpenedGroupKey: string | null = null;
 
   protected readonly menuItems = MENU_ITEMS;
+  protected readonly dropdownLinkMatch: IsActiveMatchOptions = {
+    paths: 'exact',
+    queryParams: 'ignored',
+    matrixParams: 'ignored',
+    fragment: 'exact',
+  };
   protected readonly isMobileViewport = signal(false);
   readonly isMobileMenuOpen = model(false);
   protected readonly openGroupKey = signal<string | null>(null);
@@ -172,7 +178,7 @@ export class PublicHeader {
     this.hoverOpenedGroupKey = null;
   }
 
-  private closeAllMenus(): void {
+  protected closeAllMenus(): void {
     this.closeDropdown();
     this.isMobileMenuOpen.set(false);
   }

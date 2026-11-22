@@ -1,0 +1,9 @@
+<div class="collaborate-page__intro">
+  <h1>Col·labora amb Sa Gatonera</h1>
+</div>
+
+@for (option of options; track option.id) {
+  <section class="collaborate-page__section" [id]="option.id" [attr.aria-labelledby]="option.id + '-title'">
+    <h2 [id]="option.id + '-title'" tabindex="-1">{{ option.title }}</h2>
+  </section>
+}

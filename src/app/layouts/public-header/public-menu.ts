@@ -1,6 +1,7 @@
 export interface MenuLink {
   label: string;
   path: string;
+  fragment?: string;
 }
 
 export interface MenuSingleItem extends MenuLink {
@@ -34,9 +35,9 @@ export const MENU_ITEMS: readonly MenuItem[] = [
     key: 'collaborate',
     label: 'Col·labora',
     links: [
-      { label: 'Donacions', path: '/collabora/donacions' },
-      { label: 'Voluntariat', path: '/collabora/voluntariat' },
-      { label: 'Fes-te soci/sòcia', path: '/collabora/socis' },
+      { label: 'Donacions', path: '/collabora', fragment: 'donacions' },
+      { label: 'Voluntariat', path: '/collabora', fragment: 'voluntariat' },
+      { label: 'Fes-te soci/sòcia', path: '/collabora', fragment: 'socis' },
     ],
   },
   { kind: 'link', label: 'Actualitat', path: '/actualitat' },

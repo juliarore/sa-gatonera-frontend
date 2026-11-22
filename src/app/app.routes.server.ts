@@ -22,15 +22,7 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Prerender,
   },
   {
-    path: 'collabora/donacions',
-    renderMode: RenderMode.Prerender,
-  },
-  {
-    path: 'collabora/voluntariat',
-    renderMode: RenderMode.Prerender,
-  },
-  {
-    path: 'collabora/socis',
+    path: 'collabora',
     renderMode: RenderMode.Prerender,
   },
   {

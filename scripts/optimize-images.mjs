@@ -33,7 +33,7 @@ const ENCODERS = {
 };
 
 const USAGE = `Usage: npm run images -- <original> [--preset hero|card|detail] [--name <name>] [--widths 960,1440] [--quality 60 | avif=60,webp=80,jpg=82] [--out <dir>]
-Default output: public/images/<name>/<name>-<width>.<avif|webp|jpg>`;
+Output: <out>/<name>-<width>.<avif|webp|jpg>, e.g. --out public/images/home/about (default: public/images/<name>)`;
 
 function fail(message) {
   console.error(`${message}\n${USAGE}`);

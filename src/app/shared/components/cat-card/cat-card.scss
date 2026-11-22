@@ -18,7 +18,7 @@
     position: relative;
     aspect-ratio: 411 / 250;
     overflow: hidden;
-    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    border-radius: var(--radius-media) var(--radius-media) 0 0;
     background-color: var(--color-surface-gray);
   }
 
@@ -90,15 +90,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-4);
-  }
-
-  &__name {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: calc(32 / 24);
   }
 
   &__meta {

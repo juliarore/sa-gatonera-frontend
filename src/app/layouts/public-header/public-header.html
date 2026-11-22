@@ -5,8 +5,9 @@
         class="header__logo"
         src="images/sa-gatonera-logo.png"
         alt="Sa Gatonera Blanes, inici"
-        width="485"
-        height="191"
+        width="1722"
+        height="573"
+        loading="eager"
       />
     </a>
     <button
@@ -48,8 +49,10 @@
           class="header__logo"
           src="images/sa-gatonera-logo.png"
           alt="Sa Gatonera Blanes, inici"
-          width="485"
-          height="191"
+          width="1722"
+          height="573"
+          loading="lazy"
+          decoding="async"
         />
       </a>
       <button
@@ -102,12 +105,15 @@
                 [id]="getDropdownId(item.key)"
                 [hidden]="openGroupKey() !== item.key"
               >
-                @for (link of item.links; track link.path) {
+                @for (link of item.links; track link.label) {
                   <li>
                     <a
                       class="dropdown__link"
                       [routerLink]="link.path"
+                      [fragment]="link.fragment"
                       routerLinkActive="dropdown__link--active"
+                      [routerLinkActiveOptions]="dropdownLinkMatch"
+                      (click)="closeAllMenus()"
                       ariaCurrentWhenActive="page"
                       >{{ link.label }}</a
                     >

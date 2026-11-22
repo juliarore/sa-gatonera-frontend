@@ -1,0 +1,20 @@
+@use '../../../../styles/home-section' as home;
+
+:host {
+  display: block;
+}
+
+.collaborate-page {
+  &__intro,
+  &__section {
+    @include home.section;
+  }
+
+  &__section {
+    scroll-margin-top: calc(var(--public-header-height) + var(--space-4));
+
+    &:nth-of-type(odd) {
+      background-color: var(--color-surface-cream);
+    }
+  }
+}
