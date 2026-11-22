@@ -1,6 +1,8 @@
 @use 'styles/buttons';
 @use 'styles/cards';
 @use 'styles/checkable';
+@use 'styles/typography';
+@use 'styles/media';
 @use 'styles/messages';
 @use 'styles/notice';
 @use 'styles/status-pills';
@@ -42,6 +44,7 @@
   --radius-md: 8px;
   --radius-btn: 12px;
   --radius-card: 12px;
+  --radius-media: 12px;
   --radius-tag: 6px;
   --radius-lg: 16px;
   --radius-pill: 999px;
@@ -113,6 +116,12 @@ h1 {
 
   &:focus {
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 

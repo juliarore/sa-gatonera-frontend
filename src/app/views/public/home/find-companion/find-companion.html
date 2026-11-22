@@ -1,20 +1,21 @@
 <section class="find-companion" aria-labelledby="find-companion-title">
   <div class="find-companion__content">
-    <h2 class="find-companion__title" id="find-companion-title">Troba el teu company de vida</h2>
-    <p class="find-companion__intro">
+    <h2 id="find-companion-title">Troba el teu company de vida</h2>
+    <p>
       Cada gat és únic, i cada família també. Respon unes preguntes sobre les teves preferències i
       descobreix quins gats podrien encaixar millor amb tu.
     </p>
-    <a class="btn btn--primary find-companion__action" routerLink="/adopta/troba-el-teu-company">
+    <a class="btn btn--primary" routerLink="/adopta/troba-el-teu-company">
       Començar el test
     </a>
   </div>
-  <img
-    class="find-companion__image"
-    src="/images/compatibility-cats.jpg"
+  <app-responsive-image
+    class="find-companion__image media"
+    src="images/home/find-companion/troba-company-gats"
     alt="Dos gats estirats al sol, mirant a càmera"
-    width="1200"
-    height="800"
-    loading="lazy"
+    sizes="(min-width: 960px) 656px, calc(100vw - 48px)"
+    [widths]="[656, 1200]"
+    [width]="1200"
+    [height]="800"
   />
 </section>

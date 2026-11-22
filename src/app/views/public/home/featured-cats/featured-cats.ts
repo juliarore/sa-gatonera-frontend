@@ -12,7 +12,7 @@ const CATALOG_PATH = '/adopta/gats-adopcio';
 
 function toCardImage(cat: FeaturedCat): CatCardImage | null {
   return cat.coverImageUrl
-    ? { src: imageUrl(cat.coverImageUrl), alt: cat.coverImageAlt ?? '' }
+    ? { src: imageUrl(cat.coverImageUrl), alt: cat.coverImageAlt || `Foto de ${cat.name}` }
     : null;
 }
 

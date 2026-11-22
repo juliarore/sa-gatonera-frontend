@@ -6,18 +6,7 @@
 }
 
 .find-companion {
-  @include home.section;
-
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--section-gap);
-
-  @include bp.desktop {
-    display: grid;
-    grid-template-columns: minmax(0, 600fr) minmax(0, 656fr);
-    align-items: center;
-    column-gap: calc(2 * var(--space-7));
-  }
+  @include home.section-split(minmax(0, 600fr) minmax(0, 656fr));
 
   &__content {
     display: flex;
@@ -29,34 +18,8 @@
     }
   }
 
-  &__title {
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 500;
-    line-height: 1.125;
-
-    @include bp.desktop {
-      font-size: 2rem;
-    }
-  }
-
-  &__intro {
-    margin: 0;
-    line-height: calc(25 / 16);
-  }
-
-  &__action {
-    @include bp.desktop {
-      align-self: flex-start;
-    }
-  }
-
   &__image {
-    display: block;
-    width: 100%;
-    height: auto;
     aspect-ratio: 3 / 2;
-    border-radius: var(--radius-card);
     object-fit: cover;
 
     @include bp.desktop {

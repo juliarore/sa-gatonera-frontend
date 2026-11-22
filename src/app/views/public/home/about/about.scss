@@ -1,0 +1,26 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use '../../../../../styles/home-section' as home;
+
+:host {
+  display: block;
+  background-color: var(--color-surface-cream);
+}
+
+.about {
+  @include home.section-split(minmax(0, 656fr) minmax(0, 600fr));
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    @include bp.desktop {
+      order: 1;
+    }
+  }
+
+  &__image {
+    aspect-ratio: 656 / 384;
+    object-fit: cover;
+  }
+}

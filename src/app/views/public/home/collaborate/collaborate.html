@@ -1,0 +1,22 @@
+<section class="collaborate" aria-labelledby="collaborate-title">
+  <h2 id="collaborate-title">Col·labora amb nosaltres</h2>
+  <ul class="collaborate__options" role="list">
+    @for (option of options; track option.id) {
+      <li>
+        <a class="collaborate__option" [routerLink]="path" [fragment]="option.id">
+          <img
+            class="collaborate__icon"
+            [src]="option.icon"
+            alt=""
+            width="99"
+            height="99"
+            loading="lazy"
+            decoding="async"
+          />
+          <h3 class="collaborate__option-title">{{ option.title }}</h3>
+          <p class="collaborate__option-text">{{ option.text }}</p>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

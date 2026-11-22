@@ -11,3 +11,22 @@
     --section-gap: var(--space-10);
   }
 }
+
+@mixin section-split($columns) {
+  @include section;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--section-gap);
+
+  @include bp.desktop {
+    display: grid;
+    grid-template-columns: $columns;
+    align-items: center;
+    column-gap: calc(2 * var(--space-7));
+
+    .btn {
+      align-self: flex-start;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+@use 'breakpoints' as bp;
+
+.public__main {
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+
+  h1,
+  h2 {
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.125;
+  }
+
+  h3 {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: calc(4 / 3);
+  }
+
+  p {
+    line-height: calc(25 / 16);
+  }
+
+  @include bp.desktop {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+}

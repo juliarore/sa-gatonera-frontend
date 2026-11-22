@@ -1,0 +1,66 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use '../../../../../styles/home-section' as home;
+
+:host {
+  display: block;
+}
+
+.collaborate {
+  @include home.section;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+
+  h2 {
+    text-align: center;
+  }
+
+  &__options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include bp.desktop {
+      grid-template-columns: repeat(3, minmax(0, 300px));
+      justify-content: center;
+      gap: var(--space-10);
+    }
+  }
+
+  &__option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    border-radius: var(--radius-card);
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  &__icon {
+    transition: transform 200ms ease;
+  }
+
+  &__option-title {
+    transition: color 200ms ease;
+  }
+
+  &__option-text {
+    line-height: 1.25;
+  }
+
+  &__option:is(:hover, :focus-visible) &__option-title {
+    color: var(--color-primary);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &__option:is(:hover, :focus-visible) &__icon {
+      transform: scale(1.05);
+    }
+  }
+}
