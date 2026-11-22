@@ -5,6 +5,8 @@
 }
 
 .footer {
+  --footer-link-padding: 10px;
+
   &__main {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -17,6 +19,8 @@
     }
 
     @include bp.laptop {
+      --footer-link-padding: 0;
+
       grid-template-columns: repeat(4, auto);
       justify-content: space-between;
       align-items: start;
@@ -31,7 +35,6 @@
     display: flex;
     align-items: center;
     min-height: var(--size-touch);
-    margin: 0;
     font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 700;
@@ -58,14 +61,14 @@
     &--social {
       flex-direction: row;
       gap: var(--space-3);
-      margin-inline: -4px;
+      margin-inline: calc(-1 * var(--space-1));
     }
   }
 
   &__link {
     display: flex;
     align-items: center;
-    padding-block: 10px;
+    padding-block: var(--footer-link-padding);
     color: inherit;
     font-size: 1rem;
     font-weight: 400;
@@ -73,12 +76,12 @@
     text-decoration: none;
     white-space: nowrap;
 
-    @include bp.laptop {
-      padding-block: 0;
-    }
-
     &:is(:hover, :focus-visible) {
       text-decoration: underline;
+    }
+
+    &--legal {
+      margin-block: calc(-1 * var(--footer-link-padding));
     }
   }
 
@@ -87,7 +90,7 @@
     place-items: center;
     width: var(--size-touch);
     height: var(--size-touch);
-    padding: 4px;
+    padding: var(--space-1);
     border-radius: var(--radius-pill);
     background-color: var(--color-primary);
     background-clip: content-box;
@@ -123,14 +126,11 @@
       column-gap: 48px;
     }
 
-    p {
-      margin: 0;
-    }
   }
 
   &__brand {
     display: block;
-    border-radius: var(--radius-card);
+    border-radius: var(--radius-media);
 
     @include bp.laptop {
       justify-self: start;
@@ -157,9 +157,5 @@
       gap: var(--space-8);
     }
 
-    .footer__link {
-      padding-block: 10px;
-      margin-block: -10px;
-    }
   }
 }

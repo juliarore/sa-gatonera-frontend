@@ -5,7 +5,7 @@
   --public-header-height: calc(var(--public-logo-height) + 20px);
   --public-gutter: 64px;
   --public-content-max: 1312px;
-  --public-inline: max(var(--public-gutter), calc((100% - var(--public-content-max)) / 2));
+  --public-inline: max(var(--public-gutter), (100% - var(--public-content-max)) / 2);
   --public-edge-fade: linear-gradient(to left, var(--color-white) 14.68%, transparent 78.87%);
 
   display: block;
@@ -20,7 +20,6 @@
 @include bp.mobile {
   :host {
     --public-logo-height: 44px;
-    --public-header-height: 64px;
     --public-gutter: var(--space-6);
   }
 }

@@ -5,7 +5,7 @@
       Cada gat és únic, i cada família també. Respon unes preguntes sobre les teves preferències i
       descobreix quins gats podrien encaixar millor amb tu.
     </p>
-    <a class="btn btn--primary" routerLink="/adopta/troba-el-teu-company">
+    <a class="btn btn--primary" [routerLink]="findCompanionPath">
       Començar el test
     </a>
   </div>
@@ -13,7 +13,7 @@
     class="find-companion__image media"
     src="images/home/find-companion/troba-company-gats"
     alt="Dos gats estirats al sol, mirant a càmera"
-    sizes="(min-width: 960px) 656px, calc(100vw - 48px)"
+    [sizes]="imageSizes"
     [widths]="[656, 1200]"
     [width]="1200"
     [height]="800"

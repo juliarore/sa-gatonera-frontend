@@ -3,7 +3,7 @@ $tablet-min: 768px;
 $laptop-min: 1100px;
 $wide-min: 1280px;
 $ultrawide-min: 1440px;
-$phone-max: 480px;
+$phone-min: 480px;
 
 @mixin desktop {
   @media (min-width: $desktop-min) {
@@ -24,7 +24,13 @@ $phone-max: 480px;
 }
 
 @mixin phone {
-  @media (width < #{$phone-max}) {
+  @media (width < #{$phone-min}) {
+    @content;
+  }
+}
+
+@mixin below-tablet {
+  @media (width < #{$tablet-min}) {
     @content;
   }
 }

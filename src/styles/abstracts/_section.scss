@@ -1,13 +1,12 @@
 @use 'breakpoints' as bp;
 
 @mixin section {
-  --section-padding-block: 60px;
   --section-gap: var(--space-7);
 
-  padding: var(--section-padding-block) var(--public-inline);
+  padding: 60px var(--public-inline);
 
   @include bp.desktop {
-    --section-padding-block: 80px;
+    padding-block: 80px;
     --section-gap: var(--space-10);
   }
 }
@@ -19,11 +18,17 @@
   flex-direction: column;
   row-gap: var(--section-gap);
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
   @include bp.desktop {
     display: grid;
     grid-template-columns: $columns;
     align-items: center;
-    column-gap: calc(2 * var(--space-7));
+    column-gap: 56px;
 
     .btn {
       align-self: flex-start;

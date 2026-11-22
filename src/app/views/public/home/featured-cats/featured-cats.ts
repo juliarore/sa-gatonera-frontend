@@ -5,10 +5,9 @@ import { getAgeLabel } from '../../../../shared/cats/age';
 import { toDisplayDate } from '../../../../shared/cats/date';
 import { imageUrl } from '../../../../shared/cats/image-url';
 import { FeaturedCat, PublicCatsService } from '../../../../shared/cats/public-cats.service';
+import { CATALOG_PATH } from '../../../../shared/navigation/routes';
 
 type LoadState = 'loading' | 'ready' | 'hidden';
-
-const CATALOG_PATH = '/adopta/gats-adopcio';
 
 function toCardImage(cat: FeaturedCat): CatCardImage | null {
   return cat.coverImageUrl

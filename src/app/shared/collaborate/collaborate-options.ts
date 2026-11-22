@@ -5,8 +5,6 @@ export interface CollaborateOption {
   icon: string;
 }
 
-export const COLLABORATE_PATH = '/collabora';
-
 export const COLLABORATE_OPTIONS: readonly CollaborateOption[] = [
   {
     id: 'donacions',

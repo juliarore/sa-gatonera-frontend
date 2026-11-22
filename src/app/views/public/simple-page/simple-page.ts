@@ -2,10 +2,10 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-legal',
-  templateUrl: './legal.html',
-  styleUrl: './legal.scss',
+  selector: 'app-simple-page',
+  templateUrl: './simple-page.html',
+  styleUrl: './simple-page.scss',
 })
-export class Legal {
+export class SimplePage {
   protected readonly title: string = inject(ActivatedRoute).snapshot.data['title'];
 }

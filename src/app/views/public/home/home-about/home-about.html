@@ -1,6 +1,6 @@
-<section class="about" aria-labelledby="about-title">
-  <div class="about__content">
-    <h2 id="about-title">Qui som i què fem?</h2>
+<section class="home-about" aria-labelledby="home-about-title">
+  <div class="home-about__content">
+    <h2 id="home-about-title">Qui som i què fem?</h2>
     <p>
       Des del 2016, treballem per millorar el benestar dels gats que viuen al carrer a Blanes.
       Molts d'aquests animals s'enfronten a dificultats per trobar aliment, problemes de salut i
@@ -14,13 +14,13 @@
       També orientem les persones que tenen dubtes o inquietuds sobre com actuar davant de
       situacions relacionades amb els gats del carrer.
     </p>
-    <a class="btn btn--primary" routerLink="/sobre-nosaltres">Coneix-nos millor</a>
+    <a class="btn btn--primary" [routerLink]="aboutPath">Coneix-nos millor</a>
   </div>
   <app-responsive-image
-    class="about__image media"
+    class="home-about__image media"
     src="images/home/about/qui-som-gatonera"
     alt="Gats de les colònies de Sa Gatonera menjant en una terrassa de Blanes"
-    sizes="(min-width: 960px) 656px, calc(100vw - 48px)"
+    [sizes]="imageSizes"
     [widths]="[656, 1200]"
     [width]="1200"
     [height]="702"

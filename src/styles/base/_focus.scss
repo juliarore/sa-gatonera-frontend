@@ -3,7 +3,6 @@
   outline-offset: 2px;
 }
 
-// Aquests elements només reben el focus per codi i no són interactius; per això no necessiten contorn de focus.
 [tabindex='-1']:focus {
   outline: none;
   box-shadow: none;

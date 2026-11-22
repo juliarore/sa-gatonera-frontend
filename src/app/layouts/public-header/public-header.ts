@@ -14,9 +14,10 @@ import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { IsActiveMatchOptions, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
+import { MOBILE_VIEWPORT_QUERY } from '../../shared/navigation/breakpoints';
+import { HOME_PATH } from '../../shared/navigation/routes';
 import { MENU_ITEMS, MenuGroupItem } from './public-menu';
 
-const MOBILE_VIEWPORT_QUERY = '(max-width: 959px)';
 const HOVER_POINTER_QUERY = '(hover: hover)';
 
 @Component({
@@ -39,6 +40,7 @@ export class PublicHeader {
 
   private hoverOpenedGroupKey: string | null = null;
 
+  protected readonly homePath = HOME_PATH;
   protected readonly menuItems = MENU_ITEMS;
   protected readonly dropdownLinkMatch: IsActiveMatchOptions = {
     paths: 'exact',

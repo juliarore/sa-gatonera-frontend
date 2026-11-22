@@ -11,14 +11,16 @@ h1 {
   font-weight: 600;
 }
 
-.public__main {
+.public {
   h1,
   h2,
   h3,
   p {
     margin: 0;
   }
+}
 
+.public__main {
   h1,
   h2 {
     font-weight: 500;
@@ -38,11 +40,11 @@ h1 {
     font-family: var(--font-body);
     font-size: 1.25rem;
     font-weight: 700;
-    line-height: calc(4 / 3);
+    line-height: 1.3333;
   }
 
   p {
-    line-height: calc(25 / 16);
+    line-height: 1.5625;
   }
 
   @include bp.desktop {

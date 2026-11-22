@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { COLLABORATE_PATH } from '../../shared/collaborate/collaborate-options';
-import { MenuLink } from '../public-header/public-menu';
-
-interface FooterColumn {
-  title: string;
-  links: MenuLink[];
-}
+import { MenuLink } from '../../shared/navigation/menu-link';
+import {
+  ABOUT_PATH,
+  CONTACT_PATH,
+  HOME_PATH,
+  LEGAL_NOTICE_PATH,
+  NEWS_PATH,
+  PRIVACY_POLICY_PATH,
+} from '../../shared/navigation/routes';
+import { MENU_ITEMS, MenuGroupItem } from '../public-header/public-menu';
 
 interface SocialLink {
   label: string;
@@ -14,37 +17,23 @@ interface SocialLink {
   icon: string;
 }
 
-const FOOTER_COLUMNS: readonly FooterColumn[] = [
+const FOOTER_COLUMNS: readonly MenuGroupItem[] = [
+  ...MENU_ITEMS.filter((item): item is MenuGroupItem => item.kind === 'group'),
   {
-    title: 'Adopta',
+    kind: 'group',
+    key: 'association',
+    label: 'Sa Gatonera',
     links: [
-      { label: 'Gats en adopció', path: '/adopta/gats-adopcio' },
-      { label: 'Troba el teu company de vida', path: '/adopta/troba-el-teu-company' },
-      { label: "Procés d'adopció", path: '/adopta/proces-adopcio' },
-      { label: "Condicions d'adopció", path: '/adopta/condicions-adopcio' },
-    ],
-  },
-  {
-    title: 'Col·labora',
-    links: [
-      { label: 'Donacions', path: COLLABORATE_PATH, fragment: 'donacions' },
-      { label: 'Voluntariat', path: COLLABORATE_PATH, fragment: 'voluntariat' },
-      { label: 'Fes-te soci/sòcia', path: COLLABORATE_PATH, fragment: 'socis' },
-    ],
-  },
-  {
-    title: 'Sa Gatonera',
-    links: [
-      { label: 'Sobre nosaltres', path: '/sobre-nosaltres' },
-      { label: 'Actualitat', path: '/actualitat' },
-      { label: 'Contacte', path: '/contacte' },
+      { label: 'Sobre nosaltres', path: ABOUT_PATH },
+      { label: 'Actualitat', path: NEWS_PATH },
+      { label: 'Contacte', path: CONTACT_PATH },
     ],
   },
 ];
 
 const LEGAL_LINKS: readonly MenuLink[] = [
-  { label: 'Avís legal', path: '/avis-legal' },
-  { label: 'Política de privacitat', path: '/politica-privacitat' },
+  { label: 'Avís legal', path: LEGAL_NOTICE_PATH },
+  { label: 'Política de privacitat', path: PRIVACY_POLICY_PATH },
 ];
 
 const SOCIAL_LINKS: readonly SocialLink[] = [
@@ -59,6 +48,7 @@ const SOCIAL_LINKS: readonly SocialLink[] = [
   styleUrl: './public-footer.scss',
 })
 export class PublicFooter {
+  protected readonly homePath = HOME_PATH;
   protected readonly columns = FOOTER_COLUMNS;
   protected readonly legalLinks = LEGAL_LINKS;
   protected readonly socialLinks = SOCIAL_LINKS;

@@ -1,12 +1,14 @@
+@use '../abstracts/breakpoints' as bp;
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 48px;
+  min-height: var(--size-control);
   padding: 0 var(--space-6);
   border: 1px solid transparent;
-  border-radius: var(--radius-btn);
+  border-radius: var(--radius-media);
   background-color: transparent;
   color: var(--color-text-primary);
   font-family: var(--font-body);
@@ -69,7 +71,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@include bp.below-tablet {
   .btn {
     width: 100%;
   }

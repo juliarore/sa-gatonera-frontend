@@ -1,6 +1,6 @@
 <header class="header" (keydown.escape)="closeOpenMenuOnEscape()">
   <div class="header__bar" [attr.inert]="isMobileMenuOpen() ? '' : null">
-    <a class="header__brand" routerLink="/">
+    <a class="header__brand" [routerLink]="homePath">
       <img
         class="header__logo"
         src="images/logos/logo-sa-gatonera-horizontal.png"
@@ -44,7 +44,7 @@
     (keydown)="trapFocusInPanel($event)"
   >
     <div class="panel__bar">
-      <a class="header__brand" routerLink="/">
+      <a class="header__brand" [routerLink]="homePath">
         <img
           class="header__logo"
           src="images/logos/logo-sa-gatonera-horizontal.png"
@@ -128,7 +128,7 @@
                 [routerLink]="item.path"
                 routerLinkActive="nav__control--active"
                 ariaCurrentWhenActive="page"
-                [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+                [routerLinkActiveOptions]="{ exact: item.path === homePath }"
               >
                 <span class="nav__label">{{ item.label }}</span>
               </a>

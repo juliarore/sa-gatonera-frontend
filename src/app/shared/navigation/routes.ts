@@ -1,0 +1,11 @@
+export const HOME_PATH = '/';
+export const CATALOG_PATH = '/adopta/gats-adopcio';
+export const FIND_COMPANION_PATH = '/adopta/troba-el-teu-company';
+export const ADOPTION_PROCESS_PATH = '/adopta/proces-adopcio';
+export const ADOPTION_CONDITIONS_PATH = '/adopta/condicions-adopcio';
+export const COLLABORATE_PATH = '/collabora';
+export const NEWS_PATH = '/actualitat';
+export const ABOUT_PATH = '/sobre-nosaltres';
+export const CONTACT_PATH = '/contacte';
+export const LEGAL_NOTICE_PATH = '/avis-legal';
+export const PRIVACY_POLICY_PATH = '/politica-privacitat';
