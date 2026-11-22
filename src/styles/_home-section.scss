@@ -1,0 +1,13 @@
+@use 'breakpoints' as bp;
+
+@mixin section {
+  --section-padding-block: 60px;
+  --section-gap: var(--space-7);
+
+  padding: var(--section-padding-block) var(--public-inline);
+
+  @include bp.desktop {
+    --section-padding-block: 80px;
+    --section-gap: var(--space-10);
+  }
+}

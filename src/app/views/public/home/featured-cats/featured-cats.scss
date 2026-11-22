@@ -1,27 +1,20 @@
 @use '../../../../../styles/breakpoints' as bp;
+@use '../../../../../styles/home-section' as home;
 
 :host {
   display: block;
 }
 
 .featured {
-  padding: var(--space-10) var(--public-inline);
+  @include home.section;
+
   background-color: var(--color-surface-cream);
-
-  @include bp.desktop {
-    padding-block: calc(2 * var(--space-10));
-    padding-inline: var(--space-8);
-  }
-
-  @include bp.wide {
-    padding-inline: var(--public-inline);
-  }
 
   &__content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-10);
+    gap: var(--section-gap);
   }
 
   &__text {
