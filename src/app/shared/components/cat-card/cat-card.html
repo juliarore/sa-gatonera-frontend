@@ -1,0 +1,64 @@
+<article class="cat-card">
+  <div class="cat-card__media">
+    @if (image(); as photo) {
+      <img
+        class="cat-card__image"
+        [src]="photo.src"
+        [alt]="photo.alt"
+        [attr.width]="imageWidth"
+        [attr.height]="imageHeight"
+        loading="lazy"
+        decoding="async"
+      />
+    } @else {
+      <span class="cat-card__placeholder" aria-hidden="true">
+        <i class="fa-solid fa-paw"></i>
+      </span>
+    }
+
+    @if (isUrgent() || isJointAdoption()) {
+      <div class="cat-card__badges">
+        @if (isUrgent()) {
+          <span class="cat-card__tag cat-card__tag--urgent">{{ urgentLabel }}</span>
+        }
+        @if (isJointAdoption()) {
+          <span class="cat-card__tag cat-card__tag--joint">{{ jointAdoptionLabel }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="cat-card__body">
+    <div class="cat-card__info">
+      <h3 class="cat-card__name">{{ name() }}</h3>
+      <p class="cat-card__meta">
+        <i
+          class="cat-card__gender fa-solid"
+          [class.fa-venus]="gender() === 'female'"
+          [class.fa-mars]="gender() === 'male'"
+          [class.cat-card__gender--female]="gender() === 'female'"
+          aria-hidden="true"
+        ></i>
+        {{ genderLabels[gender()] }} | {{ age() }}
+      </p>
+
+      <div class="cat-card__tags">
+        @if (tags().length) {
+          <ul class="cat-card__tag-list">
+            @for (tag of tags(); track tag) {
+              <li class="cat-card__tag cat-card__tag--info">{{ tag }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <a
+      class="cat-card__link btn btn--secondary"
+      [routerLink]="link()"
+      [attr.aria-label]="'Veure detalls de ' + name()"
+    >
+      Veure detalls
+    </a>
+  </div>
+</article>
