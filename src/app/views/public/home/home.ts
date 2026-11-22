@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ResponsiveImage } from '../../../shared/components/responsive-image/responsive-image';
+import { FeaturedCats } from './featured-cats/featured-cats';
+import { Hero } from './hero/hero';
 
 @Component({
-  imports: [RouterLink, ResponsiveImage],
+  imports: [Hero, FeaturedCats],
   selector: 'app-home',
   templateUrl: './home.html',
-  styleUrl: './home.scss',
 })
 export class Home {}

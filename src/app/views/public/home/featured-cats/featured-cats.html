@@ -1,0 +1,47 @@
+@if (state() !== 'hidden') {
+  <div class="featured" [attr.aria-busy]="state() === 'loading'">
+    @if (state() === 'ready') {
+      <section class="featured__content" aria-labelledby="featured-title">
+        <div class="featured__text">
+          <h2 class="featured__title" id="featured-title">Gats que busquen una llar</h2>
+          <p class="featured__intro">
+            Descobreix els gats que busquen una família. Cadascun té la seva història i tots
+            mereixen l'oportunitat de trobar una llar on sentir-se estimats.
+          </p>
+        </div>
+
+        <ul class="featured__cards" role="list">
+          @for (cat of cards(); track cat.slug) {
+            <li>
+              <app-cat-card
+                [name]="cat.name"
+                [gender]="cat.gender"
+                [age]="cat.age"
+                [characteristics]="cat.characteristics"
+                [compatibleWithCats]="cat.compatibleWithCats"
+                [compatibleWithDogs]="cat.compatibleWithDogs"
+                [compatibleWithChildren]="cat.compatibleWithChildren"
+                [isUrgent]="cat.isUrgent"
+                [isJointAdoption]="cat.isJointAdoption"
+                [image]="cat.image"
+                [link]="cat.link"
+              />
+            </li>
+          }
+        </ul>
+
+        <a class="btn btn--primary" [routerLink]="catalogPath">Veure tots els gats en adopció</a>
+      </section>
+    } @else {
+      <div class="featured__content" aria-hidden="true">
+        <div class="featured__placeholder featured__placeholder--text"></div>
+        <div class="featured__cards">
+          @for (placeholder of [1, 2, 3]; track placeholder) {
+            <div class="featured__placeholder featured__placeholder--card"></div>
+          }
+        </div>
+        <div class="featured__placeholder featured__placeholder--button"></div>
+      </div>
+    }
+  </div>
+}

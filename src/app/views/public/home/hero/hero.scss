@@ -1,4 +1,8 @@
-@use '../../../../styles/breakpoints' as bp;
+@use '../../../../../styles/breakpoints' as bp;
+
+:host {
+  display: block;
+}
 
 .hero {
   --hero-height: clamp(480px, 40vw, 670px);
@@ -10,7 +14,7 @@
   align-items: flex-end;
   min-height: var(--hero-height);
   margin-top: calc(-1 * var(--public-header-height));
-  padding: var(--public-header-height) var(--public-gutter) 0;
+  padding: var(--public-header-height) var(--public-inline) 0;
   overflow: hidden;
 
   &::after {
@@ -67,7 +71,9 @@
     background-color: var(--color-surface-cream);
 
     &::after {
-      inset: calc(var(--hero-image-height) - var(--hero-image-shift) - var(--hero-fade-height) + 1px)
+      inset: calc(
+          var(--hero-image-height) - var(--hero-image-shift) - var(--hero-fade-height) + 1px
+        )
         0 auto 0;
       height: var(--hero-fade-height);
       background: linear-gradient(

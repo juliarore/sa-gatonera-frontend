@@ -1,21 +1,2 @@
-<section class="hero">
-  <app-responsive-image
-    class="hero__image"
-    src="images/hero/hero"
-    alt=""
-    sizes="max(100vw, 840px)"
-    [widths]="[960, 1440, 1920, 2880]"
-    [width]="2880"
-    [height]="1920"
-    priority
-  />
-  <div class="hero__content">
-    <h1 class="hero__title">
-      <em>Sa Gatonera</em>, associació de protecció felina de Blanes
-    </h1>
-    <div class="hero__actions">
-      <a class="btn btn--primary" routerLink="/adopta/gats-adopcio">Adopta un gat</a>
-      <a class="btn btn--secondary" routerLink="/adopta/proces-adopcio">Com adoptar</a>
-    </div>
-  </div>
-</section>
+<app-hero />
+<app-featured-cats />

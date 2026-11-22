@@ -1,0 +1,102 @@
+@use '../../../../../styles/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.featured {
+  padding: var(--space-10) var(--public-inline);
+  background-color: var(--color-surface-cream);
+
+  @include bp.desktop {
+    padding-block: calc(2 * var(--space-10));
+    padding-inline: var(--space-8);
+  }
+
+  @include bp.wide {
+    padding-inline: var(--public-inline);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-10);
+  }
+
+  &__text {
+    align-self: stretch;
+  }
+
+  &__title {
+    margin: 0 0 var(--space-6);
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.125;
+
+    @include bp.desktop {
+      font-size: 2rem;
+    }
+  }
+
+  &__intro {
+    margin: 0;
+    line-height: calc(25 / 16);
+  }
+
+  &__cards {
+    --cards-gap: var(--space-6);
+    --cards-per-row: 1;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--cards-gap);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    > * {
+      flex: 0 0 calc((100% - (var(--cards-per-row) - 1) * var(--cards-gap)) / var(--cards-per-row));
+      min-width: 0;
+    }
+
+    @include bp.tablet {
+      --cards-per-row: 2;
+
+      // Només es mostren els dos primers (els urgents van primer); display: none els treu de l'arbre d'accessibilitat.
+      > :nth-child(n + 3) {
+        display: none;
+      }
+    }
+
+    @include bp.desktop {
+      --cards-per-row: 3;
+    }
+
+    @include bp.wide {
+      --cards-gap: var(--space-10);
+    }
+  }
+
+  &__placeholder {
+    border-radius: var(--radius-card);
+    background-color: var(--color-white);
+
+    &--text {
+      align-self: stretch;
+      height: 85px;
+    }
+
+    &--card {
+      min-height: var(--cat-card-min-height);
+    }
+
+    &--button {
+      width: 266px;
+      max-width: 100%;
+      height: 48px;
+    }
+  }
+}
