@@ -1,4 +1,4 @@
-@use '../../../styles/breakpoints' as bp;
+@use '../../../styles/abstracts/breakpoints' as bp;
 
 :host {
   display: block;
@@ -25,22 +25,6 @@
 
   &__nav {
     display: contents;
-  }
-
-  &__column:first-child {
-    order: 1;
-
-    @include bp.laptop {
-      order: 0;
-    }
-  }
-
-  &__column--social {
-    order: 2;
-
-    @include bp.laptop {
-      order: 0;
-    }
   }
 
   &__title {

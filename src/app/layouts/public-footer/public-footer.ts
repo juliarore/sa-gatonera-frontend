@@ -16,13 +16,6 @@ interface SocialLink {
 
 const FOOTER_COLUMNS: readonly FooterColumn[] = [
   {
-    title: 'Sa Gatonera',
-    links: [
-      { label: 'Sobre nosaltres', path: '/sobre-nosaltres' },
-      { label: 'Contacte', path: '/contacte' },
-    ],
-  },
-  {
     title: 'Adopta',
     links: [
       { label: 'Gats en adopció', path: '/adopta/gats-adopcio' },
@@ -39,6 +32,14 @@ const FOOTER_COLUMNS: readonly FooterColumn[] = [
       { label: 'Fes-te soci/sòcia', path: COLLABORATE_PATH, fragment: 'socis' },
     ],
   },
+  {
+    title: 'Sa Gatonera',
+    links: [
+      { label: 'Sobre nosaltres', path: '/sobre-nosaltres' },
+      { label: 'Actualitat', path: '/actualitat' },
+      { label: 'Contacte', path: '/contacte' },
+    ],
+  },
 ];
 
 const LEGAL_LINKS: readonly MenuLink[] = [
@@ -47,9 +48,8 @@ const LEGAL_LINKS: readonly MenuLink[] = [
 ];
 
 const SOCIAL_LINKS: readonly SocialLink[] = [
-  { label: 'Facebook', url: 'https://www.facebook.com/', icon: 'fa-facebook-f' },
-  { label: 'Instagram', url: 'https://www.instagram.com/', icon: 'fa-instagram' },
-  { label: 'X', url: 'https://x.com/', icon: 'fa-x-twitter' },
+  { label: 'Instagram', url: 'https://www.instagram.com/sagatonerablanes/', icon: 'fa-instagram' },
+  { label: 'X', url: 'https://x.com/SaGatonera', icon: 'fa-x-twitter' },
 ];
 
 @Component({

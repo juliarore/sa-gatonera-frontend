@@ -2,7 +2,7 @@
   <div class="footer__main">
     <nav class="footer__nav" aria-label="Navegació del peu de pàgina">
       @for (column of columns; track column.title) {
-        <div class="footer__column">
+        <div>
           <h2 class="footer__title">{{ column.title }}</h2>
           <ul class="footer__list">
             @for (link of column.links; track link.label) {
@@ -16,7 +16,7 @@
         </div>
       }
     </nav>
-    <div class="footer__column footer__column--social">
+    <div>
       <h2 class="footer__title">Segueix-nos</h2>
       <ul class="footer__list footer__list--social">
         @for (social of socialLinks; track social.url) {
