@@ -11,6 +11,7 @@
 @import '@fontsource/lora/500-italic.css';
 @import '@fontsource/lora/600.css';
 @import '@fontsource/nunito-sans/400.css';
+@import '@fontsource/nunito-sans/500.css';
 @import '@fontsource/nunito-sans/600.css';
 @import '@fontsource/nunito-sans/700.css';
 
@@ -20,6 +21,8 @@
   --color-surface-cream: #fcf5ed;
   --color-surface-gray: #efedeb;
   --color-accent-turquoise: #109dc0;
+  --color-urgent: #c75000;
+  --color-gender-female: #df8cc5;
   --color-text-primary: #29201b;
   --color-text-muted: #69635f;
   --color-white: #ffffff;
@@ -38,12 +41,15 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-btn: 12px;
+  --radius-card: 12px;
+  --radius-tag: 6px;
   --radius-lg: 16px;
   --radius-pill: 999px;
 
   --font-size-sm: 0.875rem;
   --line-height-body: 1.5;
   --size-touch: 44px;
+  --cat-card-min-height: 525px;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -65,6 +71,8 @@
 body {
   margin: 0;
   font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: var(--color-text-primary);
   background-color: var(--color-white);
 }
