@@ -12,7 +12,7 @@ import {
   Characteristic,
   CreateCatRequest,
 } from '../cats/cat.models';
-import { todayInputDate } from '../cats/utils/date';
+import { todayInputDate } from '../../../shared/cats/date';
 import { parseSaveError } from '../cats/utils/save-error';
 
 function emptyCat(): CreateCatRequest {

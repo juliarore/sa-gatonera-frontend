@@ -23,19 +23,17 @@ import {
   ACTIVITY_LEVEL_LABELS,
   CAT_DETAIL_TEXT,
   CAT_FORM_TEXT,
-  COMPATIBILITY_LABELS,
-  GENDER_LABELS,
   STATUS_OPTIONS,
 } from '../cats/cat.constants';
+import { COMPATIBILITY_LABELS, GENDER_LABELS } from '../../../shared/cats/cat.constants';
+import { CatGender, Compatibility } from '../../../shared/cats/cat.models';
 import {
   ActivityLevel,
   AdoptionGroupMate,
   CatFieldError,
-  CatGender,
   CatImage,
   CatStatus,
   Characteristic,
-  Compatibility,
   UpdateCatRequest,
 } from '../cats/cat.models';
 

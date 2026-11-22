@@ -1,11 +1,5 @@
-import {
-  ActivityLevel,
-  AgeGroup,
-  CatFieldError,
-  CatGender,
-  CatStatus,
-  Compatibility,
-} from './cat.models';
+import { JOINT_ADOPTION_LABEL } from '../../../shared/cats/cat.constants';
+import { ActivityLevel, AgeGroup, CatFieldError, CatStatus } from './cat.models';
 
 export const PAGE_SIZE = 10;
 
@@ -23,17 +17,10 @@ export const AGE_GROUP_LABELS: Record<AgeGroup, string> = {
   senior: 'Sènior',
 };
 
-export const GENDER_LABELS: Record<CatGender, string> = {
-  male: 'Mascle',
-  female: 'Femella',
-};
-
 export const VISIBILITY_LABELS = {
   visible: 'Visible',
   hidden: 'No visible',
 } as const;
-
-export const URGENT_LABEL = 'Urgent';
 
 export const STATUS_OPTIONS = (Object.entries(STATUS_LABELS) as [CatStatus, string][]).map(
   ([value, label]) => ({ value, label }),
@@ -54,12 +41,6 @@ export const ACTIVITY_LEVEL_LABELS: Record<ActivityLevel, string> = {
   low: 'Tranquil',
   medium: 'Normal',
   high: 'Actiu',
-};
-
-export const COMPATIBILITY_LABELS: Record<Compatibility, string> = {
-  yes: 'Sí',
-  no: 'No',
-  unknown: 'Es desconeix',
 };
 
 export const CAT_DETAIL_TEXT = {
@@ -96,7 +77,7 @@ export const CAT_DETAIL_TEXT = {
     specialNeeds: 'Necessitats especials',
   },
   group: {
-    title: 'Adopció conjunta',
+    title: JOINT_ADOPTION_LABEL,
   },
   edit: 'Editar',
   editHeading: 'Editar',

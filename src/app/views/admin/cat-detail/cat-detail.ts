@@ -27,13 +27,15 @@ import { AdminCatsService } from '../cats/admin-cats.service';
 import {
   ACTIVITY_LEVEL_LABELS,
   CAT_DETAIL_TEXT,
-  COMPATIBILITY_LABELS,
   DELETE_CAT_TEXT,
-  GENDER_LABELS,
   STATUS_LABELS,
-  URGENT_LABEL,
   VISIBILITY_LABELS,
 } from '../cats/cat.constants';
+import {
+  COMPATIBILITY_LABELS,
+  GENDER_LABELS,
+  URGENT_LABEL,
+} from '../../../shared/cats/cat.constants';
 import {
   AdminCatDetail,
   AdoptionGroupMate,
@@ -42,8 +44,8 @@ import {
   Characteristic,
   UpdateCatRequest,
 } from '../cats/cat.models';
-import { getAgeLabel } from '../cats/utils/age';
-import { toInputDate } from '../cats/utils/date';
+import { getAgeLabel } from '../../../shared/cats/age';
+import { toInputDate } from '../../../shared/cats/date';
 import { focusHeading } from '../cats/utils/focus-heading';
 import { parseSaveError } from '../cats/utils/save-error';
 import { CatForm } from '../cat-form/cat-form';

@@ -1,4 +1,5 @@
-export type CatGender = 'male' | 'female';
+import { CatCharacteristic, CatGender, Compatibility } from '../../../shared/cats/cat.models';
+
 export type CatStatus = 'available' | 'in_foster' | 'reserved' | 'adopted';
 export type AgeGroup = 'kitten' | 'young' | 'adult' | 'senior';
 
@@ -39,7 +40,6 @@ export interface AdminCatsQuery {
   limit?: number;
 }
 
-export type Compatibility = 'yes' | 'no' | 'unknown';
 export type ActivityLevel = 'low' | 'medium' | 'high';
 
 export interface CatImage {
@@ -52,12 +52,6 @@ export interface CatImage {
 export interface AdoptionGroupMate {
   id: string;
   name: string;
-}
-
-export interface CatCharacteristic {
-  id: string;
-  code: string;
-  label: string;
 }
 
 export interface AdminCatDetail {

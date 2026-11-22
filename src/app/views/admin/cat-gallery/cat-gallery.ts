@@ -22,7 +22,7 @@ import {
   IMAGE_TYPES,
 } from '../cats/cat.constants';
 import { CatImage } from '../cats/cat.models';
-import { imageUrl } from '../cats/utils/image-url';
+import { imageUrl } from '../../../shared/cats/image-url';
 
 type EditMode = 'alt' | 'remove';
 

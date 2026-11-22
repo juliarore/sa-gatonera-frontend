@@ -30,17 +30,16 @@ import {
   AGE_GROUP_OPTIONS,
   DELETE_CAT_TEXT,
   FEATURED_TEXT,
-  GENDER_LABELS,
   PAGE_SIZE,
   STATUS_LABELS,
   STATUS_OPTIONS,
-  URGENT_LABEL,
   VISIBILITY_LABELS,
 } from './cat.constants';
+import { GENDER_LABELS, URGENT_LABEL } from '../../../shared/cats/cat.constants';
 import { AdminCat, AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
-import { getAgeLabel } from './utils/age';
+import { getAgeLabel } from '../../../shared/cats/age';
 import { focusHeading } from './utils/focus-heading';
-import { imageUrl } from './utils/image-url';
+import { imageUrl } from '../../../shared/cats/image-url';
 
 type PageItem = number | 'ellipsis';
 
