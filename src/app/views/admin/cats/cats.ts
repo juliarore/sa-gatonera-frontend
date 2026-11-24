@@ -37,7 +37,6 @@ import {
 } from './cat.constants';
 import { GENDER_LABELS, URGENT_LABEL } from '../../../shared/cats/cat.constants';
 import { AdminCat, AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
-import { getAgeLabel } from '../../../shared/cats/age';
 import { focusHeading } from './utils/focus-heading';
 import { imageUrl } from '../../../shared/cats/image-url';
 
@@ -90,7 +89,6 @@ export class Cats {
   protected readonly genderLabels = GENDER_LABELS;
   protected readonly visibilityLabels = VISIBILITY_LABELS;
   protected readonly urgentLabel = URGENT_LABEL;
-  protected readonly ageLabel = getAgeLabel;
   protected readonly imageUrl = imageUrl;
 
   protected readonly featuredLabel = FEATURED_TEXT.label;

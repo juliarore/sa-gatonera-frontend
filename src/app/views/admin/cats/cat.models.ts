@@ -13,6 +13,7 @@ export interface AdminCat {
   isUrgent: boolean;
   isFeatured: boolean;
   entryDate: string;
+  ageLabel: string;
   ageGroup: AgeGroup;
   isVisible: boolean;
   coverImageUrl: string | null;
@@ -78,6 +79,7 @@ export interface AdminCatDetail {
   createdAt: string;
   updatedAt: string;
   adoptionFee: number;
+  ageLabel: string;
   ageGroup: AgeGroup;
   isVisible: boolean;
   adoptionGroupMates: AdoptionGroupMate[];

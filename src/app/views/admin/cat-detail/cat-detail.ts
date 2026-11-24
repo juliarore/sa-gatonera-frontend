@@ -44,7 +44,6 @@ import {
   Characteristic,
   UpdateCatRequest,
 } from '../cats/cat.models';
-import { getAgeLabel } from '../../../shared/cats/age';
 import { toInputDate } from '../../../shared/cats/date';
 import { focusHeading } from '../cats/utils/focus-heading';
 import { parseSaveError } from '../cats/utils/save-error';
@@ -100,7 +99,6 @@ export class CatDetail {
   protected readonly compatibilityLabels = COMPATIBILITY_LABELS;
   protected readonly visibilityLabels = VISIBILITY_LABELS;
   protected readonly urgentLabel = URGENT_LABEL;
-  protected readonly ageLabel = getAgeLabel;
 
   protected readonly cat = signal<AdminCatDetail | null>(null);
   protected readonly images = signal<CatImage[]>([]);

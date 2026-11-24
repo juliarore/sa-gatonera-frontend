@@ -46,7 +46,6 @@ export const ACTIVITY_LEVEL_LABELS: Record<ActivityLevel, string> = {
 export const CAT_DETAIL_TEXT = {
   backToList: 'Tornar al llistat',
   featured: 'Destacat',
-  approximate: 'aprox.',
   yes: 'Sí',
   no: 'No',
   general: {

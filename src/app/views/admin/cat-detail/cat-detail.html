@@ -94,8 +94,7 @@
           <div class="details__row">
             <dt>{{ text.general.birthDate }}</dt>
             <dd>
-              {{ cat.birthDate }} ({{ cat.birthDateIsEstimated ? text.approximate + ' ' : ''
-              }}{{ ageLabel(cat.birthDate) }})
+              {{ cat.birthDate }} ({{ cat.ageLabel }})
             </dd>
           </div>
           <div class="details__row">
