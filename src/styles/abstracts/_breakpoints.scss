@@ -41,6 +41,12 @@ $phone-min: 480px;
   }
 }
 
+@mixin midrange {
+  @media (width >= #{$tablet-min}) and (width < #{$wide-min}) {
+    @content;
+  }
+}
+
 @mixin laptop {
   @media (min-width: $laptop-min) {
     @content;

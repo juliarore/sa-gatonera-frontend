@@ -1,0 +1,107 @@
+@use '../../../../styles/abstracts/breakpoints' as bp;
+
+:host {
+  display: block;
+
+  @include bp.desktop {
+    flex-shrink: 0;
+  }
+}
+
+.dropdown {
+  position: relative;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--size-touch);
+    padding: var(--space-2) 0;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  &__value {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  &__chevron {
+    font-size: 0.75rem;
+    transition:
+      transform 200ms ease,
+      color 150ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__button:is(:hover, :focus-visible, [aria-expanded='true']) &__chevron {
+    color: var(--color-primary);
+  }
+
+  &__button[aria-expanded='true'] &__chevron {
+    transform: rotate(180deg);
+  }
+
+  &__panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 200px;
+    max-width: calc(100vw - 2 * var(--public-gutter));
+    margin: 0;
+    padding: var(--space-2);
+    border-radius: var(--radius-media);
+    background-color: var(--color-white);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+    list-style: none;
+
+    @include bp.desktop {
+      right: 0;
+      left: auto;
+      max-width: none;
+    }
+  }
+
+  &__panel > li + li {
+    margin-top: var(--space-1);
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: var(--size-touch);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:focus-visible {
+      background-color: var(--color-surface-cream);
+      color: var(--color-text-primary);
+    }
+
+    @include bp.desktop-hover {
+      &:hover {
+        background-color: var(--color-surface-cream);
+        color: var(--color-text-primary);
+      }
+    }
+
+    &--active {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+  }
+}

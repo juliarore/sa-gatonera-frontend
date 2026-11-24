@@ -1,0 +1,39 @@
+<div
+  class="dropdown"
+  (keydown.escape)="closeAndFocusTrigger()"
+  (focusout)="closeOnFocusLeave($event)"
+>
+  <button
+    #trigger
+    type="button"
+    class="dropdown__button"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="panelId"
+    (click)="toggle()"
+  >
+    <span>{{ label() }}:</span>
+    <span class="dropdown__value">{{ activeLabel() }}</span>
+    <i class="dropdown__chevron fa-solid fa-chevron-down" aria-hidden="true"></i>
+  </button>
+
+  <ul class="dropdown__panel" [id]="panelId" [hidden]="!isOpen()">
+    @for (option of options(); track option.value) {
+      <li>
+        <a
+          class="dropdown__option"
+          [class.dropdown__option--active]="option.value === value()"
+          [routerLink]="[]"
+          [queryParams]="queryParams(option)"
+          queryParamsHandling="merge"
+          [attr.aria-current]="option.value === value() ? 'true' : null"
+          (click)="close()"
+        >
+          {{ option.label }}
+          @if (option.value === value()) {
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+          }
+        </a>
+      </li>
+    }
+  </ul>
+</div>

@@ -1,3 +1,4 @@
+@use '../../../styles/abstracts/dropdown';
 @use '../../../styles/abstracts/breakpoints' as bp;
 
 :host {
@@ -90,14 +91,7 @@ ul {
   }
 
   &__link {
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-md);
-    color: var(--color-text-primary);
-    text-decoration: none;
-
-    &:focus-visible {
-      background-color: var(--color-surface-cream);
-    }
+    @include dropdown.dropdown-option;
   }
 }
 
@@ -162,13 +156,10 @@ ul {
   }
 
   .dropdown {
+    @include dropdown.dropdown-panel;
+
     position: absolute;
     top: 100%;
-    padding: var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-white);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text-primary) 12%, transparent);
 
     &::before {
       content: '';
