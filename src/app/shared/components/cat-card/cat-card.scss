@@ -1,3 +1,5 @@
+@use '../../../../styles/abstracts/breakpoints' as bp;
+
 :host {
   display: block;
   height: 100%;
@@ -14,12 +16,20 @@
   border-radius: var(--radius-media);
   background-color: var(--color-white);
 
+  @include bp.midrange {
+    min-height: 0;
+  }
+
   &__media {
     position: relative;
     aspect-ratio: 411 / 250;
     overflow: hidden;
     border-radius: var(--radius-media) var(--radius-media) 0 0;
     background-color: var(--color-surface-gray);
+
+    @include bp.midrange {
+      aspect-ratio: 4 / 3;
+    }
   }
 
   &__image {
@@ -83,6 +93,11 @@
     justify-content: space-between;
     gap: var(--space-6);
     padding: var(--space-6);
+
+    @include bp.midrange {
+      flex: none;
+      justify-content: flex-start;
+    }
   }
 
   &__info {

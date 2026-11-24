@@ -2,15 +2,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CatCharacteristic, CatGender, Compatibility } from './cat.models';
+import { AgeGroup, CatCharacteristic, CatGender, CatsSort, Compatibility } from './cat.models';
 
-export interface FeaturedCat {
-  name: string;
+export interface PublicCat {
+  id: string;
   slug: string;
+  name: string;
   gender: CatGender;
-  birthDate: string;
+  ageLabel: string;
+  ageGroup: AgeGroup;
   isUrgent: boolean;
-  isJointAdoption: boolean;
+  hasJointAdoption: boolean;
   compatibleWithCats: Compatibility;
   compatibleWithDogs: Compatibility;
   compatibleWithChildren: Compatibility;
@@ -19,15 +21,31 @@ export interface FeaturedCat {
   coverImageAlt: string | null;
 }
 
-const FEATURED_CATS_LIMIT = 3;
+export interface PublicCatsPage {
+  items: PublicCat[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface PublicCatsQuery {
+  page: number;
+  pageSize: number;
+  sort: CatsSort;
+}
 
 @Injectable({ providedIn: 'root' })
 export class PublicCatsService {
   private readonly http = inject(HttpClient);
-  private readonly url = `${environment.apiUrl}/public/cats`;
+  private readonly url = `${environment.apiUrl}/cats`;
 
-  getFeatured(): Observable<FeaturedCat[]> {
-    const params = new HttpParams().set('featured', true).set('limit', FEATURED_CATS_LIMIT);
-    return this.http.get<FeaturedCat[]>(this.url, { params });
+  getCats({ page, pageSize, sort }: PublicCatsQuery): Observable<PublicCatsPage> {
+    const params = new HttpParams().set('page', page).set('pageSize', pageSize).set('sort', sort);
+    return this.http.get<PublicCatsPage>(this.url, { params });
+  }
+
+  getFeaturedCats(): Observable<PublicCat[]> {
+    return this.http.get<PublicCat[]>(`${this.url}/featured`);
   }
 }

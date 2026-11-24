@@ -46,6 +46,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Prerender,
   },
   {
+    path: 'adopta/gats-adopcio/:slug',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: 'admin/cats/create',
     renderMode: RenderMode.Client,
   },

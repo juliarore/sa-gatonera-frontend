@@ -16,6 +16,12 @@ export const routes: Routes = [
         path: 'adopta/gats-adopcio',
         title: 'Gats en adopció | Sa Gatonera',
         data: { title: 'Gats en adopció' },
+        loadComponent: () => import('./views/public/adopt/catalog/catalog').then((m) => m.Catalog),
+      },
+      {
+        path: 'adopta/gats-adopcio/:slug',
+        title: 'Fitxa del gat | Sa Gatonera',
+        data: { title: 'Fitxa del gat' },
         loadComponent: () => import('./views/public/simple-page/simple-page').then((m) => m.SimplePage),
       },
       {

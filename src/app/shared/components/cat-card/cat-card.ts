@@ -41,6 +41,7 @@ export class CatCard {
   readonly image = input<CatCardImage | null>(null);
   readonly isUrgent = input(false, { transform: booleanAttribute });
   readonly isJointAdoption = input(false, { transform: booleanAttribute });
+  readonly eager = input(false, { transform: booleanAttribute });
 
   protected readonly genderLabels = GENDER_LABELS;
   protected readonly urgentLabel = URGENT_LABEL;

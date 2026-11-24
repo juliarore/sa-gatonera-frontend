@@ -1,0 +1,109 @@
+@use '../../../../../styles/abstracts/breakpoints' as bp;
+@use '../../../../../styles/abstracts/section' as section;
+
+:host {
+  display: block;
+  background-color: var(--color-surface-cream);
+}
+
+.catalog {
+  &__header {
+    @include bp.desktop {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 550px;
+      margin-top: calc(-1 * var(--public-header-height));
+      padding: var(--public-header-height) var(--public-inline) 0;
+      overflow: hidden;
+    }
+  }
+
+  &__image {
+    height: 280px;
+    object-fit: cover;
+    object-position: 70% top;
+
+    @include bp.desktop {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      object-position: center top;
+    }
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-8) var(--public-inline) 0;
+
+    @include bp.desktop {
+      position: relative;
+      gap: var(--space-8);
+      max-width: 426px;
+      padding: 0;
+    }
+  }
+
+  &__list {
+    @include section.section;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+
+    @include bp.desktop {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__results {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include bp.tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include bp.desktop {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include bp.wide {
+      gap: var(--space-10);
+    }
+  }
+
+  &__placeholder {
+    min-height: var(--cat-card-min-height);
+    border-radius: var(--radius-media);
+    background-color: var(--color-white);
+  }
+
+  &__message {
+    margin: 0;
+    text-align: center;
+  }
+}

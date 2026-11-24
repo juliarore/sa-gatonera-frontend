@@ -1,0 +1,94 @@
+<section class="catalog__header">
+  <app-responsive-image
+    class="catalog__image"
+    src="images/adopt/catalog/adopta-capcalera-gat"
+    alt=""
+    sizes="100vw"
+    [widths]="[960, 1440, 1920, 2880]"
+    [width]="2880"
+    [height]="1920"
+    priority
+  />
+  <div class="catalog__intro">
+    <h1>Gats en adopció</h1>
+    <p>
+      Descobreix els gats que busquen una família. Cadascun té la seva història i tots mereixen
+      l'oportunitat de trobar una llar on sentir-se estimats.
+    </p>
+  </div>
+</section>
+
+<section class="catalog__list" aria-labelledby="catalog-results">
+  <div class="catalog__toolbar">
+    <h2
+      class="catalog__results"
+      id="catalog-results"
+      #resultsTitle
+      tabindex="-1"
+      aria-live="polite"
+    >
+      @if (total() !== null) {
+        {{ total() === 0 ? 'Cap resultat' : total() === 1 ? '1 resultat' : total() + ' resultats' }}
+      } @else if (state() === 'error') {
+        No s'han pogut carregar els gats
+      } @else {
+        Carregant gats…
+      }
+    </h2>
+
+    <app-dropdown
+      label="Ordenar per"
+      queryParam="sort"
+      [resetQueryParams]="['page']"
+      [options]="sortOptions"
+      [value]="query().sort"
+    />
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <ul class="catalog__cards" role="list" aria-busy="true" aria-label="Carregant gats">
+        @for (placeholder of placeholders; track placeholder) {
+          <li class="catalog__placeholder"></li>
+        }
+      </ul>
+    }
+    @case ('error') {
+      <div class="catalog__message">
+        <p>No s'han pogut carregar els gats. Torna-ho a provar.</p>
+        <button type="button" class="btn btn--secondary" (click)="retry()">Reintentar</button>
+      </div>
+    }
+    @default {
+      @if (cards().length > 0) {
+        <ul class="catalog__cards" role="list">
+          @for (cat of cards(); track cat.id; let index = $index) {
+            <li>
+              <app-cat-card
+                [name]="cat.name"
+                [gender]="cat.gender"
+                [age]="cat.ageLabel"
+                [characteristics]="cat.characteristics"
+                [compatibleWithCats]="cat.compatibleWithCats"
+                [compatibleWithDogs]="cat.compatibleWithDogs"
+                [compatibleWithChildren]="cat.compatibleWithChildren"
+                [isUrgent]="cat.isUrgent"
+                [isJointAdoption]="cat.hasJointAdoption"
+                [image]="cat.image"
+                [link]="[catalogPath, cat.slug]"
+                [eager]="index < eagerImages"
+              />
+            </li>
+          }
+        </ul>
+        <app-pagination
+          [page]="query().page"
+          [totalPages]="totalPages()"
+          (pageSelect)="focusResultsAfterLoad()"
+        />
+      } @else {
+        <p class="catalog__message">Ara mateix no hi ha gats en adopció</p>
+      }
+    }
+  }
+</section>

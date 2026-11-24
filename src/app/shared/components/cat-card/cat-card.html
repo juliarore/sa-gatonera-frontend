@@ -7,7 +7,7 @@
         [alt]="photo.alt"
         [attr.width]="imageWidth"
         [attr.height]="imageHeight"
-        loading="lazy"
+        [attr.loading]="eager() ? 'eager' : 'lazy'"
         decoding="async"
       />
     } @else {
