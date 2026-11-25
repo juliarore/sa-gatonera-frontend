@@ -1,8 +1,14 @@
+@use '../abstracts/breakpoints' as bp;
+
 .card {
   background-color: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+
+  @include bp.below-tablet {
+    padding: var(--space-4);
+  }
 }
 
 .card__title {

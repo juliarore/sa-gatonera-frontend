@@ -173,13 +173,6 @@ fieldset {
   }
 }
 
-.check {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  cursor: pointer;
-}
-
 .fieldset {
   &__legend {
     padding: 0;
@@ -248,10 +241,6 @@ fieldset {
 @media (max-width: 767px) {
   .checks .check {
     min-height: var(--size-touch);
-  }
-
-  .card {
-    padding: var(--space-4);
   }
 
   .actions {

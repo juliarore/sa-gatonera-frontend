@@ -80,3 +80,14 @@
     width: auto;
   }
 }
+
+.link-button {
+  min-height: var(--size-touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-primary);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

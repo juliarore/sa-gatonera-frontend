@@ -1,7 +1,50 @@
 import { JOINT_ADOPTION_LABEL } from '../../../shared/cats/cat.constants';
-import { ActivityLevel, AgeGroup, CatFieldError, CatStatus } from './cat.models';
+import {
+  ActivityLevel,
+  AdminCatsSort,
+  AgeGroup,
+  CatFieldError,
+  CatStatus,
+  SortDirection,
+} from './cat.models';
 
 export const PAGE_SIZE = 10;
+
+export const DEFAULT_SORT: AdminCatsSort = 'entryDate';
+export const DEFAULT_SORT_DIRECTION: SortDirection = 'desc';
+
+export const SORT_COLUMNS: readonly {
+  sort: AdminCatsSort;
+  header: string;
+  label: string;
+  directions: Record<SortDirection, string>;
+}[] = [
+  { sort: 'name', header: 'Gat', label: 'nom', directions: { asc: 'A-Z', desc: 'Z-A' } },
+  {
+    sort: 'status',
+    header: 'Estat',
+    label: 'estat',
+    directions: { asc: 'en adopció primer', desc: 'adoptats primer' },
+  },
+  {
+    sort: 'age',
+    header: 'Edat',
+    label: 'edat',
+    directions: { asc: 'més joves primer', desc: 'més grans primer' },
+  },
+  {
+    sort: 'entryDate',
+    header: "Data d'entrada",
+    label: "data d'entrada",
+    directions: { asc: 'més antics primer', desc: 'més recents primer' },
+  },
+  {
+    sort: 'visibility',
+    header: 'Visibilitat',
+    label: 'visibilitat',
+    directions: { asc: 'visibles primer', desc: 'no visibles primer' },
+  },
+];
 
 export const STATUS_LABELS: Record<CatStatus, string> = {
   available: 'En adopció',
@@ -10,11 +53,11 @@ export const STATUS_LABELS: Record<CatStatus, string> = {
   adopted: 'Adoptat',
 };
 
-export const AGE_GROUP_LABELS: Record<AgeGroup, string> = {
-  kitten: 'Cadell',
-  young: 'Jove',
-  adult: 'Adult',
-  senior: 'Sènior',
+export const AGE_GROUPS: Record<AgeGroup, { label: string; range: string }> = {
+  kitten: { label: 'Cadell', range: "menys d'1 any" },
+  young: { label: 'Jove', range: '1 a 2 anys' },
+  adult: { label: 'Adult', range: '2 a 7 anys' },
+  senior: { label: 'Sènior', range: 'més de 7 anys' },
 };
 
 export const VISIBILITY_LABELS = {
@@ -26,16 +69,9 @@ export const STATUS_OPTIONS = (Object.entries(STATUS_LABELS) as [CatStatus, stri
   ([value, label]) => ({ value, label }),
 );
 
-export const AGE_GROUP_RANGE_LABELS: Record<AgeGroup, string> = {
-  kitten: "Menys d'1 any",
-  young: "D'1 a 2 anys",
-  adult: 'De 2 a 7 anys',
-  senior: '7 anys o més',
-};
-
 export const AGE_GROUP_OPTIONS = (
-  Object.entries(AGE_GROUP_RANGE_LABELS) as [AgeGroup, string][]
-).map(([value, label]) => ({ value, label }));
+  Object.entries(AGE_GROUPS) as [AgeGroup, { label: string; range: string }][]
+).map(([value, { label, range }]) => ({ value, label: `${label} (${range})` }));
 
 export const ACTIVITY_LEVEL_LABELS: Record<ActivityLevel, string> = {
   low: 'Tranquil',

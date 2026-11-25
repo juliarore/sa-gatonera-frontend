@@ -149,16 +149,6 @@ ul {
   }
 }
 
-.state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-8) var(--space-6);
-  text-align: center;
-  color: var(--color-text-muted);
-}
-
 @media (max-width: 767px) {
   .cat-header__actions {
     flex-direction: column;
@@ -175,10 +165,6 @@ ul {
     display: inline-flex;
     align-items: center;
     min-height: var(--size-touch);
-  }
-
-  .card {
-    padding: var(--space-4);
   }
 }
 

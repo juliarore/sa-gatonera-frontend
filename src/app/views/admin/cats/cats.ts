@@ -6,19 +6,22 @@ import {
   ElementRef,
   inject,
   Injector,
+  linkedSignal,
   PLATFORM_ID,
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
   combineLatest,
+  debounceTime,
   EMPTY,
   filter,
   map,
+  Subject,
   switchMap,
   tap,
 } from 'rxjs';
@@ -26,17 +29,28 @@ import { AdminCatsService } from './admin-cats.service';
 import { StatusNotice, StatusNoticeMessage } from '../status-notice/status-notice';
 import { DeleteCatDialog } from '../delete-cat-dialog/delete-cat-dialog';
 import {
-  AGE_GROUP_LABELS,
   AGE_GROUP_OPTIONS,
+  AGE_GROUPS,
+  DEFAULT_SORT,
+  DEFAULT_SORT_DIRECTION,
   DELETE_CAT_TEXT,
   FEATURED_TEXT,
   PAGE_SIZE,
+  SORT_COLUMNS,
   STATUS_LABELS,
   STATUS_OPTIONS,
   VISIBILITY_LABELS,
 } from './cat.constants';
 import { GENDER_LABELS, URGENT_LABEL } from '../../../shared/cats/cat.constants';
-import { AdminCat, AdminCatsPage, AgeGroup, CatStatus, FeaturedSummary } from './cat.models';
+import {
+  AdminCat,
+  AdminCatsPage,
+  AdminCatsSort,
+  AgeGroup,
+  CatStatus,
+  FeaturedSummary,
+  SortDirection,
+} from './cat.models';
 import { focusHeading } from './utils/focus-heading';
 import { imageUrl } from '../../../shared/cats/image-url';
 
@@ -46,22 +60,34 @@ interface CatsUrlState {
   search: string;
   status: CatStatus | '';
   ageGroup: AgeGroup | '';
+  urgent: boolean;
+  featured: boolean;
+  sort: AdminCatsSort;
+  dir: SortDirection;
   page: number;
 }
 
+const SEARCH_DELAY_MS = 300;
+
 const STATUS_VALUES: string[] = STATUS_OPTIONS.map((option) => option.value);
 const AGE_GROUP_VALUES: string[] = AGE_GROUP_OPTIONS.map((option) => option.value);
+const SORT_VALUES: string[] = SORT_COLUMNS.map((column) => column.sort);
 
 function parseUrlState(params: ParamMap): CatsUrlState {
   const search = (params.get('search') ?? '').trim();
   const status = params.get('status') ?? '';
   const ageGroup = params.get('ageGroup') ?? '';
+  const sort = params.get('sort') ?? '';
   const rawPage = params.get('page') ?? '';
   const page = /^\d+$/.test(rawPage) ? Number(rawPage) : 1;
   return {
     search,
     status: STATUS_VALUES.includes(status) ? (status as CatStatus) : '',
     ageGroup: AGE_GROUP_VALUES.includes(ageGroup) ? (ageGroup as AgeGroup) : '',
+    urgent: params.get('urgent') === 'true',
+    featured: params.get('featured') === 'true',
+    sort: SORT_VALUES.includes(sort) ? (sort as AdminCatsSort) : DEFAULT_SORT,
+    dir: params.get('dir') === 'asc' ? 'asc' : DEFAULT_SORT_DIRECTION,
     page: Number.isSafeInteger(page) && page >= 1 ? page : 1,
   };
 }
@@ -82,10 +108,13 @@ export class Cats {
   private readonly destroyRef = inject(DestroyRef);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('heading');
 
+  private readonly searchInput$ = new Subject<string>();
+
   protected readonly statusOptions = STATUS_OPTIONS;
+  protected readonly sortColumns = SORT_COLUMNS;
   protected readonly ageGroupOptions = AGE_GROUP_OPTIONS;
   protected readonly statusLabels = STATUS_LABELS;
-  protected readonly ageGroupLabels = AGE_GROUP_LABELS;
+  protected readonly ageGroups = AGE_GROUPS;
   protected readonly genderLabels = GENDER_LABELS;
   protected readonly visibilityLabels = VISIBILITY_LABELS;
   protected readonly urgentLabel = URGENT_LABEL;
@@ -105,10 +134,21 @@ export class Cats {
   protected readonly deleteTarget = signal<AdminCat | null>(null);
   protected readonly notice = signal<StatusNoticeMessage | null>(null);
 
-  protected readonly searchDraft = signal('');
-  protected readonly statusDraft = signal<CatStatus | ''>('');
-  protected readonly ageGroupDraft = signal<AgeGroup | ''>('');
-
+  private readonly state$ = this.route.queryParamMap.pipe(map(parseUrlState));
+  protected readonly state = toSignal(this.state$, { requireSync: true });
+  protected readonly searchDraft = linkedSignal({
+    source: this.state,
+    computation: (state) => state.search,
+  });
+  protected readonly hasFilters = computed(() => {
+    const { search, status, ageGroup, urgent, featured } = this.state();
+    return Boolean(search || status || ageGroup || urgent || featured);
+  });
+  protected readonly sortSummary = computed(() => {
+    const { sort, dir } = this.state();
+    const column = SORT_COLUMNS.find((item) => item.sort === sort)!;
+    return `Ordenats per ${column.label} (${column.directions[dir]})`;
+  });
 
   protected readonly catsPage = signal<AdminCatsPage | null>(null);
   protected readonly loading = signal(true);
@@ -146,14 +186,13 @@ export class Cats {
   });
 
   constructor() {
-    const state$ = this.route.queryParamMap.pipe(
-      map(parseUrlState),
-      tap((state) => {
-        this.searchDraft.set(state.search);
-        this.statusDraft.set(state.status);
-        this.ageGroupDraft.set(state.ageGroup);
-      }),
-    );
+    this.searchInput$
+      .pipe(
+        debounceTime(SEARCH_DELAY_MS),
+        filter((search) => search === this.searchDraft()),
+        takeUntilDestroyed(),
+      )
+      .subscribe((search) => this.updateUrl({ search: search.trim() }));
 
     if (isPlatformBrowser(this.platformId)) {
       this.loadFeaturedSummary();
@@ -165,7 +204,7 @@ export class Cats {
       }
     }
 
-    combineLatest([state$, this.retry$])
+    combineLatest([this.state$, this.retry$])
       .pipe(
         filter(() => isPlatformBrowser(this.platformId)),
         tap(() => {
@@ -173,7 +212,19 @@ export class Cats {
           this.error.set(false);
         }),
         switchMap(([state]) =>
-          this.adminCats.list({ ...state, limit: PAGE_SIZE }).pipe(
+          this.adminCats
+            .list({
+              search: state.search,
+              status: state.status,
+              ageGroup: state.ageGroup,
+              isUrgent: state.urgent,
+              isFeatured: state.featured,
+              sort: state.sort,
+              dir: state.dir,
+              page: state.page,
+              limit: PAGE_SIZE,
+            })
+            .pipe(
             tap((catsPage) => {
               this.catsPage.set(catsPage);
               this.loading.set(false);
@@ -191,29 +242,49 @@ export class Cats {
   }
 
   protected onSearchInput(event: Event): void {
-    this.searchDraft.set((event.target as HTMLInputElement).value);
+    const search = (event.target as HTMLInputElement).value;
+    this.searchDraft.set(search);
+    this.searchInput$.next(search);
   }
 
   protected onStatusChange(event: Event): void {
-    this.statusDraft.set((event.target as HTMLSelectElement).value as CatStatus | '');
+    this.updateUrl({ status: (event.target as HTMLSelectElement).value as CatStatus | '' });
   }
 
   protected onAgeGroupChange(event: Event): void {
-    this.ageGroupDraft.set((event.target as HTMLSelectElement).value as AgeGroup | '');
+    this.updateUrl({ ageGroup: (event.target as HTMLSelectElement).value as AgeGroup | '' });
   }
 
-  protected applyFilters(event?: Event): void {
-    event?.preventDefault();
-    this.navigate({
-      search: this.searchDraft().trim(),
-      status: this.statusDraft(),
-      ageGroup: this.ageGroupDraft(),
-      page: 1,
-    });
+  protected onUrgentChange(event: Event): void {
+    this.updateUrl({ urgent: (event.target as HTMLInputElement).checked });
+  }
+
+  protected onFeaturedChange(event: Event): void {
+    this.updateUrl({ featured: (event.target as HTMLInputElement).checked });
   }
 
   protected clearFilters(): void {
-    this.router.navigate([], { relativeTo: this.route });
+    this.updateUrl({ search: '', status: '', ageGroup: '', urgent: false, featured: false });
+  }
+
+  protected sortBy(sort: AdminCatsSort): void {
+    const state = this.state();
+    const isActive = sort === state.sort;
+    if (isActive && state.dir === 'asc') {
+      this.updateUrl({ sort, dir: 'desc' });
+    } else if (isActive && sort !== DEFAULT_SORT) {
+      this.updateUrl({ sort: DEFAULT_SORT, dir: DEFAULT_SORT_DIRECTION });
+    } else {
+      this.updateUrl({ sort, dir: 'asc' });
+    }
+  }
+
+  protected ariaSort(sort: AdminCatsSort): 'ascending' | 'descending' | 'none' {
+    const state = this.state();
+    if (state.sort !== sort) {
+      return 'none';
+    }
+    return state.dir === 'asc' ? 'ascending' : 'descending';
   }
 
   protected goToPage(page: number): void {
@@ -221,7 +292,7 @@ export class Cats {
     if (!catsPage || page < 1 || page > catsPage.totalPages || page === catsPage.page) {
       return;
     }
-    this.navigate({ ...parseUrlState(this.route.snapshot.queryParamMap), page });
+    this.updateUrl({ page });
   }
 
   protected load(): void {
@@ -247,7 +318,7 @@ export class Cats {
     this.loadFeaturedSummary();
     const current = this.catsPage();
     if (current && current.items.length === 1 && current.page > 1) {
-      this.navigate({ ...parseUrlState(this.route.snapshot.queryParamMap), page: current.page - 1 });
+      this.updateUrl({ page: current.page - 1 });
     } else {
       this.load();
     }
@@ -272,13 +343,18 @@ export class Cats {
     focusHeading(this.injector, this.heading);
   }
 
-  private navigate(state: CatsUrlState): void {
+  private updateUrl(changes: Partial<CatsUrlState>): void {
+    const state: CatsUrlState = { ...this.state(), page: 1, ...changes };
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
         search: state.search || null,
         status: state.status || null,
         ageGroup: state.ageGroup || null,
+        urgent: state.urgent || null,
+        featured: state.featured || null,
+        sort: state.sort === DEFAULT_SORT ? null : state.sort,
+        dir: state.dir === DEFAULT_SORT_DIRECTION ? null : state.dir,
         page: state.page > 1 ? state.page : null,
       },
     });

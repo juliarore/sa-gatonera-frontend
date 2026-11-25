@@ -13,52 +13,77 @@
 
 <section class="card" aria-labelledby="filters-title">
   <h2 class="card__title" id="filters-title">Cerca i filtres</h2>
-  <form class="filters" (submit)="applyFilters($event)">
-    <div class="field field--search">
-      <label class="visually-hidden" for="cats-search">Cerca pel nom del gat</label>
-      <i class="fa-solid fa-magnifying-glass field__icon" aria-hidden="true"></i>
-      <input
-        id="cats-search"
-        class="control control--with-icon"
-        type="search"
-        placeholder="Cerca pel nom del gat..."
-        autocomplete="off"
-        [value]="searchDraft()"
-        (input)="onSearchInput($event)"
-      />
+  <div class="filters">
+    <div class="filters__controls">
+      <div class="field field--search">
+        <label class="visually-hidden" for="cats-search">Cerca pel nom del gat</label>
+        <i class="fa-solid fa-magnifying-glass field__icon" aria-hidden="true"></i>
+        <input
+          id="cats-search"
+          class="control control--with-icon"
+          [class.control--active]="state().search"
+          type="search"
+          placeholder="Cerca pel nom del gat..."
+          autocomplete="off"
+          [value]="searchDraft()"
+          (input)="onSearchInput($event)"
+        />
+      </div>
+
+      <div class="field">
+        <label class="visually-hidden" for="cats-status">Estat</label>
+        <select
+          id="cats-status"
+          class="control"
+          [class.control--active]="state().status"
+          (change)="onStatusChange($event)"
+        >
+          <option value="" [selected]="state().status === ''">Tots els estats</option>
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value" [selected]="state().status === option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="visually-hidden" for="cats-age">Edat</label>
+        <select
+          id="cats-age"
+          class="control"
+          [class.control--active]="state().ageGroup"
+          (change)="onAgeGroupChange($event)"
+        >
+          <option value="" [selected]="state().ageGroup === ''">Totes les edats</option>
+          @for (option of ageGroupOptions; track option.value) {
+            <option [value]="option.value" [selected]="state().ageGroup === option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <label class="check filters__check">
+        <input type="checkbox" [checked]="state().urgent" (change)="onUrgentChange($event)" />
+        Urgents
+      </label>
+
+      <label class="check filters__check">
+        <input type="checkbox" [checked]="state().featured" (change)="onFeaturedChange($event)" />
+        Destacats
+      </label>
     </div>
 
-    <div class="field">
-      <label class="visually-hidden" for="cats-status">Estat</label>
-      <select id="cats-status" class="control" (change)="onStatusChange($event)">
-        <option value="" [selected]="statusDraft() === ''">Tots els estats</option>
-        @for (option of statusOptions; track option.value) {
-          <option [value]="option.value" [selected]="statusDraft() === option.value">
-            {{ option.label }}
-          </option>
-        }
-      </select>
-    </div>
-
-    <div class="field">
-      <label class="visually-hidden" for="cats-age">Edat</label>
-      <select id="cats-age" class="control" (change)="onAgeGroupChange($event)">
-        <option value="" [selected]="ageGroupDraft() === ''">Totes les edats</option>
-        @for (option of ageGroupOptions; track option.value) {
-          <option [value]="option.value" [selected]="ageGroupDraft() === option.value">
-            {{ option.label }}
-          </option>
-        }
-      </select>
-    </div>
-
-    <div class="filters__actions">
-      <button type="submit" class="btn btn--primary">Filtrar</button>
-      <button type="button" class="btn btn--secondary" (click)="clearFilters()">
-        Netejar filtres
-      </button>
-    </div>
-  </form>
+    <button
+      type="button"
+      class="link-button"
+      [style.visibility]="hasFilters() ? null : 'hidden'"
+      (click)="clearFilters()"
+    >
+      Netejar filtres
+    </button>
+  </div>
 </section>
 
 @if (featuredNotice(); as message) {
@@ -73,7 +98,7 @@
     <h2 class="card__title" id="catalog-title">Catàleg de gats</h2>
     <p class="card__meta" aria-live="polite">
       @if (catsPage(); as result) {
-        {{ result.total }} registres · Ordenats pels més recents
+        {{ result.total }} registres · {{ sortSummary() }}
       }
     </p>
   </div>
@@ -98,11 +123,22 @@
           </caption>
           <thead>
             <tr>
-              <th scope="col">Gat</th>
-              <th scope="col">Estat</th>
-              <th scope="col">Edat</th>
-              <th scope="col">Data d'entrada</th>
-              <th scope="col">Visibilitat</th>
+              @for (column of sortColumns; track column.sort) {
+                <th scope="col" [attr.aria-sort]="ariaSort(column.sort)">
+                  <button type="button" class="table__sort" (click)="sortBy(column.sort)">
+                    {{ column.header }}
+                    <i
+                      class="fa-solid"
+                      [class]="{
+                        'fa-sort': ariaSort(column.sort) === 'none',
+                        'fa-sort-up': ariaSort(column.sort) === 'ascending',
+                        'fa-sort-down': ariaSort(column.sort) === 'descending',
+                      }"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                </th>
+              }
               <th scope="col">Accions</th>
             </tr>
           </thead>
@@ -141,7 +177,7 @@
                         }
                       </p>
                       <p class="cat__detail">
-                        {{ genderLabels[cat.gender] }} · {{ cat.ageLabel }}
+                        {{ genderLabels[cat.gender] }}
                       </p>
                     </div>
                   </div>
@@ -154,7 +190,10 @@
                     }
                   </div>
                 </td>
-                <td>{{ ageGroupLabels[cat.ageGroup] }}</td>
+                <td>
+                  <p>{{ cat.ageLabel }}</p>
+                  <p class="cat__detail">{{ ageGroups[cat.ageGroup].label }}</p>
+                </td>
                 <td>{{ cat.entryDate }}</td>
                 <td>
                   {{ cat.isVisible ? visibilityLabels.visible : visibilityLabels.hidden }}

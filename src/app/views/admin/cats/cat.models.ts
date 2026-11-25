@@ -2,6 +2,8 @@ import { CatCharacteristic, CatGender, Compatibility } from '../../../shared/cat
 
 export type CatStatus = 'available' | 'in_foster' | 'reserved' | 'adopted';
 export type AgeGroup = 'kitten' | 'young' | 'adult' | 'senior';
+export type AdminCatsSort = 'name' | 'status' | 'age' | 'entryDate' | 'visibility';
+export type SortDirection = 'asc' | 'desc';
 
 export interface AdminCat {
   id: string;
@@ -37,6 +39,10 @@ export interface AdminCatsQuery {
   search?: string;
   status?: CatStatus | '';
   ageGroup?: AgeGroup | '';
+  isUrgent?: boolean;
+  isFeatured?: boolean;
+  sort?: AdminCatsSort;
+  dir?: SortDirection;
   page?: number;
   limit?: number;
 }

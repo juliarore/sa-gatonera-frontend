@@ -224,12 +224,6 @@ ul {
   }
 }
 
-@media (max-width: 767px) {
-  .card {
-    padding: var(--space-4);
-  }
-}
-
 @media (max-width: 639px) {
   .card {
     --columns: 1;
