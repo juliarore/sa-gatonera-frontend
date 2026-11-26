@@ -1,0 +1,200 @@
+<div class="filters">
+  <div class="filters__search">
+    <label class="visually-hidden" for="catalog-search">Buscar per nom</label>
+    <i class="fa-solid fa-magnifying-glass filters__search-icon" aria-hidden="true"></i>
+    <input
+      id="catalog-search"
+      class="filters__search-input"
+      type="search"
+      placeholder="Buscar per nom"
+      autocomplete="off"
+      maxlength="50"
+      [value]="searchDraft()"
+      (input)="onSearchInput($event)"
+    />
+  </div>
+
+  <button
+    #openButton
+    type="button"
+    class="filters__open"
+    aria-haspopup="dialog"
+    (click)="openDialog()"
+  >
+    <i class="fa-solid fa-sliders filters__open-icon" aria-hidden="true"></i>
+    <span class="filters__open-label">Filtres</span>
+    @if (activeCount()) {
+      <span class="filters__badge">
+        {{ activeCount() }}
+        <span class="visually-hidden">actius</span>
+      </span>
+    }
+  </button>
+
+  <div class="filters__bar">
+    <app-filter-dropdown
+      name="gender"
+      label="Sexe"
+      [multiple]="false"
+      [allLabel]="allGendersLabel"
+      [options]="genderOptions"
+      [selected]="filters().gender"
+      (selectedChange)="update({ gender: $event })"
+    />
+    <app-filter-dropdown
+      name="ageGroup"
+      label="Edat"
+      [options]="ageGroupOptions"
+      [selected]="filters().ageGroup"
+      (selectedChange)="update({ ageGroup: $event })"
+    />
+    <app-filter-dropdown
+      name="compatible"
+      label="Compatible amb"
+      [options]="compatibleOptions"
+      [selected]="filters().compatible"
+      (selectedChange)="update({ compatible: $event })"
+    />
+    @if (traitOptions().length) {
+      <app-filter-dropdown
+        name="traits"
+        label="Caràcter"
+        [options]="traitOptions()"
+        [selected]="filters().traits"
+        (selectedChange)="update({ traits: $event })"
+      />
+    }
+    <div class="filters__checks">
+      @for (option of adoptionOptions; track option.value) {
+        <label class="filters__check">
+          <input
+            type="checkbox"
+            [checked]="filters()[option.value]"
+            (change)="toggleAdoption(option.value, $event)"
+          />
+          {{ option.label }}
+        </label>
+      }
+    </div>
+  </div>
+</div>
+
+<dialog
+  #dialog
+  class="filters-dialog"
+  aria-labelledby="filters-dialog-title"
+  (close)="onDialogClose()"
+>
+  <header class="filters-dialog__header">
+    <h2 id="filters-dialog-title">Filtres</h2>
+    <button
+      type="button"
+      class="filters-dialog__close"
+      aria-label="Tancar els filtres"
+      (click)="closeDialog()"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  @if (draft(); as draft) {
+    @let adoption = adoptionSelected(draft.filters);
+    <div class="filters-dialog__body">
+      <app-accordion
+        panelId="filters-section-gender"
+        label="Sexe"
+        [count]="draft.filters.gender.length"
+      >
+        <app-filter-options
+          name="filters-gender"
+          legend="Sexe"
+          [multiple]="false"
+          [allLabel]="allGendersLabel"
+          [options]="genderOptions"
+          [selected]="draft.filters.gender"
+          (selectedChange)="updateDraft({ gender: $event })"
+        />
+      </app-accordion>
+      <app-accordion
+        panelId="filters-section-age-group"
+        label="Edat"
+        [count]="draft.filters.ageGroup.length"
+      >
+        <app-filter-options
+          name="filters-age-group"
+          legend="Edat"
+          [options]="ageGroupOptions"
+          [selected]="draft.filters.ageGroup"
+          (selectedChange)="updateDraft({ ageGroup: $event })"
+        />
+      </app-accordion>
+      <app-accordion
+        panelId="filters-section-compatible"
+        label="Compatible amb"
+        [count]="draft.filters.compatible.length"
+      >
+        <app-filter-options
+          name="filters-compatible"
+          legend="Compatible amb"
+          [options]="compatibleOptions"
+          [selected]="draft.filters.compatible"
+          (selectedChange)="updateDraft({ compatible: $event })"
+        />
+      </app-accordion>
+      @if (traitOptions().length) {
+        <app-accordion
+          panelId="filters-section-traits"
+          label="Caràcter"
+          [count]="draft.filters.traits.length"
+        >
+          <app-filter-options
+            name="filters-traits"
+            legend="Caràcter"
+            [options]="traitOptions()"
+            [selected]="draft.filters.traits"
+            (selectedChange)="updateDraft({ traits: $event })"
+          />
+        </app-accordion>
+      }
+      <app-accordion panelId="filters-section-adoption" label="Adopció" [count]="adoption.length">
+        <app-filter-options
+          name="filters-adoption"
+          legend="Adopció"
+          [options]="adoptionOptions"
+          [selected]="adoption"
+          (selectedChange)="
+            updateDraft({ urgent: $event.includes('urgent'), joint: $event.includes('joint') })
+          "
+        />
+      </app-accordion>
+      <app-accordion
+        panelId="filters-section-sort"
+        label="Ordenar per"
+        [summary]="draftSortLabel()"
+      >
+        <app-filter-options
+          name="filters-sort"
+          legend="Ordenar per"
+          [multiple]="false"
+          [options]="sortOptions()"
+          [selected]="[draft.sort]"
+          (selectedChange)="updateDraftSort($event[0])"
+        />
+      </app-accordion>
+      <button
+        type="button"
+        class="link-button filters-dialog__clear"
+        [style.visibility]="canClearDraft() ? null : 'hidden'"
+        (click)="clearDraft()"
+      >
+        Netejar filtres
+      </button>
+    </div>
+
+    <footer class="filters-dialog__footer">
+      <button #applyButton type="button" class="btn btn--primary" (click)="apply(draft)">
+        Aplicar filtres
+      </button>
+    </footer>
+  }
+</dialog>
