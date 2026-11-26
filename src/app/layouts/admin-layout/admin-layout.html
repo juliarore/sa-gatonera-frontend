@@ -114,18 +114,7 @@
           aria-hidden="true"
         ></i>
       </button>
-      <nav class="breadcrumb" aria-label="Camí de navegació">
-        <ol class="breadcrumb__list">
-          @if (onDashboard()) {
-            <li class="breadcrumb__item" aria-current="page">Panell d'administració</li>
-          } @else {
-            <li class="breadcrumb__item">
-              <a class="breadcrumb__link" routerLink="/admin">Panell d'administració</a>
-            </li>
-            <li class="breadcrumb__item" aria-current="page">{{ pageTitle() }}</li>
-          }
-        </ol>
-      </nav>
+      <app-breadcrumb class="breadcrumb" [items]="breadcrumb()" />
     </header>
 
     <main id="main-content" class="main" tabindex="-1" [attr.inert]="menuOpen() ? '' : null">

@@ -1,6 +1,7 @@
 import {
   afterNextRender,
   Component,
+  computed,
   ElementRef,
   inject,
   Injector,
@@ -17,9 +18,12 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { filter, map, startWith, tap } from 'rxjs';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
+
+const DASHBOARD_LABEL = "Panell d'administració";
 
 @Component({
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [Breadcrumb, RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',
@@ -58,6 +62,12 @@ export class AdminLayout {
       map(() => this.router.url.split(/[?#]/)[0] === '/admin'),
     ),
     { initialValue: false },
+  );
+
+  protected readonly breadcrumb = computed<BreadcrumbItem[]>(() =>
+    this.onDashboard()
+      ? [{ label: DASHBOARD_LABEL }]
+      : [{ label: DASHBOARD_LABEL, link: '/admin' }, { label: this.pageTitle() }],
   );
 
   protected toggleMenu(): void {

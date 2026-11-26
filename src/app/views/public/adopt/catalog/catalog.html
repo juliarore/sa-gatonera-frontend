@@ -10,6 +10,7 @@
     priority
   />
   <div class="catalog__intro">
+    <app-breadcrumb [items]="breadcrumb" />
     <h1>Gats en adopció</h1>
     <p>
       Descobreix els gats que busquen una família. Cadascun té la seva història i tots mereixen
@@ -111,3 +112,5 @@
     <p class="catalog__message">Ara mateix no hi ha gats en adopció</p>
   }
 </section>
+
+<app-adoption-cta />

@@ -21,6 +21,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { AdoptionCta } from '../../../../shared/components/adoption-cta/adoption-cta';
+import { Breadcrumb, BreadcrumbItem } from '../../../../shared/components/breadcrumb/breadcrumb';
 import { CatCard } from '../../../../shared/components/cat-card/cat-card';
 import { CatalogFilters, FiltersDraft } from './catalog-filters/catalog-filters';
 import {
@@ -42,7 +44,7 @@ import {
   PublicCatsService,
   PublicCharacteristic,
 } from '../../../../shared/cats/public-cats.service';
-import { CATALOG_PATH } from '../../../../shared/navigation/routes';
+import { CATALOG_PATH, HOME_PATH } from '../../../../shared/navigation/routes';
 
 interface CatalogQuery {
   page: number;
@@ -54,6 +56,11 @@ type LoadState = 'loading' | 'ready' | 'error';
 
 const PAGE_SIZE = 12;
 const EAGER_IMAGES = 3;
+
+const BREADCRUMB: readonly BreadcrumbItem[] = [
+  { label: 'Inici', link: HOME_PATH },
+  { label: 'Gats en adopció' },
+];
 
 const SORT_OPTIONS: readonly FilterOption<CatsSort>[] = [
   { value: 'oldest', label: 'Més antics' },
@@ -78,7 +85,15 @@ function toSort(value: string | null): CatsSort {
 }
 
 @Component({
-  imports: [CatCard, CatalogFilters, Dropdown, Pagination, ResponsiveImage],
+  imports: [
+    AdoptionCta,
+    Breadcrumb,
+    CatCard,
+    CatalogFilters,
+    Dropdown,
+    Pagination,
+    ResponsiveImage,
+  ],
   selector: 'app-catalog',
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
@@ -94,6 +109,7 @@ export class Catalog {
   private readonly reload = new BehaviorSubject<void>(undefined);
   private focusResultsOnLoad = false;
 
+  protected readonly breadcrumb = BREADCRUMB;
   protected readonly catalogPath = CATALOG_PATH;
   protected readonly eagerImages = EAGER_IMAGES;
   protected readonly sortOptions = SORT_OPTIONS;

@@ -41,9 +41,13 @@
 
     @include bp.desktop {
       position: relative;
-      gap: var(--space-8);
+      gap: var(--space-6);
       max-width: 426px;
       padding: 0;
+
+      h1 {
+        margin-bottom: var(--space-2);
+      }
     }
   }
 
@@ -53,9 +57,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--section-gap);
+    padding-top: var(--space-8);
 
-    @include bp.mobile {
-      padding-top: var(--space-8);
+    @include bp.desktop {
+      padding-top: 48px;
     }
   }
 
@@ -99,7 +104,7 @@
     font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 600;
-    line-height: 1.5;
+    line-height: var(--line-height-body);
   }
 
   &__cards {
@@ -130,7 +135,6 @@
   }
 
   &__message {
-    margin: 0;
     text-align: center;
   }
 }

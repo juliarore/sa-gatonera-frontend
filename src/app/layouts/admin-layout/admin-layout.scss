@@ -178,36 +178,6 @@ ol {
   }
 }
 
-.breadcrumb {
-  &__list {
-    display: flex;
-    gap: var(--space-2);
-    font-size: var(--font-size-sm);
-  }
-
-  &__item {
-    &:not(:last-child)::after {
-      content: '/' / '';
-      margin-left: var(--space-2);
-      color: var(--color-text-muted);
-    }
-
-    &[aria-current='page'] {
-      font-weight: 600;
-    }
-  }
-
-  &__link {
-    color: var(--color-text-primary);
-    text-decoration: none;
-
-    &:hover,
-    &:focus-visible {
-      text-decoration: underline;
-    }
-  }
-}
-
 .main {
   flex: 1;
   padding: var(--space-8);

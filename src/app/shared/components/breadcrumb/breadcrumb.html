@@ -1,0 +1,21 @@
+<nav aria-label="Ruta de navegació">
+  <ol class="breadcrumb" role="list">
+    @for (item of items(); track item.label; let first = $first, last = $last) {
+      <li class="breadcrumb__item">
+        @if (!first) {
+          <i
+            class="fa-solid fa-chevron-right fa-width-auto breadcrumb__separator"
+            aria-hidden="true"
+          ></i>
+        }
+        @if (last) {
+          <span class="breadcrumb__current" aria-current="page">{{ item.label }}</span>
+        } @else if (item.link) {
+          <a class="breadcrumb__link" [routerLink]="item.link">{{ item.label }}</a>
+        } @else {
+          {{ item.label }}
+        }
+      </li>
+    }
+  </ol>
+</nav>

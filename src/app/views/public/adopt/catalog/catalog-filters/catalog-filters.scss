@@ -49,7 +49,7 @@
   &__search-input {
     @include controls.public-control;
 
-    padding-left: calc(var(--space-4) + 1em + var(--space-3));
+    padding-left: 44px;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -61,26 +61,22 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
+
+    @include desktop-midrange {
+      flex-basis: 100%;
+    }
   }
 
   &__bar {
     @include bp.mobile {
       display: none;
     }
-
-    @include desktop-midrange {
-      flex-basis: 100%;
-
-      > app-filter-dropdown,
-      .filters__check {
-        flex: 1;
-      }
-    }
   }
 
-  &__checks {
+  &__bar > app-filter-dropdown,
+  &__check {
     @include desktop-midrange {
-      flex-basis: 100%;
+      flex: 1;
     }
   }
 

@@ -1,0 +1,18 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+export interface BreadcrumbItem {
+  label: string;
+  link?: string;
+}
+
+@Component({
+  imports: [RouterLink],
+  selector: 'app-breadcrumb',
+  templateUrl: './breadcrumb.html',
+  styleUrl: './breadcrumb.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class Breadcrumb {
+  readonly items = input.required<readonly BreadcrumbItem[]>();
+}
