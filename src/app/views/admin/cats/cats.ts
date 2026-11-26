@@ -29,8 +29,6 @@ import { AdminCatsService } from './admin-cats.service';
 import { StatusNotice, StatusNoticeMessage } from '../status-notice/status-notice';
 import { DeleteCatDialog } from '../delete-cat-dialog/delete-cat-dialog';
 import {
-  AGE_GROUP_OPTIONS,
-  AGE_GROUPS,
   DEFAULT_SORT,
   DEFAULT_SORT_DIRECTION,
   DELETE_CAT_TEXT,
@@ -41,7 +39,12 @@ import {
   STATUS_OPTIONS,
   VISIBILITY_LABELS,
 } from './cat.constants';
-import { GENDER_LABELS, URGENT_LABEL } from '../../../shared/cats/cat.constants';
+import {
+  AGE_GROUP_OPTIONS,
+  AGE_GROUPS,
+  GENDER_LABELS,
+  URGENT_LABEL,
+} from '../../../shared/cats/cat.constants';
 import {
   AdminCat,
   AdminCatsPage,

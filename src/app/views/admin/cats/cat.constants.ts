@@ -2,7 +2,6 @@ import { JOINT_ADOPTION_LABEL } from '../../../shared/cats/cat.constants';
 import {
   ActivityLevel,
   AdminCatsSort,
-  AgeGroup,
   CatFieldError,
   CatStatus,
   SortDirection,
@@ -53,13 +52,6 @@ export const STATUS_LABELS: Record<CatStatus, string> = {
   adopted: 'Adoptat',
 };
 
-export const AGE_GROUPS: Record<AgeGroup, { label: string; range: string }> = {
-  kitten: { label: 'Cadell', range: "menys d'1 any" },
-  young: { label: 'Jove', range: '1 a 2 anys' },
-  adult: { label: 'Adult', range: '2 a 7 anys' },
-  senior: { label: 'Sènior', range: 'més de 7 anys' },
-};
-
 export const VISIBILITY_LABELS = {
   visible: 'Visible',
   hidden: 'No visible',
@@ -68,10 +60,6 @@ export const VISIBILITY_LABELS = {
 export const STATUS_OPTIONS = (Object.entries(STATUS_LABELS) as [CatStatus, string][]).map(
   ([value, label]) => ({ value, label }),
 );
-
-export const AGE_GROUP_OPTIONS = (
-  Object.entries(AGE_GROUPS) as [AgeGroup, { label: string; range: string }][]
-).map(([value, { label, range }]) => ({ value, label: `${label} (${range})` }));
 
 export const ACTIVITY_LEVEL_LABELS: Record<ActivityLevel, string> = {
   low: 'Tranquil',

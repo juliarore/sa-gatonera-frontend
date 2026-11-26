@@ -2,7 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AgeGroup, CatCharacteristic, CatGender, CatsSort, Compatibility } from './cat.models';
+import {
+  AgeGroup,
+  CatCharacteristic,
+  CatGender,
+  CatsSort,
+  Compatibility,
+  CompatibleWith,
+} from './cat.models';
 
 export interface PublicCat {
   id: string;
@@ -29,10 +36,25 @@ export interface PublicCatsPage {
   totalPages: number;
 }
 
-export interface PublicCatsQuery {
+export interface PublicCatsFilters {
+  gender: CatGender[];
+  ageGroup: AgeGroup[];
+  compatible: CompatibleWith[];
+  traits: string[];
+  urgent: boolean;
+  joint: boolean;
+  search: string;
+}
+
+export interface PublicCatsQuery extends PublicCatsFilters {
   page: number;
   pageSize: number;
   sort: CatsSort;
+}
+
+export interface PublicCharacteristic {
+  code: string;
+  label: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -40,9 +62,19 @@ export class PublicCatsService {
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.apiUrl}/cats`;
 
-  getCats({ page, pageSize, sort }: PublicCatsQuery): Observable<PublicCatsPage> {
-    const params = new HttpParams().set('page', page).set('pageSize', pageSize).set('sort', sort);
+  getCats(query: PublicCatsQuery): Observable<PublicCatsPage> {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(query)) {
+      const param = Array.isArray(value) ? value.join(',') : value;
+      if (param !== '' && param !== false) {
+        params = params.set(key, param);
+      }
+    }
     return this.http.get<PublicCatsPage>(this.url, { params });
+  }
+
+  getCharacteristics(): Observable<PublicCharacteristic[]> {
+    return this.http.get<PublicCharacteristic[]>(`${this.url}/characteristics`);
   }
 
   getFeaturedCats(): Observable<PublicCat[]> {
