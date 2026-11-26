@@ -228,42 +228,12 @@
         <p class="card__meta">
           Mostrant {{ firstShown() }}–{{ lastShown() }} de {{ result.total }} gats
         </p>
-        <nav class="pagination" aria-label="Paginació">
-          <button
-            type="button"
-            class="pagination__btn"
-            aria-label="Pàgina anterior"
-            [disabled]="result.page <= 1"
-            (click)="goToPage(result.page - 1)"
-          >
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-          </button>
-          @for (item of pageItems(); track $index) {
-            @if (item === 'ellipsis') {
-              <span class="pagination__gap" aria-hidden="true">…</span>
-            } @else {
-              <button
-                type="button"
-                class="pagination__btn"
-                [class.pagination__btn--active]="item === result.page"
-                [attr.aria-current]="item === result.page ? 'page' : null"
-                [attr.aria-label]="'Pàgina ' + item"
-                (click)="goToPage(item)"
-              >
-                {{ item }}
-              </button>
-            }
-          }
-          <button
-            type="button"
-            class="pagination__btn"
-            aria-label="Pàgina següent"
-            [disabled]="result.page >= result.totalPages"
-            (click)="goToPage(result.page + 1)"
-          >
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-          </button>
-        </nav>
+        <app-pagination
+          [page]="result.page"
+          [totalPages]="result.totalPages"
+          [links]="false"
+          (pageChange)="goToPage($event)"
+        />
       </footer>
     }
   }

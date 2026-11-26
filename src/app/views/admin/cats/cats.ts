@@ -56,8 +56,7 @@ import {
 } from './cat.models';
 import { focusHeading } from './utils/focus-heading';
 import { imageUrl } from '../../../shared/cats/image-url';
-
-type PageItem = number | 'ellipsis';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
 interface CatsUrlState {
   search: string;
@@ -97,7 +96,7 @@ function parseUrlState(params: ParamMap): CatsUrlState {
 
 @Component({
   selector: 'app-cats',
-  imports: [RouterLink, DeleteCatDialog, StatusNotice],
+  imports: [RouterLink, DeleteCatDialog, Pagination, StatusNotice],
   templateUrl: './cats.html',
   styleUrl: './cats.scss',
 })
@@ -166,28 +165,6 @@ export class Cats {
     return catsPage ? Math.min(catsPage.page * catsPage.limit, catsPage.total) : 0;
   });
 
-  protected readonly pageItems = computed<PageItem[]>(() => {
-    const catsPage = this.catsPage();
-    if (!catsPage) {
-      return [];
-    }
-    const { page, totalPages } = catsPage;
-    const pages = new Set(
-      [1, page - 1, page, page + 1, totalPages].filter(
-        (n) => n >= 1 && n <= totalPages,
-      ),
-    );
-    const sorted = [...pages].sort((a, b) => a - b);
-    const items: PageItem[] = [];
-    sorted.forEach((n, index) => {
-      if (index > 0 && n - sorted[index - 1] > 1) {
-        items.push('ellipsis');
-      }
-      items.push(n);
-    });
-    return items;
-  });
-
   constructor() {
     this.searchInput$
       .pipe(
@@ -228,16 +205,16 @@ export class Cats {
               limit: PAGE_SIZE,
             })
             .pipe(
-            tap((catsPage) => {
-              this.catsPage.set(catsPage);
-              this.loading.set(false);
-            }),
-            catchError(() => {
-              this.error.set(true);
-              this.loading.set(false);
-              return EMPTY;
-            }),
-          ),
+              tap((catsPage) => {
+                this.catsPage.set(catsPage);
+                this.loading.set(false);
+              }),
+              catchError(() => {
+                this.error.set(true);
+                this.loading.set(false);
+                return EMPTY;
+              }),
+            ),
         ),
         takeUntilDestroyed(),
       )

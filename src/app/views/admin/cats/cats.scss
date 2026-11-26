@@ -252,52 +252,6 @@ select.control {
   border-top: 1px solid var(--color-border);
 }
 
-.pagination {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-
-  &__btn {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background-color: var(--color-white);
-    color: var(--color-text-primary);
-    font: inherit;
-    cursor: pointer;
-
-    // Mateix criteri que .btn: contorn enganxat, sense buit
-    &:focus-visible {
-      outline-offset: 0;
-    }
-
-    &:hover:not(:disabled) {
-      background-color: var(--color-surface-cream);
-    }
-
-    &--active,
-    &--active:hover:not(:disabled) {
-      background-color: var(--color-primary);
-      border-color: var(--color-primary);
-      font-weight: 600;
-    }
-
-    &:disabled {
-      background-color: var(--color-surface-gray);
-      border-color: transparent;
-      color: var(--color-text-muted);
-      cursor: not-allowed;
-    }
-  }
-
-  &__gap {
-    padding: 0 var(--space-1);
-    color: var(--color-text-muted);
-  }
-}
-
 @media (max-width: 767px) {
   .cat__info {
     min-width: 200px;

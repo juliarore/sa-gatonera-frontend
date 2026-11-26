@@ -1,41 +1,106 @@
+@use '../../../../styles/abstracts/breakpoints' as bp;
+
 :host {
   display: block;
 }
 
 .pagination {
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-2);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__slot--mobile {
+    display: none;
   }
 
-  &__item,
-  &__gap {
+  @include bp.below-tablet {
+    &__slot--desktop {
+      display: none;
+    }
+
+    &__slot--mobile {
+      display: block;
+    }
+  }
+
+  &__item {
     display: grid;
     place-items: center;
     min-width: var(--size-touch);
     height: var(--size-touch);
-    border-radius: var(--radius-sm);
-  }
-
-  &__item {
-    color: inherit;
+    padding: 0 var(--space-2);
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font: inherit;
     text-decoration: none;
+    cursor: pointer;
 
-    &:is(a):is(:hover, :focus-visible) {
-      background-color: var(--color-surface-cream-strong);
-    }
-
-    &--current,
-    &--current:is(a):is(:hover, :focus-visible) {
+    &--current {
       background-color: var(--color-primary);
     }
 
-    &--disabled {
+    &:disabled {
+      color: var(--color-text-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  &--public {
+    gap: var(--space-2);
+
+    .pagination__item {
+      border-radius: var(--radius-sm);
+
+      &:is(a):is(:hover, :focus-visible) {
+        background-color: var(--color-surface-cream-strong);
+      }
+
+      &--current:is(a):is(:hover, :focus-visible) {
+        background-color: var(--color-primary);
+      }
+    }
+
+    .pagination__gap {
+      min-width: var(--size-touch);
+      text-align: center;
+    }
+  }
+
+  &--admin {
+    gap: var(--space-1);
+
+    .pagination__item {
+      border-color: var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-white);
+
+      &:focus-visible {
+        outline-offset: 0;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--color-surface-cream);
+      }
+
+      &--current,
+      &--current:hover:not(:disabled) {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary);
+        font-weight: 600;
+      }
+
+      &:disabled {
+        border-color: transparent;
+        background-color: var(--color-surface-gray);
+      }
+    }
+
+    .pagination__gap {
+      padding: 0 var(--space-1);
       color: var(--color-text-muted);
     }
   }

@@ -1,63 +1,51 @@
 @if (totalPages() > 1) {
-  <nav class="pagination" aria-label="Paginació">
-    <ul class="pagination__list">
-      <li>
-        @if (page() > 1) {
-          <a
-            class="pagination__item"
-            [routerLink]="[]"
-            [queryParams]="queryParams(page() - 1)"
-            queryParamsHandling="merge"
-            aria-label="Pàgina anterior"
-            (click)="pageSelect.emit()"
-          >
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-          </a>
-        } @else {
-          <span class="pagination__item pagination__item--disabled" aria-hidden="true">
-            <i class="fa-solid fa-chevron-left"></i>
-          </span>
-        }
-      </li>
-
-      @for (item of pages(); track $index) {
-        @if (item === null) {
-          <li class="pagination__gap" aria-hidden="true">…</li>
-        } @else {
-          <li>
-            <a
-              class="pagination__item"
-              [class.pagination__item--current]="item === page()"
-              [routerLink]="[]"
-              [queryParams]="queryParams(item)"
-              queryParamsHandling="merge"
-              [attr.aria-current]="item === page() ? 'page' : null"
-              [attr.aria-label]="'Pàgina ' + item"
-              (click)="pageSelect.emit()"
-              >{{ item }}</a
-            >
-          </li>
-        }
+  <nav aria-label="Paginació">
+    <ul class="pagination" [class]="'pagination--' + variant()" role="list">
+      @for (slot of slots(); track $index) {
+        <li
+          [class.pagination__slot--desktop]="slot.only === 'desktop'"
+          [class.pagination__slot--mobile]="slot.only === 'mobile'"
+        >
+          @if (slot.item; as item) {
+            @if (links() && !item.disabled) {
+              <a
+                class="pagination__item"
+                [class.pagination__item--current]="item.current"
+                [routerLink]="[]"
+                [queryParams]="{ page: item.page === 1 ? null : item.page }"
+                queryParamsHandling="merge"
+                [attr.aria-current]="item.current ? 'page' : null"
+                [attr.aria-label]="item.label"
+                (click)="select(item)"
+              >
+                <ng-container *ngTemplateOutlet="content; context: { $implicit: item }" />
+              </a>
+            } @else {
+              <button
+                type="button"
+                class="pagination__item"
+                [class.pagination__item--current]="item.current"
+                [disabled]="item.disabled"
+                [attr.aria-current]="item.current ? 'page' : null"
+                [attr.aria-label]="item.label"
+                (click)="select(item)"
+              >
+                <ng-container *ngTemplateOutlet="content; context: { $implicit: item }" />
+              </button>
+            }
+          } @else {
+            <span class="pagination__gap" aria-hidden="true">…</span>
+          }
+        </li>
       }
-
-      <li>
-        @if (page() < totalPages()) {
-          <a
-            class="pagination__item"
-            [routerLink]="[]"
-            [queryParams]="queryParams(page() + 1)"
-            queryParamsHandling="merge"
-            aria-label="Pàgina següent"
-            (click)="pageSelect.emit()"
-          >
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-          </a>
-        } @else {
-          <span class="pagination__item pagination__item--disabled" aria-hidden="true">
-            <i class="fa-solid fa-chevron-right"></i>
-          </span>
-        }
-      </li>
     </ul>
   </nav>
 }
+
+<ng-template #content let-item>
+  @if (item.icon) {
+    <i class="fa-solid" [class]="item.icon" aria-hidden="true"></i>
+  } @else {
+    {{ item.page }}
+  }
+</ng-template>
