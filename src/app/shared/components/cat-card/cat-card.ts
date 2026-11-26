@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -23,7 +24,7 @@ const IMAGE_WIDTH = 822;
 const IMAGE_HEIGHT = 500;
 
 @Component({
-  imports: [RouterLink],
+  imports: [NgTemplateOutlet, RouterLink],
   selector: 'app-cat-card',
   templateUrl: './cat-card.html',
   styleUrl: './cat-card.scss',

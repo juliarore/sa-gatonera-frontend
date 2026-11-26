@@ -44,6 +44,7 @@ import {
   PublicCatsService,
   PublicCharacteristic,
 } from '../../../../shared/cats/public-cats.service';
+import { PHONE_VIEWPORT_QUERY } from '../../../../shared/navigation/breakpoints';
 import { CATALOG_PATH, HOME_PATH } from '../../../../shared/navigation/routes';
 
 interface CatalogQuery {
@@ -54,7 +55,7 @@ interface CatalogQuery {
 
 type LoadState = 'loading' | 'ready' | 'error';
 
-const PAGE_SIZE = 12;
+const PAGE_SIZES = { phone: 6, default: 12 } as const;
 const EAGER_IMAGES = 3;
 
 const BREADCRUMB: readonly BreadcrumbItem[] = [
@@ -108,13 +109,14 @@ export class Catalog {
   private readonly resultsTitle = viewChild.required<ElementRef<HTMLElement>>('resultsTitle');
   private readonly reload = new BehaviorSubject<void>(undefined);
   private focusResultsOnLoad = false;
+  private pageSize: number = PAGE_SIZES.default;
 
   protected readonly breadcrumb = BREADCRUMB;
   protected readonly catalogPath = CATALOG_PATH;
   protected readonly eagerImages = EAGER_IMAGES;
   protected readonly sortOptions = SORT_OPTIONS;
   protected readonly defaultSort = DEFAULT_SORT;
-  protected readonly placeholders = Array.from({ length: PAGE_SIZE / 2 }, (_, index) => index);
+  protected readonly placeholders = Array.from({ length: PAGE_SIZES.phone }, (_, index) => index);
   protected readonly state = signal<LoadState>('loading');
   protected readonly catsPage = signal<PublicCatsPage | null>(null);
   protected readonly characteristics = signal<PublicCharacteristic[]>([]);
@@ -156,6 +158,8 @@ export class Catalog {
     });
 
     afterNextRender(() => {
+      this.watchPageSize();
+
       const characteristics$ = this.publicCats.getCharacteristics().pipe(
         catchError(() => of([])),
         tap((characteristics) => this.characteristics.set(characteristics)),
@@ -169,7 +173,7 @@ export class Catalog {
               .getCats({
                 ...withKnownTraits(filters, characteristics),
                 page,
-                pageSize: PAGE_SIZE,
+                pageSize: this.pageSize,
                 sort,
               })
               .pipe(catchError(() => of(null))),
@@ -202,6 +206,25 @@ export class Catalog {
 
   protected retry(): void {
     this.reload.next();
+  }
+
+  private watchPageSize(): void {
+    const query = window.matchMedia(PHONE_VIEWPORT_QUERY);
+    const syncPageSize = () => {
+      this.pageSize = query.matches ? PAGE_SIZES.phone : PAGE_SIZES.default;
+    };
+    const onChange = () => {
+      syncPageSize();
+      if (this.query().page > 1) {
+        this.navigateToFirstPage({});
+      } else {
+        this.reload.next();
+      }
+    };
+
+    syncPageSize();
+    query.addEventListener('change', onChange);
+    this.destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
   }
 
   private navigateToFirstPage(queryParams: Params): void {

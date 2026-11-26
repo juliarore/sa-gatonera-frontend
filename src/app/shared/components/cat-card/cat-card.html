@@ -42,15 +42,14 @@
         {{ genderLabels[gender()] }} | {{ age() }}
       </p>
 
-      <div class="cat-card__tags">
-        @if (tags().length) {
-          <ul class="cat-card__tag-list">
-            @for (tag of tags(); track tag) {
-              <li class="cat-card__tag cat-card__tag--info">{{ tag }}</li>
-            }
-          </ul>
-        }
-      </div>
+      @if (tags().length) {
+        <ul class="cat-card__tags" aria-hidden="true">
+          <ng-container *ngTemplateOutlet="tagItems" />
+        </ul>
+        <ul class="visually-hidden">
+          <ng-container *ngTemplateOutlet="tagItems" />
+        </ul>
+      }
     </div>
 
     <a
@@ -62,3 +61,9 @@
     </a>
   </div>
 </article>
+
+<ng-template #tagItems>
+  @for (tag of tags(); track tag) {
+    <li class="cat-card__tag cat-card__tag--info">{{ tag }}</li>
+  }
+</ng-template>

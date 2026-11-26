@@ -99,9 +99,10 @@
       }
     </ul>
     <app-pagination
+      variant="public"
       [page]="query().page"
       [totalPages]="totalPages()"
-      (pageSelect)="focusResultsAfterLoad()"
+      (pageChange)="focusResultsAfterLoad()"
     />
   } @else if (hasFilters()) {
     <div class="state" role="status">
