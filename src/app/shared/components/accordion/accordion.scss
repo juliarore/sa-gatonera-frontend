@@ -1,0 +1,34 @@
+@use '../../../../styles/abstracts/accordion';
+@use '../../../../styles/abstracts/controls';
+
+:host {
+  @include accordion.item;
+
+  display: block;
+}
+
+.accordion {
+  &__button {
+    @include accordion.button-base;
+    @include accordion.button;
+  }
+
+  &__label {
+    flex: 1;
+    text-align: left;
+  }
+
+  &__summary {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+  }
+
+  &__badge {
+    @include controls.count-badge;
+  }
+
+  &__panel {
+    padding-bottom: var(--space-3);
+  }
+}

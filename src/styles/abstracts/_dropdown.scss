@@ -1,3 +1,5 @@
+$filter-panel-min-width: 280px;
+
 @mixin dropdown-panel {
   padding: var(--space-2);
   border: 1px solid var(--color-border);
@@ -15,4 +17,15 @@
   &:focus-visible {
     background-color: var(--color-surface-cream);
   }
+}
+
+@mixin floating-panel {
+  position: absolute;
+  top: 100%;
+  z-index: 10;
+  max-width: calc(100vw - 2 * var(--public-gutter, var(--space-6)));
+  padding: var(--space-2);
+  border-radius: var(--radius-media);
+  background-color: var(--color-white);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text-primary) 12%, transparent);
 }

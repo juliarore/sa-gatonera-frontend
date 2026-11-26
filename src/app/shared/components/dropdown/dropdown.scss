@@ -1,4 +1,5 @@
 @use '../../../../styles/abstracts/breakpoints' as bp;
+@use '../../../../styles/abstracts/dropdown';
 
 :host {
   display: block;
@@ -36,10 +37,6 @@
     transition:
       transform 200ms ease,
       color 150ms ease;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
   }
 
   &__button:is(:hover, :focus-visible, [aria-expanded='true']) &__chevron {
@@ -51,17 +48,11 @@
   }
 
   &__panel {
-    position: absolute;
-    top: 100%;
+    @include dropdown.floating-panel;
+
     left: 0;
-    z-index: 10;
     min-width: 200px;
-    max-width: calc(100vw - 2 * var(--public-gutter));
     margin: 0;
-    padding: var(--space-2);
-    border-radius: var(--radius-media);
-    background-color: var(--color-white);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-text-primary) 12%, transparent);
     list-style: none;
 
     @include bp.desktop {
@@ -103,5 +94,9 @@
       color: var(--color-text-primary);
       font-weight: 600;
     }
+  }
+
+  &__check {
+    color: var(--color-primary);
   }
 }

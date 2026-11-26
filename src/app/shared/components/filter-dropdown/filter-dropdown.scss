@@ -1,0 +1,33 @@
+@use '../../../../styles/abstracts/controls';
+@use '../../../../styles/abstracts/dropdown';
+
+:host {
+  display: block;
+}
+
+.filter-dropdown {
+  position: relative;
+
+  &__button {
+    @include controls.control-button;
+
+    &--active {
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__badge {
+    @include controls.count-badge;
+  }
+
+  &__panel {
+    @include dropdown.floating-panel;
+
+    left: 0;
+    width: max-content;
+    min-width: max(100%, #{dropdown.$filter-panel-min-width});
+    max-height: 60vh;
+    margin-top: var(--space-2);
+    overflow-y: auto;
+  }
+}

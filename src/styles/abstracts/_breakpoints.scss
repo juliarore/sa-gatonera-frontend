@@ -4,6 +4,7 @@ $laptop-min: 1100px;
 $wide-min: 1280px;
 $ultrawide-min: 1440px;
 $phone-min: 480px;
+$narrow-min: 360px;
 
 @mixin desktop {
   @media (min-width: $desktop-min) {
@@ -25,6 +26,12 @@ $phone-min: 480px;
 
 @mixin phone {
   @media (width < #{$phone-min}) {
+    @content;
+  }
+}
+
+@mixin narrow {
+  @media (width < #{$narrow-min}) {
     @content;
   }
 }

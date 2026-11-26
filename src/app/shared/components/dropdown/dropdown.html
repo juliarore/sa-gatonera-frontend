@@ -1,22 +1,18 @@
-<div
-  class="dropdown"
-  (keydown.escape)="closeAndFocusTrigger()"
-  (focusout)="closeOnFocusLeave($event)"
->
+<div class="dropdown" [appDisclosure]="queryParam() + '-panel'" #disclosure="disclosure">
   <button
     #trigger
     type="button"
     class="dropdown__button"
-    [attr.aria-expanded]="isOpen()"
-    [attr.aria-controls]="panelId"
-    (click)="toggle()"
+    [attr.aria-expanded]="disclosure.isOpen()"
+    [attr.aria-controls]="disclosure.panelId()"
+    (click)="disclosure.toggle()"
   >
     <span>{{ label() }}:</span>
     <span class="dropdown__value">{{ activeLabel() }}</span>
     <i class="dropdown__chevron fa-solid fa-chevron-down" aria-hidden="true"></i>
   </button>
 
-  <ul class="dropdown__panel" [id]="panelId" [hidden]="!isOpen()">
+  <ul class="dropdown__panel" [id]="disclosure.panelId()" [hidden]="!disclosure.isOpen()">
     @for (option of options(); track option.value) {
       <li>
         <a
@@ -26,11 +22,11 @@
           [queryParams]="queryParams(option)"
           queryParamsHandling="merge"
           [attr.aria-current]="option.value === value() ? 'true' : null"
-          (click)="close()"
+          (click)="disclosure.close()"
         >
           {{ option.label }}
           @if (option.value === value()) {
-            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            <i class="fa-solid fa-check dropdown__check" aria-hidden="true"></i>
           }
         </a>
       </li>

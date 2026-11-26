@@ -1,0 +1,21 @@
+@use '../../../../styles/abstracts/visually-hidden';
+
+:host {
+  display: block;
+}
+
+.filter-options {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &__legend {
+    @include visually-hidden.visually-hidden;
+  }
+
+  &__option {
+    min-height: var(--size-touch);
+    padding: 0 var(--space-2);
+  }
+}

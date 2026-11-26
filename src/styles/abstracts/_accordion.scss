@@ -1,0 +1,43 @@
+@mixin item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+@mixin button-base {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-primary);
+  font: inherit;
+  line-height: 25px;
+  cursor: pointer;
+
+  > .fa-chevron-down {
+    transition:
+      transform 0.2s ease,
+      color 0.15s ease;
+  }
+
+  &[aria-expanded='true'] > .fa-chevron-down {
+    transform: rotate(180deg);
+  }
+}
+
+@mixin button {
+  justify-content: space-between;
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.125rem;
+  font-weight: 500;
+
+  &[aria-expanded='true'] {
+    font-weight: 600;
+  }
+
+  > .fa-chevron-down {
+    font-size: 1rem;
+    color: var(--color-primary);
+  }
+}

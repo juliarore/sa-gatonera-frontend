@@ -25,3 +25,48 @@
   background-position: right var(--space-4) center;
   background-size: 12px;
 }
+
+@mixin public-control {
+  @include control-box;
+
+  border-color: transparent;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+@mixin control-button {
+  @include public-control;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+
+  > .fa-chevron-down {
+    margin-left: auto;
+    font-size: 0.75rem;
+    transition: transform 200ms ease;
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--color-primary);
+  }
+
+  &[aria-expanded='true'] > .fa-chevron-down {
+    transform: rotate(180deg);
+  }
+}
+
+@mixin count-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
